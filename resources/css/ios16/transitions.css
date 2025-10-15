@@ -1,0 +1,508 @@
+/**
+ * iOS 16 Page Transitions and Loading States
+ * Smooth transitions between pages and loading indicators
+ */
+
+/* Page Transition States */
+body {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+body.page-loaded {
+    opacity: 1;
+}
+
+body.page-transitioning {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* Page Loader */
+.ios-page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--ios-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.ios-page-loader.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.loader-content {
+    text-align: center;
+}
+
+.loader-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--ios-gray-4);
+    border-top-color: var(--ios-blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto var(--ios-spacing-md);
+}
+
+.loader-text {
+    color: var(--ios-text-secondary);
+    font-size: var(--ios-font-size-subhead);
+    font-weight: 500;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Button Loading States */
+.ios-button.loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+.button-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+.button-text {
+    margin-left: var(--ios-spacing-sm);
+}
+
+/* Skeleton Loading */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--ios-gray-5) 0%,
+        var(--ios-gray-4) 50%,
+        var(--ios-gray-5) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+    border-radius: var(--ios-radius-sm);
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton-text {
+    height: 1em;
+    margin-bottom: 0.5em;
+}
+
+.skeleton-text:last-child {
+    width: 80%;
+}
+
+.skeleton-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.skeleton-card {
+    height: 200px;
+    border-radius: var(--ios-radius-lg);
+}
+
+/* Progress Bar */
+.ios-progress {
+    width: 100%;
+    height: 4px;
+    background: var(--ios-gray-5);
+    border-radius: var(--ios-radius-sm);
+    overflow: hidden;
+}
+
+.ios-progress-bar {
+    height: 100%;
+    background: var(--ios-blue);
+    transition: width 0.3s ease;
+    border-radius: var(--ios-radius-sm);
+}
+
+.ios-progress-bar.indeterminate {
+    width: 30%;
+    animation: progress-indeterminate 1.5s ease-in-out infinite;
+}
+
+@keyframes progress-indeterminate {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(400%);
+    }
+}
+
+/* Fade Transitions */
+.ios-fade-enter {
+    opacity: 0;
+}
+
+.ios-fade-enter-active {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.ios-fade-exit {
+    opacity: 1;
+}
+
+.ios-fade-exit-active {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Slide Transitions */
+.ios-slide-enter {
+    transform: translateX(100%);
+}
+
+.ios-slide-enter-active {
+    transform: translateX(0);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-slide-exit {
+    transform: translateX(0);
+}
+
+.ios-slide-exit-active {
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Scale Transitions */
+.ios-scale-enter {
+    transform: scale(0.9);
+    opacity: 0;
+}
+
+.ios-scale-enter-active {
+    transform: scale(1);
+    opacity: 1;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease;
+}
+
+.ios-scale-exit {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.ios-scale-exit-active {
+    transform: scale(0.9);
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease;
+}
+
+/* Modal Transitions */
+.ios-modal {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.ios-modal.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.ios-modal .modal-content {
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-modal.show .modal-content {
+    transform: scale(1) translateY(0);
+}
+
+/* Toast Notifications */
+.ios-toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(20px);
+    color: white;
+    padding: var(--ios-spacing-md) var(--ios-spacing-lg);
+    border-radius: var(--ios-radius-lg);
+    font-size: var(--ios-font-size-subhead);
+    font-weight: 500;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 90%;
+    text-align: center;
+}
+
+.ios-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.ios-toast-success {
+    background: rgba(52, 199, 89, 0.95);
+}
+
+.ios-toast-error,
+.ios-toast-danger {
+    background: rgba(255, 59, 48, 0.95);
+}
+
+.ios-toast-warning {
+    background: rgba(255, 149, 0, 0.95);
+}
+
+.ios-toast-info {
+    background: rgba(0, 122, 255, 0.95);
+}
+
+/* Tooltip Transitions */
+.ios-tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: var(--ios-spacing-xs) var(--ios-spacing-sm);
+    border-radius: var(--ios-radius-sm);
+    font-size: var(--ios-font-size-caption-1);
+    white-space: nowrap;
+    z-index: 10001;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.ios-tooltip.show {
+    opacity: 1;
+}
+
+/* Lightbox Transitions */
+.ios-lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10002;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.ios-lightbox.show {
+    opacity: 1;
+}
+
+.lightbox-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+}
+
+.lightbox-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ios-spacing-xl);
+}
+
+.lightbox-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: var(--ios-radius-lg);
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-lightbox.show .lightbox-image {
+    transform: scale(1);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: var(--ios-spacing-lg);
+    right: var(--ios-spacing-lg);
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+/* Stagger Animation */
+.ios-stagger-container > * {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.ios-stagger-container.animate > * {
+    animation: stagger-fade-in 0.5s ease forwards;
+}
+
+.ios-stagger-container.animate > *:nth-child(1) { animation-delay: 0.05s; }
+.ios-stagger-container.animate > *:nth-child(2) { animation-delay: 0.1s; }
+.ios-stagger-container.animate > *:nth-child(3) { animation-delay: 0.15s; }
+.ios-stagger-container.animate > *:nth-child(4) { animation-delay: 0.2s; }
+.ios-stagger-container.animate > *:nth-child(5) { animation-delay: 0.25s; }
+.ios-stagger-container.animate > *:nth-child(n+6) { animation-delay: 0.3s; }
+
+@keyframes stagger-fade-in {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Scroll Reveal Animations */
+.ios-fade-in-scroll,
+.ios-slide-in-scroll,
+.ios-scale-in-scroll {
+    opacity: 0;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-fade-in-scroll.animate-in {
+    opacity: 1;
+}
+
+.ios-slide-in-scroll {
+    transform: translateY(40px);
+}
+
+.ios-slide-in-scroll.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.ios-scale-in-scroll {
+    transform: scale(0.9);
+}
+
+.ios-scale-in-scroll.animate-in {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.loading-overlay.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.ios-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Bounce Animation */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.ios-bounce {
+    animation: bounce 1s ease infinite;
+}
+
+/* Shimmer Effect */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.ios-shimmer {
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+}

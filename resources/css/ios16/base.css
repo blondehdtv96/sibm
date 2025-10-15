@@ -1,0 +1,242 @@
+/* iOS 16 Design System - Base Styles */
+
+/* CSS Custom Properties for iOS 16 Color Palette */
+:root {
+  /* Primary Colors */
+  --ios-blue: #007AFF;
+  --ios-purple: #5856D6;
+  --ios-green: #34C759;
+  --ios-orange: #FF9500;
+  --ios-red: #FF3B30;
+  --ios-pink: #FF2D92;
+  --ios-teal: #5AC8FA;
+  --ios-indigo: #5856D6;
+  
+  /* Neutral Colors */
+  --ios-gray: #8E8E93;
+  --ios-gray-2: #AEAEB2;
+  --ios-gray-3: #C7C7CC;
+  --ios-gray-4: #D1D1D6;
+  --ios-gray-5: #E5E5EA;
+  --ios-gray-6: #F2F2F7;
+  
+  /* Background Colors */
+  --ios-background: #FFFFFF;
+  --ios-background-secondary: #F2F2F7;
+  --ios-background-tertiary: #FFFFFF;
+  
+  /* Dark Mode Support */
+  --ios-background-dark: #000000;
+  --ios-background-secondary-dark: #1C1C1E;
+  --ios-background-tertiary-dark: #2C2C2E;
+  
+  /* Text Colors */
+  --ios-text-primary: #000000;
+  --ios-text-secondary: #3C3C43;
+  --ios-text-tertiary: #3C3C4399;
+  --ios-text-quaternary: #3C3C4366;
+  
+  /* Border Colors */
+  --ios-border: #C6C6C8;
+  --ios-border-secondary: #E5E5EA;
+  
+  /* Shadow Colors */
+  --ios-shadow: rgba(0, 0, 0, 0.1);
+  --ios-shadow-heavy: rgba(0, 0, 0, 0.2);
+  
+  /* Blur Effects */
+  --ios-blur-light: rgba(255, 255, 255, 0.8);
+  --ios-blur-dark: rgba(0, 0, 0, 0.8);
+  
+  /* Typography Scale */
+  --ios-font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+  --ios-font-size-large-title: 34px;
+  --ios-font-size-title-1: 28px;
+  --ios-font-size-title-2: 22px;
+  --ios-font-size-title-3: 20px;
+  --ios-font-size-headline: 17px;
+  --ios-font-size-body: 17px;
+  --ios-font-size-callout: 16px;
+  --ios-font-size-subhead: 15px;
+  --ios-font-size-footnote: 13px;
+  --ios-font-size-caption-1: 12px;
+  --ios-font-size-caption-2: 11px;
+  
+  /* Spacing Scale */
+  --ios-spacing-xs: 4px;
+  --ios-spacing-sm: 8px;
+  --ios-spacing-md: 16px;
+  --ios-spacing-lg: 24px;
+  --ios-spacing-xl: 32px;
+  --ios-spacing-2xl: 48px;
+  
+  /* Border Radius */
+  --ios-radius-sm: 8px;
+  --ios-radius-md: 12px;
+  --ios-radius-lg: 16px;
+  --ios-radius-xl: 20px;
+  --ios-radius-2xl: 24px;
+  
+  /* Transitions */
+  --ios-transition-fast: 0.2s ease-out;
+  --ios-transition-normal: 0.3s ease-out;
+  --ios-transition-slow: 0.5s ease-out;
+}
+
+/* Dark Mode Variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ios-background: var(--ios-background-dark);
+    --ios-background-secondary: var(--ios-background-secondary-dark);
+    --ios-background-tertiary: var(--ios-background-tertiary-dark);
+    --ios-text-primary: #FFFFFF;
+    --ios-text-secondary: #EBEBF5;
+    --ios-text-tertiary: #EBEBF599;
+    --ios-text-quaternary: #EBEBF566;
+    --ios-border: #38383A;
+    --ios-border-secondary: #48484A;
+  }
+}
+
+/* Base Reset and Typography */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--ios-font-family);
+  font-size: var(--ios-font-size-body);
+  color: var(--ios-text-primary);
+  background-color: var(--ios-background-secondary);
+  line-height: 1.47;
+  letter-spacing: -0.022em;
+}
+
+/* Typography Classes */
+.ios-large-title {
+  font-size: var(--ios-font-size-large-title);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.ios-title-1 {
+  font-size: var(--ios-font-size-title-1);
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -0.022em;
+}
+
+.ios-title-2 {
+  font-size: var(--ios-font-size-title-2);
+  font-weight: 400;
+  line-height: 1.27;
+  letter-spacing: -0.020em;
+}
+
+.ios-title-3 {
+  font-size: var(--ios-font-size-title-3);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.018em;
+}
+
+.ios-headline {
+  font-size: var(--ios-font-size-headline);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.016em;
+}
+
+.ios-body {
+  font-size: var(--ios-font-size-body);
+  font-weight: 400;
+  line-height: 1.47;
+  letter-spacing: -0.022em;
+}
+
+.ios-callout {
+  font-size: var(--ios-font-size-callout);
+  font-weight: 400;
+  line-height: 1.38;
+  letter-spacing: -0.020em;
+}
+
+.ios-subhead {
+  font-size: var(--ios-font-size-subhead);
+  font-weight: 400;
+  line-height: 1.33;
+  letter-spacing: -0.016em;
+}
+
+.ios-footnote {
+  font-size: var(--ios-font-size-footnote);
+  font-weight: 400;
+  line-height: 1.38;
+  letter-spacing: -0.013em;
+}
+
+.ios-caption-1 {
+  font-size: var(--ios-font-size-caption-1);
+  font-weight: 400;
+  line-height: 1.33;
+  letter-spacing: -0.012em;
+}
+
+.ios-caption-2 {
+  font-size: var(--ios-font-size-caption-2);
+  font-weight: 400;
+  line-height: 1.36;
+  letter-spacing: -0.011em;
+}
+
+/* Text Color Utilities */
+.ios-text-primary { color: var(--ios-text-primary); }
+.ios-text-secondary { color: var(--ios-text-secondary); }
+.ios-text-tertiary { color: var(--ios-text-tertiary); }
+.ios-text-quaternary { color: var(--ios-text-quaternary); }
+
+/* Color Utilities */
+.ios-color-blue { color: var(--ios-blue); }
+.ios-color-purple { color: var(--ios-purple); }
+.ios-color-green { color: var(--ios-green); }
+.ios-color-orange { color: var(--ios-orange); }
+.ios-color-red { color: var(--ios-red); }
+.ios-color-pink { color: var(--ios-pink); }
+.ios-color-teal { color: var(--ios-teal); }
+
+/* Background Color Utilities */
+.ios-bg-primary { background-color: var(--ios-background); }
+.ios-bg-secondary { background-color: var(--ios-background-secondary); }
+.ios-bg-tertiary { background-color: var(--ios-background-tertiary); }
+
+/* Spacing Utilities */
+.ios-p-xs { padding: var(--ios-spacing-xs); }
+.ios-p-sm { padding: var(--ios-spacing-sm); }
+.ios-p-md { padding: var(--ios-spacing-md); }
+.ios-p-lg { padding: var(--ios-spacing-lg); }
+.ios-p-xl { padding: var(--ios-spacing-xl); }
+.ios-p-2xl { padding: var(--ios-spacing-2xl); }
+
+.ios-m-xs { margin: var(--ios-spacing-xs); }
+.ios-m-sm { margin: var(--ios-spacing-sm); }
+.ios-m-md { margin: var(--ios-spacing-md); }
+.ios-m-lg { margin: var(--ios-spacing-lg); }
+.ios-m-xl { margin: var(--ios-spacing-xl); }
+.ios-m-2xl { margin: var(--ios-spacing-2xl); }
+
+/* Border Radius Utilities */
+.ios-rounded-sm { border-radius: var(--ios-radius-sm); }
+.ios-rounded-md { border-radius: var(--ios-radius-md); }
+.ios-rounded-lg { border-radius: var(--ios-radius-lg); }
+.ios-rounded-xl { border-radius: var(--ios-radius-xl); }
+.ios-rounded-2xl { border-radius: var(--ios-radius-2xl); }

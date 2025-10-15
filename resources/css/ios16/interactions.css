@@ -1,0 +1,462 @@
+/**
+ * iOS 16 Interactive Components CSS
+ * Enhanced interactions, loading states, and touch feedback
+ */
+
+/* Page Transitions */
+.page-transitioning {
+    opacity: 0.8;
+    transform: scale(0.98);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-loaded {
+    opacity: 1;
+    transform: scale(1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Page Loader */
+.ios-page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(242, 242, 247, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-page-loader.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.loader-content {
+    text-align: center;
+    color: var(--ios-text-primary);
+}
+
+.loader-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--ios-gray-4);
+    border-top: 3px solid var(--ios-blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+}
+
+.loader-text {
+    font-size: var(--ios-font-size-subhead);
+    font-weight: 500;
+    color: var(--ios-text-secondary);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Button Loading States */
+.ios-button.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.button-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+}
+
+.button-text {
+    opacity: 0.8;
+}
+
+/* Touch Feedback */
+.touch-active {
+    transform: scale(0.95);
+    opacity: 0.8;
+    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-button.touch-active,
+.ios-nav-item.touch-active,
+.mobile-nav-item.touch-active {
+    background: rgba(0, 122, 255, 0.1);
+}
+
+.ios-card-interactive.touch-active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Swipe Indicators */
+.ios-swipe-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.swipe-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.swipe-indicator.left {
+    left: 20px;
+}
+
+.swipe-indicator.right {
+    right: 20px;
+}
+
+.ios-swipe-container:hover .swipe-indicator {
+    opacity: 0.8;
+}
+
+/* Pull to Refresh */
+.pull-refresh-indicator {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pull-refresh-indicator .spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--ios-gray-4);
+    border-top: 2px solid var(--ios-blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.pull-refresh-indicator.ready {
+    color: var(--ios-blue);
+}
+
+/* Toast Notifications */
+.ios-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--ios-background);
+    border: 1px solid var(--ios-border-secondary);
+    border-radius: var(--ios-radius-lg);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: var(--ios-spacing-md) var(--ios-spacing-lg);
+    max-width: 400px;
+    z-index: 10000;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.ios-toast-success {
+    border-left: 4px solid var(--ios-green);
+}
+
+.ios-toast-error {
+    border-left: 4px solid var(--ios-red);
+}
+
+.ios-toast-warning {
+    border-left: 4px solid var(--ios-orange);
+}
+
+.ios-toast-info {
+    border-left: 4px solid var(--ios-blue);
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: var(--ios-spacing-sm);
+}
+
+.toast-message {
+    font-size: var(--ios-font-size-subhead);
+    color: var(--ios-text-primary);
+}
+
+/* Keyboard Navigation */
+.keyboard-navigation *:focus {
+    outline: 2px solid var(--ios-blue);
+    outline-offset: 2px;
+}
+
+/* Screen Reader Only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Scroll Animations */
+.ios-fade-in-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-fade-in-scroll.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.ios-slide-in-scroll {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-slide-in-scroll.animate-in {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.ios-scale-in-scroll {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-scale-in-scroll.animate-in {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Stagger Animation */
+.ios-stagger-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-stagger-item.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.ios-stagger-item:nth-child(1) { transition-delay: 0.1s; }
+.ios-stagger-item:nth-child(2) { transition-delay: 0.2s; }
+.ios-stagger-item:nth-child(3) { transition-delay: 0.3s; }
+.ios-stagger-item:nth-child(4) { transition-delay: 0.4s; }
+.ios-stagger-item:nth-child(5) { transition-delay: 0.5s; }
+.ios-stagger-item:nth-child(6) { transition-delay: 0.6s; }
+
+/* Lazy Loading */
+.lazy-loading {
+    background: var(--ios-gray-6);
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Interactive Cards */
+.ios-card-interactive {
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-card-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.ios-card-interactive:active {
+    transform: translateY(0);
+}
+
+/* Form Enhancements */
+.ios-form-group {
+    position: relative;
+    margin-bottom: var(--ios-spacing-lg);
+}
+
+.ios-form-label {
+    display: block;
+    font-size: var(--ios-font-size-subhead);
+    font-weight: 600;
+    color: var(--ios-text-primary);
+    margin-bottom: var(--ios-spacing-xs);
+}
+
+.ios-form-input {
+    width: 100%;
+    padding: var(--ios-spacing-md);
+    border: 1px solid var(--ios-border-secondary);
+    border-radius: var(--ios-radius-md);
+    background: var(--ios-background);
+    font-size: var(--ios-font-size-body);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-form-input:focus {
+    outline: none;
+    border-color: var(--ios-blue);
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.ios-form-input.error {
+    border-color: var(--ios-red);
+    box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.1);
+}
+
+.ios-form-error {
+    color: var(--ios-red);
+    font-size: var(--ios-font-size-caption-1);
+    margin-top: var(--ios-spacing-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--ios-spacing-xs);
+}
+
+/* Progress Indicators */
+.ios-progress {
+    width: 100%;
+    height: 4px;
+    background: var(--ios-gray-5);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.ios-progress-bar {
+    height: 100%;
+    background: var(--ios-blue);
+    border-radius: 2px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ios-progress-indeterminate .ios-progress-bar {
+    width: 30%;
+    animation: indeterminate 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes indeterminate {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(400%);
+    }
+}
+
+/* Mobile Specific Enhancements */
+@media (max-width: 768px) {
+    .ios-toast {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+    
+    .swipe-indicator {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .swipe-indicator.left {
+        left: 10px;
+    }
+    
+    .swipe-indicator.right {
+        right: 10px;
+    }
+    
+    /* Improve touch targets */
+    .ios-button,
+    .nav-item,
+    .mobile-nav-item {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .page-transitioning,
+    .page-loaded,
+    .ios-fade-in-scroll,
+    .ios-slide-in-scroll,
+    .ios-scale-in-scroll,
+    .ios-stagger-item,
+    .touch-active,
+    .ios-card-interactive {
+        transition: none;
+        animation: none;
+    }
+    
+    .loader-spinner,
+    .button-spinner {
+        animation: none;
+    }
+}
+
+/* High Contrast Support */
+@media (prefers-contrast: high) {
+    .ios-toast {
+        border-width: 2px;
+    }
+    
+    .ios-form-input:focus {
+        border-width: 2px;
+    }
+    
+    .keyboard-navigation *:focus {
+        outline-width: 3px;
+    }
+}

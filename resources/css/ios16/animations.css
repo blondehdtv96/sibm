@@ -1,0 +1,429 @@
+/* iOS 16 Animations and Transitions */
+
+/* Base Transition Classes */
+.ios-transition {
+  transition: all var(--ios-transition-normal);
+}
+
+.ios-transition-fast {
+  transition: all var(--ios-transition-fast);
+}
+
+.ios-transition-slow {
+  transition: all var(--ios-transition-slow);
+}
+
+/* Transform Utilities */
+.ios-scale-hover:hover {
+  transform: scale(1.02);
+}
+
+.ios-scale-active:active {
+  transform: scale(0.98);
+}
+
+.ios-lift-hover:hover {
+  transform: translateY(-4px);
+}
+
+.ios-lift-active:active {
+  transform: translateY(1px);
+}
+
+/* Fade Animations */
+.ios-fade-in {
+  animation: ios-fadeIn var(--ios-transition-normal) ease-out;
+}
+
+.ios-fade-out {
+  animation: ios-fadeOut var(--ios-transition-normal) ease-out;
+}
+
+@keyframes ios-fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ios-fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Slide Animations */
+.ios-slide-in-left {
+  animation: ios-slideInLeft var(--ios-transition-normal) ease-out;
+}
+
+.ios-slide-in-right {
+  animation: ios-slideInRight var(--ios-transition-normal) ease-out;
+}
+
+.ios-slide-in-up {
+  animation: ios-slideInUp var(--ios-transition-normal) ease-out;
+}
+
+.ios-slide-in-down {
+  animation: ios-slideInDown var(--ios-transition-normal) ease-out;
+}
+
+@keyframes ios-slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes ios-slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes ios-slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ios-slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale Animations */
+.ios-scale-in {
+  animation: ios-scaleIn var(--ios-transition-normal) ease-out;
+}
+
+.ios-scale-out {
+  animation: ios-scaleOut var(--ios-transition-normal) ease-out;
+}
+
+@keyframes ios-scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes ios-scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+/* Bounce Animation */
+.ios-bounce {
+  animation: ios-bounce 0.6s ease-out;
+}
+
+@keyframes ios-bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+/* Pulse Animation */
+.ios-pulse {
+  animation: ios-pulse 2s infinite;
+}
+
+@keyframes ios-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Loading Spinner */
+.ios-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--ios-gray-5);
+  border-top: 2px solid var(--ios-blue);
+  border-radius: 50%;
+  animation: ios-spin 1s linear infinite;
+}
+
+.ios-spinner-sm {
+  width: 16px;
+  height: 16px;
+  border-width: 1.5px;
+}
+
+.ios-spinner-lg {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+@keyframes ios-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Progress Bar */
+.ios-progress {
+  width: 100%;
+  height: 4px;
+  background: var(--ios-gray-5);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.ios-progress-bar {
+  height: 100%;
+  background: var(--ios-blue);
+  border-radius: 2px;
+  transition: width var(--ios-transition-normal);
+}
+
+.ios-progress-indeterminate .ios-progress-bar {
+  width: 30%;
+  animation: ios-progressIndeterminate 2s infinite;
+}
+
+@keyframes ios-progressIndeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(300%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+/* Skeleton Loading */
+.ios-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--ios-gray-5) 25%,
+    var(--ios-gray-4) 50%,
+    var(--ios-gray-5) 75%
+  );
+  background-size: 200% 100%;
+  animation: ios-skeleton 1.5s infinite;
+  border-radius: var(--ios-radius-sm);
+}
+
+@keyframes ios-skeleton {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.ios-skeleton-text {
+  height: 1em;
+  margin-bottom: 0.5em;
+}
+
+.ios-skeleton-text:last-child {
+  margin-bottom: 0;
+  width: 60%;
+}
+
+.ios-skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.ios-skeleton-card {
+  height: 200px;
+  width: 100%;
+}
+
+/* Page Transitions */
+.ios-page-enter {
+  animation: ios-pageEnter 0.4s ease-out;
+}
+
+.ios-page-exit {
+  animation: ios-pageExit 0.4s ease-out;
+}
+
+@keyframes ios-pageEnter {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes ios-pageExit {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+/* Modal Animations */
+.ios-modal-backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all var(--ios-transition-normal);
+}
+
+.ios-modal-enter {
+  animation: ios-modalEnter 0.3s ease-out;
+}
+
+.ios-modal-exit {
+  animation: ios-modalExit 0.3s ease-out;
+}
+
+@keyframes ios-modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes ios-modalExit {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+}
+
+/* Hover Effects */
+.ios-hover-lift {
+  transition: transform var(--ios-transition-fast), box-shadow var(--ios-transition-fast);
+}
+
+.ios-hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px var(--ios-shadow);
+}
+
+.ios-hover-scale {
+  transition: transform var(--ios-transition-fast);
+}
+
+.ios-hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.ios-hover-glow {
+  transition: box-shadow var(--ios-transition-fast);
+}
+
+.ios-hover-glow:hover {
+  box-shadow: 0 0 20px rgba(0, 122, 255, 0.3);
+}
+
+/* Stagger Animation for Lists */
+.ios-stagger-item {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: ios-staggerIn 0.5s ease-out forwards;
+}
+
+.ios-stagger-item:nth-child(1) { animation-delay: 0.1s; }
+.ios-stagger-item:nth-child(2) { animation-delay: 0.2s; }
+.ios-stagger-item:nth-child(3) { animation-delay: 0.3s; }
+.ios-stagger-item:nth-child(4) { animation-delay: 0.4s; }
+.ios-stagger-item:nth-child(5) { animation-delay: 0.5s; }
+.ios-stagger-item:nth-child(n+6) { animation-delay: 0.6s; }
+
+@keyframes ios-staggerIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .ios-skeleton {
+    animation: none;
+    background: var(--ios-gray-5);
+  }
+}

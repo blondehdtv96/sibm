@@ -1,0 +1,253 @@
+/* iOS 16 Card System */
+
+/* Base Card Component */
+.ios-card {
+  background: var(--ios-blur-light);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--ios-radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px var(--ios-shadow);
+  transition: all var(--ios-transition-normal);
+  overflow: hidden;
+  position: relative;
+}
+
+.ios-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px var(--ios-shadow-heavy);
+}
+
+/* Card Variants */
+.ios-card-elevated {
+  background: var(--ios-background);
+  box-shadow: 0 4px 16px var(--ios-shadow);
+}
+
+.ios-card-elevated:hover {
+  box-shadow: 0 8px 24px var(--ios-shadow-heavy);
+}
+
+.ios-card-filled {
+  background: var(--ios-background-tertiary);
+  border: 1px solid var(--ios-border-secondary);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.ios-card-outlined {
+  background: transparent;
+  border: 1px solid var(--ios-border);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Card Sizes */
+.ios-card-sm {
+  padding: var(--ios-spacing-sm);
+  border-radius: var(--ios-radius-sm);
+}
+
+.ios-card-md {
+  padding: var(--ios-spacing-md);
+  border-radius: var(--ios-radius-md);
+}
+
+.ios-card-lg {
+  padding: var(--ios-spacing-lg);
+  border-radius: var(--ios-radius-lg);
+}
+
+.ios-card-xl {
+  padding: var(--ios-spacing-xl);
+  border-radius: var(--ios-radius-xl);
+}
+
+/* Card Header */
+.ios-card-header {
+  padding: var(--ios-spacing-md);
+  border-bottom: 1px solid var(--ios-border-secondary);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.ios-card-header .ios-card-title {
+  font-size: var(--ios-font-size-headline);
+  font-weight: 600;
+  color: var(--ios-text-primary);
+  margin: 0;
+}
+
+.ios-card-header .ios-card-subtitle {
+  font-size: var(--ios-font-size-subhead);
+  color: var(--ios-text-secondary);
+  margin: 4px 0 0 0;
+}
+
+/* Card Body */
+.ios-card-body {
+  padding: var(--ios-spacing-md);
+}
+
+.ios-card-body p {
+  margin-bottom: var(--ios-spacing-sm);
+  color: var(--ios-text-secondary);
+}
+
+.ios-card-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Card Footer */
+.ios-card-footer {
+  padding: var(--ios-spacing-md);
+  border-top: 1px solid var(--ios-border-secondary);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Card Image */
+.ios-card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--ios-radius-md) var(--ios-radius-md) 0 0;
+}
+
+.ios-card-image-sm {
+  height: 120px;
+}
+
+.ios-card-image-lg {
+  height: 280px;
+}
+
+/* Card with Image Overlay */
+.ios-card-overlay {
+  position: relative;
+  color: white;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6));
+}
+
+.ios-card-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.ios-card-overlay > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Card Grid System */
+.ios-card-grid {
+  display: grid;
+  gap: var(--ios-spacing-md);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.ios-card-grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.ios-card-grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.ios-card-grid-4 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* Responsive Card Grid */
+@media (max-width: 768px) {
+  .ios-card-grid,
+  .ios-card-grid-2,
+  .ios-card-grid-3,
+  .ios-card-grid-4 {
+    grid-template-columns: 1fr;
+    gap: var(--ios-spacing-sm);
+  }
+}
+
+/* Card Actions */
+.ios-card-actions {
+  display: flex;
+  gap: var(--ios-spacing-sm);
+  padding: var(--ios-spacing-md);
+  justify-content: flex-end;
+}
+
+/* Card Badge */
+.ios-card-badge {
+  position: absolute;
+  top: var(--ios-spacing-sm);
+  right: var(--ios-spacing-sm);
+  background: var(--ios-blue);
+  color: white;
+  padding: 4px 8px;
+  border-radius: var(--ios-radius-sm);
+  font-size: var(--ios-font-size-caption-1);
+  font-weight: 600;
+  z-index: 3;
+}
+
+.ios-card-badge-success { background: var(--ios-green); }
+.ios-card-badge-warning { background: var(--ios-orange); }
+.ios-card-badge-danger { background: var(--ios-red); }
+.ios-card-badge-secondary { background: var(--ios-gray); }
+
+/* Card Loading State */
+.ios-card-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.ios-card-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: ios-shimmer 1.5s infinite;
+}
+
+@keyframes ios-shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+  .ios-card {
+    background: rgba(28, 28, 30, 0.8);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .ios-card-header,
+  .ios-card-footer {
+    background: rgba(44, 44, 46, 0.5);
+  }
+  
+  .ios-card-filled {
+    background: var(--ios-background-tertiary-dark);
+  }
+}

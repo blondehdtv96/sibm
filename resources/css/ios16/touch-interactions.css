@@ -1,0 +1,338 @@
+/**
+ * iOS 16 Touch Interactions
+ * Touch-friendly interactions for mobile devices
+ */
+
+/* Touch Active States */
+.touch-active {
+    transform: scale(0.96);
+    opacity: 0.8;
+    transition: all 0.1s ease;
+}
+
+/* Prevent text selection during touch */
+.ios-button,
+.mobile-nav-item,
+.ios-nav-item,
+.dropdown-item,
+.ios-card-interactive {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Touch Feedback for Buttons */
+.ios-button:active,
+.ios-nav-item:active,
+.mobile-nav-item:active {
+    transform: scale(0.96);
+    transition: transform 0.1s ease;
+}
+
+/* Swipe Indicators */
+.swipe-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.swipe-indicator.left {
+    left: 20px;
+}
+
+.swipe-indicator.right {
+    right: 20px;
+}
+
+.swipe-indicator.show {
+    opacity: 1;
+}
+
+/* Pull to Refresh */
+.pull-refresh-indicator {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.pull-refresh-indicator .spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--ios-gray-4);
+    border-top-color: var(--ios-blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.pull-refresh-indicator.ready .spinner {
+    border-top-color: var(--ios-green);
+}
+
+/* Long Press Feedback */
+@keyframes long-press-pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+}
+
+[data-long-press]:active {
+    animation: long-press-pulse 0.5s ease;
+}
+
+/* Drag and Drop */
+.drag-over {
+    background: rgba(0, 122, 255, 0.1);
+    border-color: var(--ios-blue);
+    border-style: dashed;
+}
+
+.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+}
+
+/* Smooth Scrolling */
+.smooth-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Scroll Snap */
+.scroll-snap-x {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.scroll-snap-y {
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.scroll-snap-item {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+/* Touch Gestures Container */
+.touch-gesture-container {
+    touch-action: pan-y;
+    user-select: none;
+}
+
+.touch-gesture-container.vertical {
+    touch-action: pan-x;
+}
+
+/* Haptic Feedback Visual */
+@keyframes haptic-feedback {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.98);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.haptic-feedback {
+    animation: haptic-feedback 0.1s ease;
+}
+
+/* Mobile-Optimized Hit Areas */
+@media (max-width: 768px) {
+    .ios-button,
+    .mobile-nav-item,
+    .ios-nav-item {
+        min-height: 44px;
+        min-width: 44px;
+        padding: var(--ios-spacing-sm) var(--ios-spacing-md);
+    }
+    
+    .dropdown-item {
+        min-height: 44px;
+        padding: var(--ios-spacing-md);
+    }
+}
+
+/* Swipe Actions */
+.swipe-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+}
+
+.swipe-actions.show {
+    transform: translateX(0);
+}
+
+.swipe-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--ios-spacing-lg);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.swipe-action.delete {
+    background: var(--ios-red);
+}
+
+.swipe-action.edit {
+    background: var(--ios-blue);
+}
+
+.swipe-action.archive {
+    background: var(--ios-orange);
+}
+
+.swipe-action:active {
+    filter: brightness(0.9);
+}
+
+/* Keyboard Navigation Focus */
+body.keyboard-navigation *:focus {
+    outline: 2px solid var(--ios-blue);
+    outline-offset: 2px;
+}
+
+body:not(.keyboard-navigation) *:focus {
+    outline: none;
+}
+
+/* Loading States for Touch */
+.touch-loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.touch-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--ios-gray-4);
+    border-top-color: var(--ios-blue);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+/* Gesture Hints */
+.gesture-hint {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: var(--ios-spacing-sm) var(--ios-spacing-md);
+    border-radius: var(--ios-radius-lg);
+    font-size: var(--ios-font-size-caption-1);
+    opacity: 0;
+    animation: gesture-hint-fade 3s ease;
+    pointer-events: none;
+}
+
+@keyframes gesture-hint-fade {
+    0%, 100% {
+        opacity: 0;
+    }
+    10%, 90% {
+        opacity: 1;
+    }
+}
+
+/* Momentum Scrolling */
+.momentum-scroll {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* Prevent Overscroll */
+.no-overscroll {
+    overscroll-behavior: none;
+}
+
+/* Touch Ripple Effect */
+.touch-ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.touch-ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease, opacity 0.6s ease;
+    opacity: 0;
+}
+
+.touch-ripple:active::after {
+    width: 200px;
+    height: 200px;
+    opacity: 1;
+    transition: width 0s, height 0s, opacity 0s;
+}
+
+/* Safe Area Insets for Notched Devices */
+@supports (padding: max(0px)) {
+    .safe-area-top {
+        padding-top: max(var(--ios-spacing-md), env(safe-area-inset-top));
+    }
+    
+    .safe-area-bottom {
+        padding-bottom: max(var(--ios-spacing-md), env(safe-area-inset-bottom));
+    }
+    
+    .safe-area-left {
+        padding-left: max(var(--ios-spacing-md), env(safe-area-inset-left));
+    }
+    
+    .safe-area-right {
+        padding-right: max(var(--ios-spacing-md), env(safe-area-inset-right));
+    }
+}
