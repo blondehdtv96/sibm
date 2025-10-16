@@ -163,7 +163,7 @@ class LoginController extends Controller
         // Log the logout activity
         $this->auditLog->logLogout();
 
-        $this->guard()->logout();
+        Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -189,5 +189,15 @@ class LoginController extends Controller
         $request->session()->forget('last_activity');
         
         return null;
+    }
+
+    /**
+     * Get the guard to be used during authentication.
+     *
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     */
+    protected function guard()
+    {
+        return Auth::guard();
     }
 }

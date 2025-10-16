@@ -131,4 +131,18 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     Route::post('notifications/read-all', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
     Route::delete('notifications/{id}', [\App\Http\Controllers\Admin\NotificationController::class, 'destroy'])->name('notifications.destroy');
     Route::get('notifications/unread-count', [\App\Http\Controllers\Admin\NotificationController::class, 'getUnreadCount'])->name('notifications.unread-count');
+    
+    // Chat History routes
+    Route::get('chat-history', [\App\Http\Controllers\Admin\ChatHistoryController::class, 'index'])->name('chat-history.index');
+    Route::delete('chat-history/{id}', [\App\Http\Controllers\Admin\ChatHistoryController::class, 'destroy'])->name('chat-history.destroy');
+    Route::post('chat-history/destroy-all', [\App\Http\Controllers\Admin\ChatHistoryController::class, 'destroyAll'])->name('chat-history.destroy-all');
+    Route::post('chat-history/destroy-by-date', [\App\Http\Controllers\Admin\ChatHistoryController::class, 'destroyByDate'])->name('chat-history.destroy-by-date');
+    Route::get('chat-history/export', [\App\Http\Controllers\Admin\ChatHistoryController::class, 'export'])->name('chat-history.export');
+    
+    // Chatbot Responses Management routes
+    Route::resource('chatbot-responses', \App\Http\Controllers\Admin\ChatbotResponseController::class);
+    Route::post('chatbot-responses/{chatbotResponse}/toggle-status', [\App\Http\Controllers\Admin\ChatbotResponseController::class, 'toggleStatus'])->name('chatbot-responses.toggle-status');
 });
+
+// Chatbot routes (public)
+Route::post('/chatbot', [\App\Http\Controllers\ChatbotController::class, 'sendMessage'])->name('chatbot.send');
