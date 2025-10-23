@@ -117,16 +117,18 @@
 
         <!-- Input Area -->
         <div class="p-4 bg-white border-t border-gray-200">
-            <form @submit.prevent="sendMessage()" class="flex items-center space-x-2">
+            <form @submit.prevent="sendMessage" class="flex items-center space-x-2">
                 <input 
                     x-model="userInput"
+                    @keydown.enter.prevent="sendMessage"
                     type="text" 
                     placeholder="Ketik pesan Anda..."
                     class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     :disabled="isTyping"
                 >
                 <button 
-                    type="submit"
+                    type="button"
+                    @click="sendMessage"
                     :disabled="!userInput.trim() || isTyping"
                     class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
