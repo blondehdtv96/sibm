@@ -151,15 +151,11 @@ function chatbot() {
         sessionId: null,
 
         init() {
-            // Generate atau ambil session ID dari localStorage
-            this.sessionId = localStorage.getItem('chatbot_session_id') || this.generateSessionId();
-            localStorage.setItem('chatbot_session_id', this.sessionId);
-
-            // Load messages dari localStorage
-            const savedMessages = localStorage.getItem('chatbot_messages');
-            if (savedMessages) {
-                this.messages = JSON.parse(savedMessages);
-            }
+            // Generate session ID baru setiap kali (tidak disimpan)
+            this.sessionId = this.generateSessionId();
+            
+            // Tidak load messages dari localStorage
+            // Chat akan selalu dimulai dari awal
         },
 
         generateSessionId() {
@@ -219,8 +215,8 @@ function chatbot() {
                     timestamp: new Date()
                 });
 
-                // Simpan ke localStorage
-                this.saveMessages();
+                // Tidak simpan ke localStorage
+                // Chat akan hilang saat refresh
 
                 // Jika chat tertutup, tampilkan notifikasi
                 if (!this.isOpen) {
@@ -247,12 +243,6 @@ function chatbot() {
                     container.scrollTop = container.scrollHeight;
                 }
             });
-        },
-
-        saveMessages() {
-            // Simpan maksimal 50 pesan terakhir
-            const messagesToSave = this.messages.slice(-50);
-            localStorage.setItem('chatbot_messages', JSON.stringify(messagesToSave));
         },
 
         formatMessage(text) {

@@ -53,6 +53,36 @@
         </a>
     </div>
 
+    <!-- Video Section -->
+    <section class="content-section">
+        <div class="section-header">
+            <h2 class="section-title">Video Profil Sekolah</h2>
+        </div>
+        
+        <div class="video-container">
+            <div class="video-wrapper">
+                <!-- Ganti VIDEO_ID dengan ID video YouTube Anda -->
+                <!-- Contoh: https://www.youtube.com/watch?v=dQw4w9WgXcQ -> ID: dQw4w9WgXcQ -->
+                <iframe 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                    title="Video Profil SMK Bina Mandiri Bekasi" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen
+                    loading="lazy"
+                ></iframe>
+            </div>
+            <div class="video-description">
+                <h3 class="video-title">Selamat Datang di SMK Bina Mandiri Bekasi</h3>
+                <p class="video-text">
+                    Tonton video profil kami untuk mengenal lebih dekat tentang fasilitas, program keahlian, 
+                    dan kehidupan siswa di SMK Bina Mandiri Bekasi. Bergabunglah bersama kami dan wujudkan 
+                    masa depan cemerlang Anda!
+                </p>
+            </div>
+        </div>
+    </section>
+
     <!-- Latest News Section -->
     @if($latestNews->count() > 0)
     <section class="content-section">
@@ -632,6 +662,89 @@
     
     .news-meta {
         color: #8e8e93;
+    }
+}
+
+/* Video Section */
+.video-container {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+    background: #000;
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.video-description {
+    padding: 30px;
+    text-align: center;
+}
+
+.video-title {
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #1a1a1a;
+}
+
+.video-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #666;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Tablet Responsive */
+@media (max-width: 768px) {
+    .video-description {
+        padding: 20px;
+    }
+    
+    .video-title {
+        font-size: 1.3rem;
+    }
+    
+    .video-text {
+        font-size: 0.95rem;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    .video-container {
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .video-description {
+        padding: 16px;
+    }
+    
+    .video-title {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .video-text {
+        font-size: 0.9rem;
+        line-height: 1.6;
     }
 }
 </style>

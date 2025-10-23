@@ -142,6 +142,13 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     // Chatbot Responses Management routes
     Route::resource('chatbot-responses', \App\Http\Controllers\Admin\ChatbotResponseController::class);
     Route::post('chatbot-responses/{chatbotResponse}/toggle-status', [\App\Http\Controllers\Admin\ChatbotResponseController::class, 'toggleStatus'])->name('chatbot-responses.toggle-status');
+    
+    // Settings Management routes
+    Route::get('settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
+    Route::post('settings/update-general', [\App\Http\Controllers\Admin\SettingController::class, 'updateGeneral'])->name('settings.update-general');
+    Route::post('settings/update-logo', [\App\Http\Controllers\Admin\SettingController::class, 'updateLogo'])->name('settings.update-logo');
+    Route::delete('settings/delete-logo', [\App\Http\Controllers\Admin\SettingController::class, 'deleteLogo'])->name('settings.delete-logo');
+    Route::post('settings/clear-cache', [\App\Http\Controllers\Admin\SettingController::class, 'clearCache'])->name('settings.clear-cache');
 });
 
 // Chatbot routes (public)

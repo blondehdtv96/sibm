@@ -43,17 +43,50 @@
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
+    <!-- Custom Scrollbar Styles -->
+    <style>
+        /* Custom Scrollbar for Sidebar */
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Firefox Scrollbar */
+        .scrollbar-thin {
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f1f5f9;
+        }
+        
+        /* Smooth Scrolling */
+        .scrollbar-thin {
+            scroll-behavior: smooth;
+        }
+    </style>
+    
     @stack('styles')
 </head>
 <body class="bg-gray-50 font-sans antialiased" x-data="{ sidebarOpen: false }">
     <div class="min-h-screen">
         <!-- Sidebar -->
         <aside 
-            class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0"
+            class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 flex flex-col"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
         >
-            <!-- Logo -->
-            <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
+            <!-- Logo (Fixed at top) -->
+            <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200 flex-shrink-0">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3">
                     <div class="w-8 h-8 bg-ios-blue rounded-lg flex items-center justify-center">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,8 +102,8 @@
                 </button>
             </div>
 
-            <!-- Navigation -->
-            <nav class="flex-1 px-4 py-6 space-y-8 overflow-y-auto">
+            <!-- Navigation (Scrollable) -->
+            <nav class="flex-1 px-4 py-6 space-y-8 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400">
                 <!-- Dashboard -->
                 <div>
                     <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Dasbor</h3>
@@ -176,6 +209,14 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                             </svg>
                             Pengguna
+                        </a>
+                        <a href="{{ route('admin.settings.index') }}" 
+                           class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.settings.*') ? 'bg-ios-blue text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            Pengaturan
                         </a>
                     </div>
                 </div>
@@ -326,5 +367,10 @@
     <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden" x-transition></div>
 
     @stack('scripts')
+    
+    <!-- Loading Components -->
+    @include('components.page-loader')
+    @include('components.ajax-loader')
+    @include('components.button-loading')
 </body>
 </html>

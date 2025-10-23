@@ -212,9 +212,71 @@
 </section>
 
 
+<!-- Video Section -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Video Profil Sekolah</h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto rounded-full mb-6"></div>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                Kenali lebih dekat SMK Bina Mandiri Bekasi melalui video profil kami
+            </p>
+        </div>
+        
+        <!-- Video Container -->
+        <div class="max-w-5xl mx-auto">
+            <div class="bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-100">
+                <!-- Video Wrapper -->
+                <div class="relative" style="padding-bottom: 56.25%; height: 0;">
+                    <iframe 
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                        title="Video Profil SMK Bina Mandiri Bekasi" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen
+                        loading="lazy"
+                        class="absolute top-0 left-0 w-full h-full rounded-t-3xl"
+                    ></iframe>
+                </div>
+                
+                <!-- Video Description -->
+                <div class="p-8 md:p-12 text-center">
+                    <h3 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
+                        Selamat Datang di SMK Bina Mandiri Bekasi
+                    </h3>
+                    <p class="text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto">
+                        Tonton video profil kami untuk mengenal lebih dekat tentang fasilitas modern, 
+                        program keahlian unggulan, dan kehidupan siswa di SMK Bina Mandiri Bekasi. 
+                        Bergabunglah bersama kami dan wujudkan masa depan cemerlang Anda!
+                    </p>
+                    
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
+                        <a href="{{ route('ppdb.register') }}" 
+                           class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                            Daftar Sekarang
+                        </a>
+                        <a href="{{ route('info.about') }}" 
+                           class="inline-flex items-center gap-3 px-8 py-4 bg-white border-2 border-gray-300 text-gray-700 rounded-2xl font-bold text-lg hover:border-blue-500 hover:text-blue-600 transition-all duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Pelajari Lebih Lanjut
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Latest News Section -->
 @if($latestNews->count() > 0)
-<section class="py-16">
+<section class="py-16 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Section Header -->
         <div class="text-center mb-12">
