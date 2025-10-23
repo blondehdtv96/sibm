@@ -3,16 +3,17 @@
     Widget chat yang muncul di pojok kanan bawah
     Menggunakan Tailwind CSS dan Alpine.js
 -->
-<div x-data="chatbot()" x-init="init()" class="fixed bottom-6 right-6 z-50">
+<div x-data="chatbot()" x-init="init()" class="fixed md:bottom-6 md:right-6 bottom-0 right-0 z-50">
     <!-- Chat Button -->
     <button 
         @click="toggleChat()" 
         x-show="!isOpen"
-        x-transition
-        class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full p-4 shadow-2xl hover:shadow-3xl transform hover:scale-110 transition-all duration-300 flex items-center justify-center group"
+        x-cloak
+        class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full p-3 md:p-4 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 flex items-center justify-center m-4 md:m-0"
+        style="display: none;"
         aria-label="Open Chat"
     >
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
         </svg>
         <!-- Notification Badge -->
@@ -22,29 +23,24 @@
     <!-- Chat Window -->
     <div 
         x-show="isOpen" 
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 transform scale-90"
-        x-transition:enter-end="opacity-100 transform scale-100"
-        x-transition:leave="transition ease-in duration-200"
-        x-transition:leave-start="opacity-100 transform scale-100"
-        x-transition:leave-end="opacity-0 transform scale-90"
-        class="bg-white rounded-2xl shadow-2xl w-96 h-[600px] flex flex-col overflow-hidden"
-        style="max-width: calc(100vw - 3rem);"
+        x-cloak
+        class="bg-white md:rounded-2xl shadow-xl w-full md:w-96 h-screen md:h-[600px] flex flex-col overflow-hidden"
+        style="display: none;"
     >
         <!-- Header -->
-        <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 md:p-4 flex items-center justify-between">
+            <div class="flex items-center space-x-2 md:space-x-3">
+                <div class="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                     </svg>
                 </div>
-                <div>
-                    <h3 class="font-semibold text-lg">Asisten Virtual</h3>
-                    <p class="text-xs text-blue-100">SMK Bina Mandiri Bekasi</p>
+                <div class="min-w-0">
+                    <h3 class="font-semibold text-base md:text-lg truncate">Asisten Virtual</h3>
+                    <p class="text-xs text-blue-100 truncate">SMK Bina Mandiri Bekasi</p>
                 </div>
             </div>
-            <button @click="toggleChat()" class="text-white hover:bg-white/20 rounded-lg p-2 transition-colors">
+            <button @click="toggleChat()" class="text-white hover:bg-white/20 rounded-lg p-2 transition-colors flex-shrink-0">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
@@ -54,18 +50,18 @@
         <!-- Messages Container -->
         <div 
             x-ref="messagesContainer"
-            class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"
+            class="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 bg-gray-50"
             style="scroll-behavior: smooth;"
         >
             <!-- Welcome Message -->
             <div class="flex items-start space-x-2">
-                <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex-shrink-0 w-7 h-7 md:w-8 md:h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 md:w-5 md:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                     </svg>
                 </div>
-                <div class="bg-white rounded-2xl rounded-tl-none p-3 shadow-sm max-w-[80%]">
-                    <p class="text-sm text-gray-800">Halo! 😊 Selamat datang di SMK Bina Mandiri Bekasi. Ada yang bisa saya bantu?</p>
+                <div class="bg-white rounded-2xl rounded-tl-none p-2.5 md:p-3 shadow-sm max-w-[75%] md:max-w-[80%]">
+                    <p class="text-xs md:text-sm text-gray-800">Halo! 😊 Selamat datang di SMK Bina Mandiri Bekasi. Ada yang bisa saya bantu?</p>
                 </div>
             </div>
 
@@ -74,11 +70,11 @@
                 <div>
                     <!-- User Message -->
                     <div x-show="message.type === 'user'" class="flex items-start space-x-2 justify-end">
-                        <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl rounded-tr-none p-3 shadow-sm max-w-[80%]">
-                            <p class="text-sm" x-text="message.text"></p>
+                        <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl rounded-tr-none p-2.5 md:p-3 shadow-sm max-w-[75%] md:max-w-[80%]">
+                            <p class="text-xs md:text-sm break-words" x-text="message.text"></p>
                         </div>
-                        <div class="flex-shrink-0 w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="flex-shrink-0 w-7 h-7 md:w-8 md:h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                            <svg class="w-4 h-4 md:w-5 md:h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                             </svg>
                         </div>
@@ -86,13 +82,13 @@
 
                     <!-- Bot Message -->
                     <div x-show="message.type === 'bot'" class="flex items-start space-x-2">
-                        <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="flex-shrink-0 w-7 h-7 md:w-8 md:h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                            <svg class="w-4 h-4 md:w-5 md:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                             </svg>
                         </div>
-                        <div class="bg-white rounded-2xl rounded-tl-none p-3 shadow-sm max-w-[80%]">
-                            <p class="text-sm text-gray-800 whitespace-pre-line" x-html="formatMessage(message.text)"></p>
+                        <div class="bg-white rounded-2xl rounded-tl-none p-2.5 md:p-3 shadow-sm max-w-[75%] md:max-w-[80%]">
+                            <p class="text-xs md:text-sm text-gray-800 whitespace-pre-line break-words" x-html="formatMessage(message.text)"></p>
                         </div>
                     </div>
                 </div>
@@ -100,12 +96,12 @@
 
             <!-- Typing Indicator -->
             <div x-show="isTyping" class="flex items-start space-x-2">
-                <div class="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex-shrink-0 w-7 h-7 md:w-8 md:h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4 md:w-5 md:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                     </svg>
                 </div>
-                <div class="bg-white rounded-2xl rounded-tl-none p-3 shadow-sm">
+                <div class="bg-white rounded-2xl rounded-tl-none p-2.5 md:p-3 shadow-sm">
                     <div class="flex space-x-1">
                         <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
                         <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
@@ -116,28 +112,28 @@
         </div>
 
         <!-- Input Area -->
-        <div class="p-4 bg-white border-t border-gray-200">
+        <div class="p-3 md:p-4 bg-white border-t border-gray-200 safe-area-bottom">
             <form @submit.prevent="sendMessage" class="flex items-center space-x-2">
                 <input 
                     x-model="userInput"
                     @keydown.enter.prevent="sendMessage"
                     type="text" 
                     placeholder="Ketik pesan Anda..."
-                    class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    class="flex-1 px-3 md:px-4 py-2 md:py-3 text-sm md:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     :disabled="isTyping"
                 >
                 <button 
                     type="button"
                     @click="sendMessage"
                     :disabled="!userInput.trim() || isTyping"
-                    class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-2.5 md:p-3 rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
                 >
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                     </svg>
                 </button>
             </form>
-            <p class="text-xs text-gray-500 mt-2 text-center">Powered by SMK Bina Mandiri Bekasi</p>
+            <p class="text-xs text-gray-500 mt-2 text-center hidden md:block">Powered by SMK Bina Mandiri Bekasi</p>
         </div>
     </div>
 </div>
@@ -262,6 +258,11 @@ function chatbot() {
 </script>
 
 <style>
+/* Prevent flash of unstyled content */
+[x-cloak] {
+    display: none !important;
+}
+
 /* Custom scrollbar untuk chat */
 [x-ref="messagesContainer"]::-webkit-scrollbar {
     width: 6px;
