@@ -33,8 +33,8 @@
 </div>
 
 <script>
-// Hide loader when page is fully loaded
-window.addEventListener('load', function() {
+// Function to hide loader
+function hideLoader() {
     const loader = document.getElementById('page-loader');
     if (loader) {
         loader.style.opacity = '0';
@@ -42,10 +42,44 @@ window.addEventListener('load', function() {
             loader.style.display = 'none';
         }, 500);
     }
+}
+
+// Function to show loader
+function showLoader() {
+    const loader = document.getElementById('page-loader');
+    if (loader) {
+        loader.style.display = 'flex';
+        loader.style.opacity = '1';
+    }
+}
+
+// Hide loader when page is fully loaded
+window.addEventListener('load', hideLoader);
+
+// Hide loader when page becomes visible (handles back/forward navigation)
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+        hideLoader();
+    }
+});
+
+// Hide loader on page show (handles back/forward from cache)
+window.addEventListener('pageshow', function(event) {
+    hideLoader();
+});
+
+// Hide loader on popstate (browser back/forward)
+window.addEventListener('popstate', function() {
+    hideLoader();
 });
 
 // Show loader on page navigation
 document.addEventListener('DOMContentLoaded', function() {
+    // Hide loader initially if page is already loaded
+    if (document.readyState === 'complete') {
+        hideLoader();
+    }
+    
     // Show loader when clicking links (except hash links and external)
     document.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', function(e) {
@@ -60,12 +94,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Show loader
-            const loader = document.getElementById('page-loader');
-            if (loader) {
-                loader.style.display = 'flex';
-                loader.style.opacity = '1';
-            }
+            // Show loader with a small delay to prevent flashing on fast navigation
+            setTimeout(showLoader, 50);
         });
     });
     
@@ -77,12 +107,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            const loader = document.getElementById('page-loader');
-            if (loader) {
-                loader.style.display = 'flex';
-                loader.style.opacity = '1';
-            }
+            showLoader();
         });
+    });
+    
+    // Handle browser navigation events
+    let navigationTimeout;
+    
+    // Clear any existing timeout when navigation starts
+    window.addEventListener('beforeunload', function() {
+        if (navigationTimeout) {
+            clearTimeout(navigationTimeout);
+        }
+    });
+    
+    // Fallback: Hide loader after maximum wait time
+    window.addEventListener('beforeunload', function() {
+        navigationTimeout = setTimeout(hideLoader, 5000); // 5 second fallback
     });
 });
 </script>

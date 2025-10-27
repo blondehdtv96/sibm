@@ -58,11 +58,27 @@
                             @endif
                         </div>
 
-                        <form action="{{ route('admin.settings.update-logo') }}" method="POST" enctype="multipart/form-data" class="space-y-3">
+                        <form action="{{ route('admin.settings.update-logo') }}" method="POST" enctype="multipart/form-data" class="space-y-3" x-data="logoPreview()">
                             @csrf
                             <input type="hidden" name="logo_type" value="site_logo">
-                            <input type="file" name="logo" accept="image/*" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                            <button type="submit" class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
+                            
+                            <!-- Preview Area -->
+                            <div x-show="previewUrl" class="bg-white border-2 border-blue-200 rounded-lg p-4 mb-3">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Preview:</p>
+                                <img :src="previewUrl" alt="Preview" class="max-h-32 mx-auto rounded-lg shadow-sm">
+                                <div class="flex justify-center gap-2 mt-3">
+                                    <button type="button" @click="clearPreview()" class="px-3 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs rounded-lg transition-colors">
+                                        Batal
+                                    </button>
+                                    <button type="submit" class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded-lg transition-colors">
+                                        Upload
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <input type="file" name="logo" accept="image/*" required @change="handleFileSelect($event)" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                            
+                            <button type="submit" x-show="!previewUrl" class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
                                 Upload Logo
                             </button>
                         </form>
@@ -97,11 +113,27 @@
                             @endif
                         </div>
 
-                        <form action="{{ route('admin.settings.update-logo') }}" method="POST" enctype="multipart/form-data" class="space-y-3">
+                        <form action="{{ route('admin.settings.update-logo') }}" method="POST" enctype="multipart/form-data" class="space-y-3" x-data="logoPreview()">
                             @csrf
                             <input type="hidden" name="logo_type" value="site_logo_dark">
-                            <input type="file" name="logo" accept="image/*" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
-                            <button type="submit" class="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors">
+                            
+                            <!-- Preview Area -->
+                            <div x-show="previewUrl" class="bg-gray-800 border-2 border-purple-200 rounded-lg p-4 mb-3">
+                                <p class="text-sm font-medium text-gray-300 mb-2">Preview:</p>
+                                <img :src="previewUrl" alt="Preview" class="max-h-32 mx-auto rounded-lg shadow-sm">
+                                <div class="flex justify-center gap-2 mt-3">
+                                    <button type="button" @click="clearPreview()" class="px-3 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs rounded-lg transition-colors">
+                                        Batal
+                                    </button>
+                                    <button type="submit" class="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white text-xs rounded-lg transition-colors">
+                                        Upload
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <input type="file" name="logo" accept="image/*" required @change="handleFileSelect($event)" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                            
+                            <button type="submit" x-show="!previewUrl" class="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors">
                                 Upload Logo
                             </button>
                         </form>
@@ -136,11 +168,27 @@
                             @endif
                         </div>
 
-                        <form action="{{ route('admin.settings.update-logo') }}" method="POST" enctype="multipart/form-data" class="space-y-3">
+                        <form action="{{ route('admin.settings.update-logo') }}" method="POST" enctype="multipart/form-data" class="space-y-3" x-data="logoPreview()">
                             @csrf
                             <input type="hidden" name="logo_type" value="site_favicon">
-                            <input type="file" name="logo" accept="image/*,.ico" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
-                            <button type="submit" class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors">
+                            
+                            <!-- Preview Area -->
+                            <div x-show="previewUrl" class="bg-white border-2 border-green-200 rounded-lg p-4 mb-3">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Preview:</p>
+                                <img :src="previewUrl" alt="Preview" class="w-16 h-16 mx-auto rounded-lg shadow-sm">
+                                <div class="flex justify-center gap-2 mt-3">
+                                    <button type="button" @click="clearPreview()" class="px-3 py-1 bg-gray-500 hover:bg-gray-600 text-white text-xs rounded-lg transition-colors">
+                                        Batal
+                                    </button>
+                                    <button type="submit" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded-lg transition-colors">
+                                        Upload
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <input type="file" name="logo" accept="image/*,.ico" required @change="handleFileSelect($event)" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+                            
+                            <button type="submit" x-show="!previewUrl" class="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors">
                                 Upload Favicon
                             </button>
                         </form>
@@ -167,7 +215,13 @@
                     <li>• <strong>Logo Dark:</strong> Gunakan warna terang untuk background gelap (putih/terang)</li>
                     <li>• <strong>Favicon:</strong> Format ICO/PNG, ukuran 32x32px atau 64x64px untuk hasil terbaik</li>
                     <li>• <strong>Background:</strong> Gunakan background transparan (PNG) untuk hasil terbaik</li>
+                    <li>• <strong>Preview:</strong> Gambar akan ditampilkan sebelum upload untuk memastikan kualitas</li>
                 </ul>
+                
+                <div class="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <h5 class="font-medium text-green-800 mb-1">✨ Fitur Baru: Preview Gambar</h5>
+                    <p class="text-sm text-green-700">Sekarang Anda dapat melihat preview gambar sebelum mengupload. Pilih file dan lihat hasilnya sebelum menyimpan!</p>
+                </div>
             </div>
         </div>
     </div>
@@ -204,3 +258,60 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function logoPreview() {
+    return {
+        previewUrl: null,
+        selectedFile: null,
+        
+        handleFileSelect(event) {
+            const file = event.target.files[0];
+            
+            if (!file) {
+                this.clearPreview();
+                return;
+            }
+            
+            // Validate file type
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml', 'image/x-icon'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Format file tidak didukung. Gunakan JPG, PNG, GIF, SVG, atau ICO.');
+                event.target.value = '';
+                this.clearPreview();
+                return;
+            }
+            
+            // Validate file size (max 2MB)
+            const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+            if (file.size > maxSize) {
+                alert('Ukuran file terlalu besar. Maksimal 2MB.');
+                event.target.value = '';
+                this.clearPreview();
+                return;
+            }
+            
+            this.selectedFile = file;
+            
+            // Create preview URL
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                this.previewUrl = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        },
+        
+        clearPreview() {
+            this.previewUrl = null;
+            this.selectedFile = null;
+            // Clear the file input
+            const fileInput = this.$el.querySelector('input[type="file"]');
+            if (fileInput) {
+                fileInput.value = '';
+            }
+        }
+    }
+}
+</script>
+@endpush
