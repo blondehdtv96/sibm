@@ -54,14 +54,19 @@ class Setting extends Model
      */
     public static function getLogo($type = 'site_logo')
     {
-        $logo = self::get($type);
-        
-        if ($logo && Storage::disk('public')->exists($logo)) {
-            return asset('storage/' . $logo);
+        try {
+            $logo = self::get($type);
+            
+            if ($logo && Storage::disk('public')->exists($logo)) {
+                return asset('storage/' . $logo);
+            }
+        } catch (\Exception $e) {
+            // Log error but don't break the page
+            \Log::warning("Error getting logo {$type}: " . $e->getMessage());
         }
 
-        // Return default logo
-        return asset('images/logo-default.png');
+        // Return null instead of default to let views handle fallback
+        return null;
     }
 
     /**
@@ -69,13 +74,32 @@ class Setting extends Model
      */
     public static function getFavicon()
     {
-        $favicon = self::get('site_favicon');
-        
-        if ($favicon && Storage::disk('public')->exists($favicon)) {
-            return asset('storage/' . $favicon);
+        try {
+            $favicon = self::get('site_favicon');
+            
+            if ($favicon && Storage::disk('public')->exists($favicon)) {
+                return asset('storage/' . $favicon);
+            }
+        } catch (\Exception $e) {
+            // Log error but don't break the page
+            \Log::warning("Error getting favicon: " . $e->getMessage());
         }
 
-        return asset('favicon.ico');
+        // Return null to let views handle fallback
+        return null;
+    }
+
+    /**
+     * Check if logo exists
+     */
+    public static function hasLogo($type = 'site_logo')
+    {
+        try {
+            $logo = self::get($type);
+            return $logo && Storage::disk('public')->exists($logo);
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
