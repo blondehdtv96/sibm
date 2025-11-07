@@ -104,4 +104,85 @@ class SettingController extends Controller
         Setting::clearCache();
         return redirect()->back()->with('success', 'Cache pengaturan berhasil dibersihkan!');
     }
+
+    /**
+     * Show school content management page
+     */
+    public function schoolContent()
+    {
+        $overview = Setting::get('school_overview', '');
+        $principalName = Setting::get('principal_name', '');
+        $principalPhoto = Setting::get('principal_photo', '');
+        $principalMessage = Setting::get('principal_message', '');
+
+        return view('admin.settings.school-content', compact(
+            'overview',
+            'principalName',
+            'principalPhoto',
+            'principalMessage'
+        ));
+    }
+
+    /**
+     * Update school overview
+     */
+    public function updateOverview(Request $request)
+    {
+        $request->validate([
+            'school_overview' => 'required|string',
+        ]);
+
+        Setting::set('school_overview', $request->school_overview, 'text');
+
+        return redirect()->back()->with('success', 'Selayang Pandang berhasil diperbarui!');
+    }
+
+    /**
+     * Update principal message
+     */
+    public function updatePrincipalMessage(Request $request)
+    {
+        $request->validate([
+            'principal_name' => 'required|string|max:255',
+            'principal_message' => 'required|string',
+            'principal_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        Setting::set('principal_name', $request->principal_name);
+        Setting::set('principal_message', $request->principal_message, 'text');
+
+        // Handle photo upload
+        if ($request->hasFile('principal_photo')) {
+            // Delete old photo if exists
+            $oldPhoto = Setting::get('principal_photo');
+            if ($oldPhoto && Storage::disk('public')->exists($oldPhoto)) {
+                Storage::disk('public')->delete($oldPhoto);
+            }
+
+            // Upload new photo
+            $file = $request->file('principal_photo');
+            $filename = 'principal_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('principal', $filename, 'public');
+
+            Setting::set('principal_photo', $path, 'image');
+        }
+
+        return redirect()->back()->with('success', 'Sambutan Kepala Sekolah berhasil diperbarui!');
+    }
+
+    /**
+     * Delete principal photo
+     */
+    public function deletePrincipalPhoto()
+    {
+        $photo = Setting::get('principal_photo');
+
+        if ($photo && Storage::disk('public')->exists($photo)) {
+            Storage::disk('public')->delete($photo);
+        }
+
+        Setting::set('principal_photo', null, 'image');
+
+        return redirect()->back()->with('success', 'Foto Kepala Sekolah berhasil dihapus!');
+    }
 }

@@ -30,6 +30,8 @@ Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 // Public info routes
 Route::get('/about', [InfoController::class, 'about'])->name('info.about');
+Route::get('/overview', [InfoController::class, 'overview'])->name('info.overview');
+Route::get('/principal-message', [InfoController::class, 'principalMessage'])->name('info.principal-message');
 Route::get('/contact', [InfoController::class, 'contact'])->name('info.contact');
 Route::post('/contact', [InfoController::class, 'sendContact'])->name('info.contact.send');
 
@@ -146,6 +148,14 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     // Settings Management routes
     Route::get('settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
     Route::post('settings/update-general', [\App\Http\Controllers\Admin\SettingController::class, 'updateGeneral'])->name('settings.update-general');
+    Route::get('settings/school-content', [\App\Http\Controllers\Admin\SettingController::class, 'schoolContent'])->name('settings.school-content');
+    Route::post('settings/update-overview', [\App\Http\Controllers\Admin\SettingController::class, 'updateOverview'])->name('settings.update-overview');
+    Route::post('settings/update-principal-message', [\App\Http\Controllers\Admin\SettingController::class, 'updatePrincipalMessage'])->name('settings.update-principal-message');
+    Route::delete('settings/delete-principal-photo', [\App\Http\Controllers\Admin\SettingController::class, 'deletePrincipalPhoto'])->name('settings.delete-principal-photo');
+    
+    // Menu Management routes
+    Route::resource('menus', \App\Http\Controllers\Admin\MenuController::class);
+    Route::post('menus/reorder', [\App\Http\Controllers\Admin\MenuController::class, 'reorder'])->name('menus.reorder');
     Route::post('settings/update-logo', [\App\Http\Controllers\Admin\SettingController::class, 'updateLogo'])->name('settings.update-logo');
     Route::delete('settings/delete-logo', [\App\Http\Controllers\Admin\SettingController::class, 'deleteLogo'])->name('settings.delete-logo');
     Route::post('settings/clear-cache', [\App\Http\Controllers\Admin\SettingController::class, 'clearCache'])->name('settings.clear-cache');

@@ -148,13 +148,9 @@
 
         <!-- Actions -->
         <div class="flex items-center justify-between">
-            <form action="{{ route('admin.pages.destroy', $page->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this page?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="px-6 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors">
-                    Delete Page
-                </button>
-            </form>
+            <button type="button" onclick="deletePage()" class="px-6 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors">
+                Delete Page
+            </button>
             
             <div class="flex items-center space-x-4">
                 <a href="{{ route('admin.pages.index') }}" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
@@ -166,7 +162,14 @@
             </div>
         </div>
     </form>
+
+    <!-- Hidden Delete Form -->
+    <form id="deleteForm" action="{{ route('admin.pages.destroy', $page->id) }}" method="POST" class="hidden">
+        @csrf
+        @method('DELETE')
+    </form>
 </div>
+@endsection
 
 @push('scripts')
 <script>
@@ -191,6 +194,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function deletePage() {
+    if (confirm('Are you sure you want to delete this page?')) {
+        document.getElementById('deleteForm').submit();
+    }
+}
 </script>
 @endpush
-@endsection

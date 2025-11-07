@@ -210,6 +210,13 @@
                             </svg>
                             Pengguna
                         </a>
+                        <a href="{{ route('admin.menus.index') }}" 
+                           class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.menus.*') ? 'bg-ios-blue text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                            </svg>
+                            Menu Navigasi
+                        </a>
                         <a href="{{ route('admin.settings.index') }}" 
                            class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.settings.*') ? 'bg-ios-blue text-white' : 'text-gray-700 hover:bg-gray-100' }}">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
