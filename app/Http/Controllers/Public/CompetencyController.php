@@ -39,6 +39,9 @@ class CompetencyController extends Controller
             abort(404);
         }
 
+        // Load active images for slider
+        $competency->load('activeImages');
+
         // Get other active competencies for navigation
         $otherCompetencies = Competency::active()
             ->ordered()

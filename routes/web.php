@@ -104,6 +104,15 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     Route::resource('competencies', \App\Http\Controllers\Admin\CompetencyController::class);
     Route::post('competencies/update-order', [\App\Http\Controllers\Admin\CompetencyController::class, 'updateOrder'])->name('competencies.update-order');
     
+    // Competency Images management routes
+    Route::get('competencies/{competency}/images', [\App\Http\Controllers\Admin\CompetencyImageController::class, 'index'])->name('competencies.images.index');
+    Route::get('competencies/{competency}/images/create', [\App\Http\Controllers\Admin\CompetencyImageController::class, 'create'])->name('competencies.images.create');
+    Route::post('competencies/{competency}/images', [\App\Http\Controllers\Admin\CompetencyImageController::class, 'store'])->name('competencies.images.store');
+    Route::get('competencies/{competency}/images/{image}/edit', [\App\Http\Controllers\Admin\CompetencyImageController::class, 'edit'])->name('competencies.images.edit');
+    Route::put('competencies/{competency}/images/{image}', [\App\Http\Controllers\Admin\CompetencyImageController::class, 'update'])->name('competencies.images.update');
+    Route::delete('competencies/{competency}/images/{image}', [\App\Http\Controllers\Admin\CompetencyImageController::class, 'destroy'])->name('competencies.images.destroy');
+    Route::post('competencies/{competency}/images/reorder', [\App\Http\Controllers\Admin\CompetencyImageController::class, 'reorder'])->name('competencies.images.reorder');
+    
     // Gallery album management routes
     Route::resource('gallery-albums', \App\Http\Controllers\Admin\GalleryAlbumController::class);
     Route::post('gallery-albums/update-order', [\App\Http\Controllers\Admin\GalleryAlbumController::class, 'updateOrder'])->name('gallery-albums.update-order');
@@ -152,6 +161,9 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     Route::post('settings/update-overview', [\App\Http\Controllers\Admin\SettingController::class, 'updateOverview'])->name('settings.update-overview');
     Route::post('settings/update-principal-message', [\App\Http\Controllers\Admin\SettingController::class, 'updatePrincipalMessage'])->name('settings.update-principal-message');
     Route::delete('settings/delete-principal-photo', [\App\Http\Controllers\Admin\SettingController::class, 'deletePrincipalPhoto'])->name('settings.delete-principal-photo');
+    Route::get('settings/contact-social', [\App\Http\Controllers\Admin\SettingController::class, 'contactSocial'])->name('settings.contact-social');
+    Route::post('settings/update-contact', [\App\Http\Controllers\Admin\SettingController::class, 'updateContact'])->name('settings.update-contact');
+    Route::post('settings/update-social-media', [\App\Http\Controllers\Admin\SettingController::class, 'updateSocialMedia'])->name('settings.update-social-media');
     
     // Menu Management routes
     Route::resource('menus', \App\Http\Controllers\Admin\MenuController::class);

@@ -185,4 +185,79 @@ class SettingController extends Controller
 
         return redirect()->back()->with('success', 'Foto Kepala Sekolah berhasil dihapus!');
     }
+
+    /**
+     * Show contact & social media management page
+     */
+    public function contactSocial()
+    {
+        $contactAddress = Setting::get('contact_address', '');
+        $contactPhone = Setting::get('contact_phone', '');
+        $contactEmail = Setting::get('contact_email', '');
+        $contactWhatsapp = Setting::get('contact_whatsapp', '');
+        
+        $socialFacebook = Setting::get('social_facebook', '');
+        $socialInstagram = Setting::get('social_instagram', '');
+        $socialTwitter = Setting::get('social_twitter', '');
+        $socialYoutube = Setting::get('social_youtube', '');
+        $socialTiktok = Setting::get('social_tiktok', '');
+        $socialLinkedin = Setting::get('social_linkedin', '');
+
+        return view('admin.settings.contact-social', compact(
+            'contactAddress',
+            'contactPhone',
+            'contactEmail',
+            'contactWhatsapp',
+            'socialFacebook',
+            'socialInstagram',
+            'socialTwitter',
+            'socialYoutube',
+            'socialTiktok',
+            'socialLinkedin'
+        ));
+    }
+
+    /**
+     * Update contact information
+     */
+    public function updateContact(Request $request)
+    {
+        $request->validate([
+            'contact_address' => 'required|string',
+            'contact_phone' => 'required|string|max:20',
+            'contact_email' => 'required|email|max:255',
+            'contact_whatsapp' => 'nullable|string|max:20',
+        ]);
+
+        Setting::set('contact_address', $request->contact_address, 'text');
+        Setting::set('contact_phone', $request->contact_phone);
+        Setting::set('contact_email', $request->contact_email);
+        Setting::set('contact_whatsapp', $request->contact_whatsapp);
+
+        return redirect()->back()->with('success', 'Informasi kontak berhasil diperbarui!');
+    }
+
+    /**
+     * Update social media links
+     */
+    public function updateSocialMedia(Request $request)
+    {
+        $request->validate([
+            'social_facebook' => 'nullable|url|max:255',
+            'social_instagram' => 'nullable|url|max:255',
+            'social_twitter' => 'nullable|url|max:255',
+            'social_youtube' => 'nullable|url|max:255',
+            'social_tiktok' => 'nullable|url|max:255',
+            'social_linkedin' => 'nullable|url|max:255',
+        ]);
+
+        Setting::set('social_facebook', $request->social_facebook);
+        Setting::set('social_instagram', $request->social_instagram);
+        Setting::set('social_twitter', $request->social_twitter);
+        Setting::set('social_youtube', $request->social_youtube);
+        Setting::set('social_tiktok', $request->social_tiktok);
+        Setting::set('social_linkedin', $request->social_linkedin);
+
+        return redirect()->back()->with('success', 'Link sosial media berhasil diperbarui!');
+    }
 }

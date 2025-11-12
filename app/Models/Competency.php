@@ -129,4 +129,20 @@ class Competency extends Model
     {
         return 'slug';
     }
+
+    /**
+     * Get the images for the competency.
+     */
+    public function images()
+    {
+        return $this->hasMany(CompetencyImage::class)->ordered();
+    }
+
+    /**
+     * Get active images for the competency.
+     */
+    public function activeImages()
+    {
+        return $this->hasMany(CompetencyImage::class)->active()->ordered();
+    }
 }

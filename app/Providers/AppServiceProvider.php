@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Share settings data with all public views
+        view()->composer('layouts.public-tailwind', \App\View\Composers\SettingsComposer::class);
     }
 }

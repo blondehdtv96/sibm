@@ -95,6 +95,48 @@
     </div>
 </section>
 
+<!-- Image Slider Section -->
+@if($competency->activeImages->count() > 0)
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Galeri {{ $competency->name }}</h2>
+            <p class="text-lg text-gray-600">Lihat fasilitas dan kegiatan program keahlian kami</p>
+        </div>
+
+        <!-- Swiper Slider -->
+        <div class="swiper competency-slider">
+            <div class="swiper-wrapper">
+                @foreach($competency->activeImages as $image)
+                    <div class="swiper-slide">
+                        <div class="relative aspect-video rounded-2xl overflow-hidden shadow-2xl">
+                            <img src="{{ $image->image_url }}" alt="{{ $image->title ?? $competency->name }}" class="w-full h-full object-cover">
+                            @if($image->title || $image->description)
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                                    @if($image->title)
+                                        <h3 class="text-white text-xl font-bold mb-2">{{ $image->title }}</h3>
+                                    @endif
+                                    @if($image->description)
+                                        <p class="text-white/90 text-sm">{{ $image->description }}</p>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            
+            <!-- Navigation -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            
+            <!-- Pagination -->
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+</section>
+@endif
+
 <!-- Content Section -->
 <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -242,6 +284,9 @@
 @endsection
 
 @push('styles')
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
 <style>
     /* Custom Animations */
     @keyframes blob {
@@ -320,5 +365,81 @@
     .prose a:hover {
         text-decoration: underline;
     }
+
+    /* Swiper Custom Styles */
+    .competency-slider {
+        padding: 20px 0 60px;
+    }
+
+    .competency-slider .swiper-button-next,
+    .competency-slider .swiper-button-prev {
+        color: #fff;
+        background: rgba(0, 0, 0, 0.5);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        backdrop-filter: blur(10px);
+    }
+
+    .competency-slider .swiper-button-next:after,
+    .competency-slider .swiper-button-prev:after {
+        font-size: 20px;
+    }
+
+    .competency-slider .swiper-button-next:hover,
+    .competency-slider .swiper-button-prev:hover {
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    .competency-slider .swiper-pagination-bullet {
+        width: 12px;
+        height: 12px;
+        background: #3b82f6;
+        opacity: 0.5;
+    }
+
+    .competency-slider .swiper-pagination-bullet-active {
+        opacity: 1;
+        background: #2563eb;
+    }
 </style>
+@endpush
+
+@push('scripts')
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Swiper
+    const swiper = new Swiper('.competency-slider', {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        loop: true,
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        breakpoints: {
+            640: {
+                slidesPerView: 1,
+            },
+            768: {
+                slidesPerView: 1,
+            },
+            1024: {
+                slidesPerView: 1,
+            },
+        },
+    });
+});
+</script>
 @endpush
