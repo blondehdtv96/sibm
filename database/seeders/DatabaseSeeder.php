@@ -20,6 +20,11 @@ class DatabaseSeeder extends Seeder
             GallerySeeder::class,
             PpdbSettingSeeder::class,
             PpdbRegistrationSeeder::class,
+            ChatbotResponseSeeder::class,
+            SchoolContentSeeder::class,
+            ContactSocialSeeder::class,
+            MenuSeeder::class,
+            HomeSliderSeeder::class,
         ]);
     }
 }

@@ -162,9 +162,46 @@
                         <div class="prose prose-lg max-w-none">
                             <h2 class="text-3xl font-bold text-gray-900 mb-6">Tentang Program</h2>
                             <div class="text-gray-700 leading-relaxed">
-                                {!! nl2br(e($competency->description)) !!}
+                                {!! $competency->description !!}
                             </div>
                         </div>
+
+                        <!-- Head of Program Section -->
+                        @if($competency->head_of_program_name || $competency->head_of_program_message)
+                        <div class="mt-12 pt-12 border-t border-gray-200">
+                            <h2 class="text-3xl font-bold text-gray-900 mb-8">Sambutan Kepala Program</h2>
+                            
+                            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 md:p-10">
+                                <div class="flex flex-col md:flex-row gap-8 items-start">
+                                    @if($competency->head_of_program_photo)
+                                    <div class="flex-shrink-0">
+                                        <img src="{{ $competency->head_of_program_photo_url }}" 
+                                             alt="{{ $competency->head_of_program_name }}"
+                                             class="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-white shadow-xl">
+                                    </div>
+                                    @endif
+                                    
+                                    <div class="flex-1">
+                                        @if($competency->head_of_program_name)
+                                        <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ $competency->head_of_program_name }}</h3>
+                                        <p class="text-blue-600 font-semibold mb-6">Kepala Program {{ $competency->name }}</p>
+                                        @endif
+                                        
+                                        @if($competency->head_of_program_message)
+                                        <div class="relative">
+                                            <svg class="absolute -top-2 -left-2 w-8 h-8 text-blue-200" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                                            </svg>
+                                            <p class="text-gray-700 leading-relaxed text-lg pl-6">
+                                                {!! nl2br(e($competency->head_of_program_message)) !!}
+                                            </p>
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                     </div>
 
                     <!-- Footer -->
@@ -201,14 +238,14 @@
                     <div class="space-y-4">
                         @foreach($otherCompetencies as $other)
                             <a href="{{ route('public.competencies.show', $other) }}" 
-                               class="group flex items-center gap-4 p-4 rounded-2xl hover:bg-gray-50 transition-all duration-200">
+                               class="group flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-all duration-200">
                                 @if($other->image)
                                     <img src="{{ asset('storage/' . $other->image) }}" 
                                          alt="{{ $other->name }}"
-                                         class="w-16 h-16 rounded-xl object-cover flex-shrink-0">
+                                         class="w-12 h-12 rounded-lg object-cover flex-shrink-0">
                                 @else
-                                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                                         </svg>
                                     </div>

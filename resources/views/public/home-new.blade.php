@@ -3,91 +3,103 @@
 @section('title', 'Beranda - ' . config('school.name'))
 
 @section('content')
-<!-- Hero Section - Full Height with Gradient -->
-<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
-    <!-- Gradient Background with Pattern -->
-    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700"></div>
-    
-    <!-- Geometric Pattern Overlay -->
-    <div class="absolute inset-0 opacity-10">
-        <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                    <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/>
-                </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-        </svg>
-    </div>
-    
-    <!-- Animated Background Elements -->
-    <div class="absolute inset-0 opacity-20">
-        <div class="absolute top-20 left-10 w-72 h-72 bg-white rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-        <div class="absolute top-40 right-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-        <div class="absolute bottom-20 left-20 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
-    </div>
-    
-    <!-- Hero Content -->
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <!-- School Logo/Badge -->
-        <div class="mb-8 flex justify-center">
-            <div class="w-24 h-24 bg-white/20 backdrop-blur-lg rounded-3xl flex items-center justify-center border border-white/30 shadow-2xl">
-                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                </svg>
-            </div>
+<!-- Hero Slider Section -->
+@if($sliders->count() > 0)
+<section class="relative">
+    <div class="swiper home-hero-slider">
+        <div class="swiper-wrapper">
+            @foreach($sliders as $slider)
+                <div class="swiper-slide">
+                    <div class="relative h-[500px] md:h-[600px] lg:h-[650px] bg-gray-900">
+                        <!-- Background Image -->
+                        <img src="{{ $slider->image_url }}" alt="{{ $slider->title }}" class="absolute inset-0 w-full h-full object-contain">
+                        
+                        <!-- Overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
+                        
+                        <!-- Content -->
+                        <div class="relative h-full flex items-center">
+                            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                                <div class="max-w-3xl">
+                                    @if($slider->title)
+                                        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 md:mb-6 leading-tight animate-fade-in-up">
+                                            {{ $slider->title }}
+                                        </h1>
+                                    @endif
+                                    @if($slider->subtitle)
+                                        <p class="text-lg sm:text-xl md:text-2xl text-white/90 mb-6 md:mb-8 leading-relaxed animate-fade-in-up animation-delay-200">
+                                            {{ $slider->subtitle }}
+                                        </p>
+                                    @endif
+                                    @if($slider->button_text && $slider->button_link)
+                                        <a href="{{ $slider->button_link }}" 
+                                           class="inline-flex items-center gap-3 px-8 py-4 bg-white text-blue-600 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 hover:scale-105 transition-all duration-300 animate-fade-in-up animation-delay-400">
+                                            <span>{{ $slider->button_text }}</span>
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                                            </svg>
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
         </div>
         
-        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-white mb-6 leading-tight tracking-tight">
+        <!-- Navigation -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+        
+        <!-- Pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+</section>
+@else
+<!-- Fallback Hero if no sliders -->
+<section class="relative h-[500px] md:h-[600px] lg:h-[650px] flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-6">
             {{ config('school.name', 'SMK Bina Mandiri Bekasi') }}
         </h1>
-        <p class="text-xl sm:text-2xl md:text-3xl text-white/95 mb-4 max-w-4xl mx-auto leading-relaxed font-light">
-            {{ config('school.tagline', 'Membangun Generasi Unggul dengan Pendidikan Berkualitas') }}
+        <p class="text-xl md:text-2xl text-white/90 mb-8">
+            Membangun Generasi Unggul dengan Pendidikan Berkualitas
         </p>
-        <p class="text-lg text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Bergabunglah dengan ribuan siswa yang telah meraih kesuksesan melalui program pendidikan terdepan dan fasilitas modern
-        </p>
-        
-        <!-- Statistics -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-4xl mx-auto">
+        <a href="{{ route('ppdb.register') }}" class="inline-flex items-center gap-3 px-8 py-4 bg-white text-blue-600 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all">
+            <span>Daftar Sekarang</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+            </svg>
+        </a>
+    </div>
+</section>
+@endif
+
+<!-- Statistics Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div class="text-center">
-                <div class="text-3xl md:text-4xl font-bold text-white mb-2">1000+</div>
-                <div class="text-white/80 text-sm md:text-base">Alumni Sukses</div>
+                <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">1000+</div>
+                <div class="text-gray-600">Alumni Sukses</div>
             </div>
             <div class="text-center">
-                <div class="text-3xl md:text-4xl font-bold text-white mb-2">15+</div>
-                <div class="text-white/80 text-sm md:text-base">Program Keahlian</div>
+                <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">15+</div>
+                <div class="text-gray-600">Program Keahlian</div>
             </div>
             <div class="text-center">
-                <div class="text-3xl md:text-4xl font-bold text-white mb-2">50+</div>
-                <div class="text-white/80 text-sm md:text-base">Guru Berpengalaman</div>
+                <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">50+</div>
+                <div class="text-gray-600">Guru Berpengalaman</div>
             </div>
             <div class="text-center">
-                <div class="text-3xl md:text-4xl font-bold text-white mb-2">95%</div>
-                <div class="text-white/80 text-sm md:text-base">Tingkat Kelulusan</div>
+                <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">95%</div>
+                <div class="text-gray-600">Tingkat Kelulusan</div>
             </div>
         </div>
-        
-        <!-- CTA Buttons -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <a href="{{ route('ppdb.register') }}" 
-               class="group px-10 py-4 bg-white text-blue-600 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105 transition-all duration-300 flex items-center gap-3">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                </svg>
-                <span>Daftar Sekarang</span>
-                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                </svg>
-            </a>
-            <a href="{{ route('info.about') }}" 
-               class="px-10 py-4 bg-white/10 backdrop-blur-lg text-white rounded-2xl font-bold text-lg border-2 border-white/30 hover:bg-white/20 hover:border-white/50 transition-all duration-300 flex items-center gap-3">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span>Tentang Kami</span>
-            </a>
-        </div>
+    </div>
+</section>
         
         @if($announcement)
         <!-- Announcement Card with Enhanced Glassmorphism -->
@@ -593,7 +605,77 @@
 @endsection
 
 @push('styles')
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
 <style>
+    /* Swiper Home Slider Styles */
+    .home-hero-slider {
+        width: 100%;
+        height: 100vh;
+    }
+
+    .home-hero-slider .swiper-button-prev,
+    .home-hero-slider .swiper-button-next {
+        color: #fff;
+        background: rgba(0, 0, 0, 0.3);
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        backdrop-filter: blur(10px);
+    }
+
+    .home-hero-slider .swiper-button-prev:after,
+    .home-hero-slider .swiper-button-next:after {
+        font-size: 24px;
+    }
+
+    .home-hero-slider .swiper-button-prev:hover,
+    .home-hero-slider .swiper-button-next:hover {
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    .home-hero-slider .swiper-pagination {
+        bottom: 40px;
+    }
+
+    .home-hero-slider .swiper-pagination-bullet {
+        width: 14px;
+        height: 14px;
+        background: #fff;
+        opacity: 0.5;
+    }
+
+    .home-hero-slider .swiper-pagination-bullet-active {
+        opacity: 1;
+        background: #fff;
+    }
+
+    /* Slide Animations */
+    @keyframes fade-in-up {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in-up {
+        animation: fade-in-up 0.8s ease-out forwards;
+        opacity: 0;
+    }
+
+    .animation-delay-200 {
+        animation-delay: 0.2s;
+    }
+
+    .animation-delay-400 {
+        animation-delay: 0.4s;
+    }
+
     /* Custom Animations */
     @keyframes blob {
         0%, 100% {
@@ -845,8 +927,33 @@
 @endpush
 
 @push('scripts')
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Home Hero Slider
+        const homeSlider = new Swiper('.home-hero-slider', {
+            slidesPerView: 1,
+            spaceBetween: 0,
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            effect: 'fade',
+            fadeEffect: {
+                crossFade: true
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
         // Enhanced Scroll Animation Observer
         const observerOptions = {
             threshold: 0.1,

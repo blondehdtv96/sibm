@@ -61,8 +61,7 @@
                     <textarea 
                         id="description" 
                         name="description" 
-                        rows="15" 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('description') border-red-500 @enderror"
+                        class="tinymce @error('description') border-red-500 @enderror"
                         required
                     >{{ old('description') }}</textarea>
                     @error('description')
@@ -141,12 +140,81 @@
                     <img id="preview" src="" alt="Preview" class="w-full rounded-lg border border-gray-200">
                 </div>
             </div>
+
+            <!-- Head of Program -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Kepala Program</h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="head_of_program_name" class="block text-sm font-medium text-gray-700 mb-2">Nama Kepala Program</label>
+                        <input 
+                            type="text" 
+                            id="head_of_program_name" 
+                            name="head_of_program_name" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('head_of_program_name') border-red-500 @enderror"
+                            value="{{ old('head_of_program_name') }}"
+                            placeholder="Contoh: Budi Santoso, S.Kom"
+                        >
+                        @error('head_of_program_name')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="head_of_program_photo" class="block text-sm font-medium text-gray-700 mb-2">Foto Kepala Program</label>
+                        <input 
+                            type="file" 
+                            id="head_of_program_photo" 
+                            name="head_of_program_photo" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('head_of_program_photo') border-red-500 @enderror"
+                            accept="image/*"
+                            onchange="previewHeadPhoto(event)"
+                        >
+                        @error('head_of_program_photo')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Max 2MB (JPEG, PNG, JPG)</p>
+                    </div>
+
+                    <div id="head-photo-preview" class="mt-4" style="display: none;">
+                        <img id="head-preview" src="" alt="Preview" class="w-32 h-32 rounded-full object-cover border-4 border-gray-200 mx-auto">
+                    </div>
+
+                    <div>
+                        <label for="head_of_program_message" class="block text-sm font-medium text-gray-700 mb-2">Sambutan Kepala Program</label>
+                        <textarea 
+                            id="head_of_program_message" 
+                            name="head_of_program_message" 
+                            rows="6" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('head_of_program_message') border-red-500 @enderror"
+                            placeholder="Tulis sambutan atau pesan dari Kepala Program..."
+                        >{{ old('head_of_program_message') }}</textarea>
+                        @error('head_of_program_message')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 </form>
 
 @push('scripts')
+<script>
+function previewHeadPhoto(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('head-preview').src = e.target.result;
+            document.getElementById('head-photo-preview').style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    }
+}
+</script>
 <script>
     // Auto-generate slug from name
     document.getElementById('name').addEventListener('input', function(e) {

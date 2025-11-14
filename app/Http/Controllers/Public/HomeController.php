@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\News;
 use App\Models\Competency;
 use App\Models\GalleryAlbum;
+use App\Models\HomeSlider;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -15,6 +16,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Get active home sliders
+        $sliders = HomeSlider::active()->ordered()->get();
+        
         // Get latest published news (limit to 6)
         $latestNews = News::where('status', 'published')
             ->where('published_at', '<=', now())
@@ -42,6 +46,7 @@ class HomeController extends Controller
             ->first();
 
         return view('public.home-new', compact(
+            'sliders',
             'latestNews',
             'featuredCompetencies',
             'latestGalleryAlbums',

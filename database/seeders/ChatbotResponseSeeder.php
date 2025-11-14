@@ -2,89 +2,93 @@
 
 namespace Database\Seeders;
 
-use App\Models\ChatbotResponse;
 use Illuminate\Database\Seeder;
+use App\Models\ChatbotResponse;
 
 class ChatbotResponseSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     * Seed data default untuk chatbot responses
-     */
     public function run(): void
     {
         $responses = [
+            // Greeting
             [
-                'trigger_name' => 'greeting',
-                'title' => 'Salam & Perkenalan',
-                'keywords' => ['halo', 'hai', 'hello', 'hi', 'assalamualaikum'],
-                'response' => "Halo! 😊 Selamat datang di SMK Bina Mandiri Bekasi. Saya asisten virtual yang siap membantu Anda. Ada yang bisa saya bantu?",
-                'is_active' => true,
-                'priority' => 100,
+                'keywords' => 'halo,hai,hello,hi,selamat pagi,selamat siang,selamat sore,selamat malam',
+                'response' => 'Halo! Selamat datang di website sekolah kami. Ada yang bisa saya bantu?',
+                'category' => 'greeting',
+                'order' => 1,
+                'status' => 'active',
             ],
+            
+            // About School
             [
-                'trigger_name' => 'profile',
-                'title' => 'Profil Sekolah',
-                'keywords' => ['profil', 'tentang sekolah', 'tentang smk', 'sekolah'],
-                'response' => "🏫 **SMK Bina Mandiri Bekasi** adalah sekolah menengah kejuruan yang berfokus pada pengembangan keterampilan praktis dan profesional.\n\n📍 **Alamat:** Jl. Pendidikan No. 123, Bekasi Timur, Kota Bekasi\n📞 **Telepon:** (021) 1234-5678\n📧 **Email:** info@smkbinamandiri.sch.id\n\nKami berkomitmen mencetak lulusan yang siap kerja dan berdaya saing tinggi! 💪",
-                'is_active' => true,
-                'priority' => 90,
+                'keywords' => 'profil,tentang,sekolah,informasi sekolah,apa itu',
+                'response' => 'Sekolah kami adalah lembaga pendidikan yang berkomitmen memberikan pendidikan berkualitas. Anda bisa melihat profil lengkap kami di menu Tentang Kami.',
+                'category' => 'about',
+                'order' => 2,
+                'status' => 'active',
             ],
+            
+            // PPDB
             [
-                'trigger_name' => 'visi_misi',
-                'title' => 'Visi & Misi',
-                'keywords' => ['visi', 'misi', 'visi misi'],
-                'response' => "🎯 **Visi:**\nMenjadi SMK unggulan yang menghasilkan lulusan berkualitas, profesional, dan berakhlak mulia.\n\n📋 **Misi:**\n1. Menyelenggarakan pendidikan berkualitas berbasis kompetensi\n2. Mengembangkan kerjasama dengan dunia industri\n3. Membentuk karakter siswa yang berakhlak mulia\n4. Menyediakan fasilitas pembelajaran modern",
-                'is_active' => true,
-                'priority' => 85,
+                'keywords' => 'ppdb,pendaftaran,daftar,cara daftar,syarat,biaya',
+                'response' => 'Untuk informasi PPDB (Penerimaan Peserta Didik Baru), silakan kunjungi halaman PPDB kami atau hubungi kontak yang tersedia. Kami siap membantu proses pendaftaran Anda!',
+                'category' => 'ppdb',
+                'order' => 3,
+                'status' => 'active',
             ],
+            
+            // Programs
             [
-                'trigger_name' => 'jurusan',
-                'title' => 'Program Keahlian/Jurusan',
-                'keywords' => ['jurusan', 'program keahlian', 'kompetensi', 'tkj', 'akuntansi', 'dkv'],
-                'response' => "📚 **Program Keahlian di SMK Bina Mandiri Bekasi:**\n\n1. **Teknik Komputer & Jaringan (TKJ)** 💻\n   - Belajar networking, programming, dan sistem komputer\n   - Prospek: Network Administrator, IT Support, Web Developer\n\n2. **Akuntansi** 💰\n   - Belajar pembukuan, perpajakan, dan keuangan\n   - Prospek: Akuntan, Staff Keuangan, Auditor\n\n3. **Desain Komunikasi Visual (DKV)** 🎨\n   - Belajar desain grafis, multimedia, dan animasi\n   - Prospek: Graphic Designer, Video Editor, UI/UX Designer\n\nMau tahu lebih detail tentang jurusan tertentu? Tanya saja! 😊",
-                'is_active' => true,
-                'priority' => 95,
+                'keywords' => 'jurusan,program,keahlian,kompetensi,tkj,rpl,multimedia',
+                'response' => 'Kami memiliki berbagai program keahlian yang bisa Anda pilih. Silakan kunjungi halaman Program Keahlian untuk informasi lengkap tentang setiap jurusan.',
+                'category' => 'programs',
+                'order' => 4,
+                'status' => 'active',
             ],
+            
+            // Contact
             [
-                'trigger_name' => 'ppdb',
-                'title' => 'PPDB (Pendaftaran)',
-                'keywords' => ['ppdb', 'pendaftaran', 'daftar', 'cara daftar', 'syarat'],
-                'response' => "📝 **Informasi PPDB SMK Bina Mandiri Bekasi:**\n\n📅 **Jadwal Pendaftaran:**\nGelombang 1: Januari - Maret 2026\nGelombang 2: April - Juni 2026\n\n📋 **Syarat Pendaftaran:**\n✅ Ijazah/SKHUN SMP/MTs\n✅ Kartu Keluarga\n✅ Akta Kelahiran\n✅ Pas Foto 3x4 (3 lembar)\n✅ Fotocopy Rapor Semester 1-5\n\n💻 **Cara Daftar:**\nKunjungi website kami dan klik menu 'PPDB' atau datang langsung ke sekolah!\n\n💰 **Biaya:** Gratis biaya pendaftaran! 🎉",
-                'is_active' => true,
-                'priority' => 95,
+                'keywords' => 'kontak,hubungi,telepon,email,alamat,lokasi',
+                'response' => 'Anda bisa menghubungi kami melalui halaman Kontak. Di sana tersedia informasi lengkap alamat, nomor telepon, email, dan media sosial kami.',
+                'category' => 'contact',
+                'order' => 5,
+                'status' => 'active',
             ],
+            
+            // Facilities
             [
-                'trigger_name' => 'fasilitas',
-                'title' => 'Fasilitas Sekolah',
-                'keywords' => ['fasilitas', 'sarana', 'prasarana', 'lab', 'perpustakaan'],
-                'response' => "🏢 **Fasilitas SMK Bina Mandiri Bekasi:**\n\n✅ Ruang kelas ber-AC\n✅ Laboratorium Komputer\n✅ Laboratorium Akuntansi\n✅ Studio Desain & Multimedia\n✅ Perpustakaan Digital\n✅ Masjid\n✅ Kantin\n✅ Lapangan Olahraga\n✅ Free WiFi\n✅ Parkir Luas\n\nSemua fasilitas dirancang untuk mendukung pembelajaran optimal! 🎓",
-                'is_active' => true,
-                'priority' => 80,
+                'keywords' => 'fasilitas,lab,perpustakaan,ruang,gedung',
+                'response' => 'Sekolah kami dilengkapi dengan berbagai fasilitas modern untuk mendukung proses pembelajaran. Anda bisa melihat galeri foto fasilitas kami di menu Galeri.',
+                'category' => 'facilities',
+                'order' => 6,
+                'status' => 'active',
             ],
+            
+            // News
             [
-                'trigger_name' => 'contact',
-                'title' => 'Alamat & Kontak',
-                'keywords' => ['alamat', 'lokasi', 'dimana', 'kontak', 'telepon', 'email'],
-                'response' => "📍 **Alamat & Kontak SMK Bina Mandiri Bekasi:**\n\n🏫 Jl. Pendidikan No. 123, Bekasi Timur\n   Kota Bekasi, Jawa Barat 17113\n\n📞 Telepon: (021) 1234-5678\n📱 WhatsApp: 0812-3456-7890\n📧 Email: info@smkbinamandiri.sch.id\n🌐 Website: www.smkbinamandiri.sch.id\n\n📍 Google Maps: [Klik di sini untuk petunjuk arah]\n\nKami buka Senin-Jumat: 07.00-16.00 WIB 🕐",
-                'is_active' => true,
-                'priority' => 85,
+                'keywords' => 'berita,informasi,pengumuman,acara,kegiatan',
+                'response' => 'Untuk informasi terbaru tentang kegiatan dan pengumuman sekolah, silakan kunjungi halaman Berita kami yang selalu diperbarui.',
+                'category' => 'news',
+                'order' => 7,
+                'status' => 'active',
             ],
+            
+            // Thanks
             [
-                'trigger_name' => 'thanks',
-                'title' => 'Terima Kasih',
-                'keywords' => ['terima kasih', 'thanks', 'makasih', 'thank you'],
-                'response' => "Sama-sama! 😊 Senang bisa membantu Anda. Jika ada pertanyaan lain tentang SMK Bina Mandiri Bekasi, jangan ragu untuk bertanya ya! 🏫✨",
-                'is_active' => true,
-                'priority' => 70,
+                'keywords' => 'terima kasih,thanks,makasih,thx',
+                'response' => 'Sama-sama! Senang bisa membantu. Jika ada pertanyaan lain, jangan ragu untuk bertanya.',
+                'category' => 'thanks',
+                'order' => 8,
+                'status' => 'active',
             ],
+            
+            // Default
             [
-                'trigger_name' => 'goodbye',
-                'title' => 'Selamat Tinggal',
-                'keywords' => ['bye', 'dadah', 'sampai jumpa', 'selamat tinggal'],
-                'response' => "Sampai jumpa! 👋 Semoga informasi yang saya berikan bermanfaat. Jangan lupa kunjungi website kami untuk info lebih lengkap. Selamat beraktivitas! 😊🏫",
-                'is_active' => true,
-                'priority' => 70,
+                'keywords' => 'default',
+                'response' => 'Maaf, saya belum memahami pertanyaan Anda. Silakan coba pertanyaan lain atau hubungi kontak kami untuk bantuan lebih lanjut.',
+                'category' => 'default',
+                'order' => 999,
+                'status' => 'active',
             ],
         ];
 

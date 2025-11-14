@@ -54,6 +54,9 @@ class CompetencyController extends Controller
             'slug' => 'nullable|string|max:255|unique:competencies,slug',
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'head_of_program_name' => 'nullable|string|max:255',
+            'head_of_program_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'head_of_program_message' => 'nullable|string',
             'status' => 'required|in:active,inactive',
             'sort_order' => 'nullable|integer|min:0',
         ]);
@@ -68,6 +71,11 @@ class CompetencyController extends Controller
         // Handle image upload
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('competencies', 'public');
+        }
+
+        // Handle head of program photo upload
+        if ($request->hasFile('head_of_program_photo')) {
+            $validated['head_of_program_photo'] = $request->file('head_of_program_photo')->store('competencies/heads', 'public');
         }
 
         // Set sort_order to max + 1 if not provided
@@ -107,6 +115,9 @@ class CompetencyController extends Controller
             'slug' => 'nullable|string|max:255|unique:competencies,slug,' . $competency->id,
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'head_of_program_name' => 'nullable|string|max:255',
+            'head_of_program_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'head_of_program_message' => 'nullable|string',
             'status' => 'required|in:active,inactive',
             'sort_order' => 'nullable|integer|min:0',
         ]);
@@ -127,6 +138,15 @@ class CompetencyController extends Controller
             $validated['image'] = $request->file('image')->store('competencies', 'public');
         }
 
+        // Handle head of program photo upload
+        if ($request->hasFile('head_of_program_photo')) {
+            // Delete old photo
+            if ($competency->head_of_program_photo) {
+                Storage::disk('public')->delete($competency->head_of_program_photo);
+            }
+            $validated['head_of_program_photo'] = $request->file('head_of_program_photo')->store('competencies/heads', 'public');
+        }
+
         $competency->update($validated);
 
         return redirect()->route('admin.competencies.index')
@@ -141,6 +161,11 @@ class CompetencyController extends Controller
         // Delete image
         if ($competency->image) {
             Storage::disk('public')->delete($competency->image);
+        }
+
+        // Delete head of program photo
+        if ($competency->head_of_program_photo) {
+            Storage::disk('public')->delete($competency->head_of_program_photo);
         }
 
         $competency->delete();

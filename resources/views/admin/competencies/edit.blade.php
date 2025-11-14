@@ -34,93 +34,93 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Main Content -->
         <div class="lg:col-span-2">
-            <div class="ios-card">
-                <div class="form-group">
-                    <label for="name" class="form-label required">Program Name</label>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 space-y-6">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Program Name *</label>
                     <input 
                         type="text" 
                         id="name" 
                         name="name" 
-                        class="form-input @error('name') is-invalid @enderror" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('name') border-red-500 @enderror" 
                         value="{{ old('name', $competency->name) }}"
                         required
                         autofocus
                     >
                     @error('name')
-                        <span class="form-error">{{ $message }}</span>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="form-group">
-                    <label for="slug" class="form-label">Slug</label>
+                <div>
+                    <label for="slug" class="block text-sm font-medium text-gray-700 mb-2">Slug</label>
                     <input 
                         type="text" 
                         id="slug" 
                         name="slug" 
-                        class="form-input @error('slug') is-invalid @enderror" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent font-mono text-sm @error('slug') border-red-500 @enderror" 
                         value="{{ old('slug', $competency->slug) }}"
                     >
                     @error('slug')
-                        <span class="form-error">{{ $message }}</span>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                    <span class="form-hint">Leave empty to auto-generate from name</span>
+                    <p class="mt-1 text-xs text-gray-500">Leave empty to auto-generate from name</p>
                 </div>
 
-                <div class="form-group">
-                    <label for="description" class="form-label required">Description</label>
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
                     <textarea 
                         id="description" 
                         name="description" 
-                        rows="15" 
-                        class="form-input @error('description') is-invalid @enderror"
+                        class="tinymce @error('description') border-red-500 @enderror"
                         required
                     >{{ old('description', $competency->description) }}</textarea>
                     @error('description')
-                        <span class="form-error">{{ $message }}</span>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
         </div>
 
         <!-- Sidebar -->
-        <div class="lg:col-span-1">
-            <div class="ios-card mb-6">
-                <h3 class="card-title">Settings</h3>
+        <div class="lg:col-span-1 space-y-6">
+            <!-- Settings -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Settings</h3>
                 
-                <div class="form-group">
-                    <label for="status" class="form-label required">Status</label>
-                    <select 
-                        id="status" 
-                        name="status" 
-                        class="form-select @error('status') is-invalid @enderror"
-                        required
-                    >
-                        <option value="active" {{ old('status', $competency->status) === 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" {{ old('status', $competency->status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                    </select>
-                    @error('status')
-                        <span class="form-error">{{ $message }}</span>
-                    @enderror
-                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status *</label>
+                        <select 
+                            id="status" 
+                            name="status" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('status') border-red-500 @enderror"
+                            required
+                        >
+                            <option value="active" {{ old('status', $competency->status) === 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="inactive" {{ old('status', $competency->status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                        @error('status')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                <div class="form-group">
-                    <label for="sort_order" class="form-label">Sort Order</label>
-                    <input 
-                        type="number" 
-                        id="sort_order" 
-                        name="sort_order" 
-                        class="form-input @error('sort_order') is-invalid @enderror"
-                        value="{{ old('sort_order', $competency->sort_order) }}"
-                        min="0"
-                    >
-                    @error('sort_order')
-                        <span class="form-error">{{ $message }}</span>
-                    @enderror
-                </div>
+                    <div>
+                        <label for="sort_order" class="block text-sm font-medium text-gray-700 mb-2">Sort Order</label>
+                        <input 
+                            type="number" 
+                            id="sort_order" 
+                            name="sort_order" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('sort_order') border-red-500 @enderror"
+                            value="{{ old('sort_order', $competency->sort_order) }}"
+                            min="0"
+                        >
+                        @error('sort_order')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary w-full">
-                        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button type="submit" class="w-full px-4 py-2 bg-ios-blue text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                         </svg>
                         Update Program
@@ -128,45 +128,125 @@
                 </div>
             </div>
 
-            <div class="ios-card">
-                <h3 class="card-title">Program Image</h3>
+            <!-- Program Image -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Program Image</h3>
                 
                 @if($competency->image)
                     <div class="mb-4">
                         <img src="{{ asset('storage/' . $competency->image) }}" 
                              alt="{{ $competency->name }}" 
-                             class="w-full rounded-lg">
-                        <p class="text-sm text-secondary mt-2">Current image</p>
+                             class="w-full rounded-lg border border-gray-200">
+                        <p class="text-sm text-gray-500 mt-2">Current image</p>
                     </div>
                 @endif
 
-                <div class="form-group">
-                    <label for="image" class="form-label">{{ $competency->image ? 'Replace Image' : 'Image' }}</label>
+                <div>
+                    <label for="image" class="block text-sm font-medium text-gray-700 mb-2">{{ $competency->image ? 'Replace Image' : 'Image' }}</label>
                     <input 
                         type="file" 
                         id="image" 
                         name="image" 
-                        class="form-input @error('image') is-invalid @enderror"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('image') border-red-500 @enderror"
                         accept="image/*"
                         onchange="previewImage(event)"
                     >
                     @error('image')
-                        <span class="form-error">{{ $message }}</span>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                    <span class="form-hint">Max 2MB (JPEG, PNG, JPG, GIF)</span>
+                    <p class="mt-1 text-xs text-gray-500">Max 2MB (JPEG, PNG, JPG, GIF)</p>
                 </div>
 
                 <div id="image-preview" class="mt-4" style="display: none;">
-                    <img id="preview" src="" alt="Preview" class="w-full rounded-lg">
-                    <p class="text-sm text-secondary mt-2">New image preview</p>
+                    <img id="preview" src="" alt="Preview" class="w-full rounded-lg border border-gray-200">
+                    <p class="text-sm text-gray-500 mt-2">New image preview</p>
+                </div>
+            </div>
+
+            <!-- Head of Program -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Kepala Program</h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="head_of_program_name" class="block text-sm font-medium text-gray-700 mb-2">Nama Kepala Program</label>
+                        <input 
+                            type="text" 
+                            id="head_of_program_name" 
+                            name="head_of_program_name" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('head_of_program_name') border-red-500 @enderror"
+                            value="{{ old('head_of_program_name', $competency->head_of_program_name) }}"
+                            placeholder="Contoh: Budi Santoso, S.Kom"
+                        >
+                        @error('head_of_program_name')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    @if($competency->head_of_program_photo)
+                        <div class="mb-4">
+                            <img src="{{ asset('storage/' . $competency->head_of_program_photo) }}" 
+                                 alt="{{ $competency->head_of_program_name }}" 
+                                 class="w-32 h-32 rounded-full object-cover border-4 border-gray-200 mx-auto">
+                            <p class="text-sm text-gray-500 mt-2 text-center">Current photo</p>
+                        </div>
+                    @endif
+
+                    <div>
+                        <label for="head_of_program_photo" class="block text-sm font-medium text-gray-700 mb-2">{{ $competency->head_of_program_photo ? 'Replace Photo' : 'Foto Kepala Program' }}</label>
+                        <input 
+                            type="file" 
+                            id="head_of_program_photo" 
+                            name="head_of_program_photo" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('head_of_program_photo') border-red-500 @enderror"
+                            accept="image/*"
+                            onchange="previewHeadPhoto(event)"
+                        >
+                        @error('head_of_program_photo')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Max 2MB (JPEG, PNG, JPG)</p>
+                    </div>
+
+                    <div id="head-photo-preview" class="mt-4" style="display: none;">
+                        <img id="head-preview" src="" alt="Preview" class="w-32 h-32 rounded-full object-cover border-4 border-gray-200 mx-auto">
+                        <p class="text-sm text-gray-500 mt-2 text-center">New photo preview</p>
+                    </div>
+
+                    <div>
+                        <label for="head_of_program_message" class="block text-sm font-medium text-gray-700 mb-2">Sambutan Kepala Program</label>
+                        <textarea 
+                            id="head_of_program_message" 
+                            name="head_of_program_message" 
+                            rows="6" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('head_of_program_message') border-red-500 @enderror"
+                            placeholder="Tulis sambutan atau pesan dari Kepala Program..."
+                        >{{ old('head_of_program_message', $competency->head_of_program_message) }}</textarea>
+                        @error('head_of_program_message')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </form>
 
 @push('scripts')
 <script>
+    function previewHeadPhoto(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('head-preview').src = e.target.result;
+                document.getElementById('head-photo-preview').style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
     // Auto-generate slug from name
     document.getElementById('name').addEventListener('input', function(e) {
         const slugInput = document.getElementById('slug');

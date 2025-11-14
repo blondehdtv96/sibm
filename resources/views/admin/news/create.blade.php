@@ -76,8 +76,7 @@
                     <textarea 
                         id="content" 
                         name="content" 
-                        rows="15" 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('content') border-red-500 @enderror"
+                        class="tinymce @error('content') border-red-500 @enderror"
                         required
                     >{{ old('content') }}</textarea>
                     @error('content')

@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\Menu;
 use Illuminate\Database\Seeder;
+use App\Models\Menu;
 
 class MenuSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
         // Clear existing menus
         Menu::truncate();
@@ -16,26 +16,38 @@ class MenuSeeder extends Seeder
         Menu::create([
             'title' => 'Beranda',
             'route_name' => 'home',
+            'parent_id' => null,
+            'order' => 10,
+            'target' => '_self',
+            'status' => 'active',
+        ]);
+
+        // Tentang Kami (Parent)
+        $aboutMenu = Menu::create([
+            'title' => 'Tentang Kami',
+            'route_name' => null,
+            'url' => '#',
+            'parent_id' => null,
+            'order' => 20,
+            'target' => '_self',
+            'status' => 'active',
+        ]);
+
+        // Tentang Kami - Submenu
+        Menu::create([
+            'title' => 'Profil Sekolah',
+            'route_name' => 'info.about',
+            'parent_id' => $aboutMenu->id,
             'order' => 1,
             'target' => '_self',
             'status' => 'active',
         ]);
 
-        // Tentang - Parent Menu
-        $tentang = Menu::create([
-            'title' => 'Tentang',
-            'route_name' => 'info.about',
-            'order' => 2,
-            'target' => '_self',
-            'status' => 'active',
-        ]);
-
-        // Tentang - Submenus
         Menu::create([
             'title' => 'Selayang Pandang',
             'route_name' => 'info.overview',
-            'parent_id' => $tentang->id,
-            'order' => 1,
+            'parent_id' => $aboutMenu->id,
+            'order' => 2,
             'target' => '_self',
             'status' => 'active',
         ]);
@@ -43,8 +55,8 @@ class MenuSeeder extends Seeder
         Menu::create([
             'title' => 'Sambutan Kepala Sekolah',
             'route_name' => 'info.principal-message',
-            'parent_id' => $tentang->id,
-            'order' => 2,
+            'parent_id' => $aboutMenu->id,
+            'order' => 3,
             'target' => '_self',
             'status' => 'active',
         ]);
@@ -52,17 +64,19 @@ class MenuSeeder extends Seeder
         // Program Keahlian
         Menu::create([
             'title' => 'Program Keahlian',
-            'route_name' => 'competencies.index',
-            'order' => 3,
+            'route_name' => 'public.competencies.index',
+            'parent_id' => null,
+            'order' => 30,
             'target' => '_self',
             'status' => 'active',
         ]);
 
-        // Berita & Acara
+        // Berita
         Menu::create([
-            'title' => 'Berita & Acara',
-            'route_name' => 'news.index',
-            'order' => 4,
+            'title' => 'Berita',
+            'route_name' => 'public.news.index',
+            'parent_id' => null,
+            'order' => 40,
             'target' => '_self',
             'status' => 'active',
         ]);
@@ -70,8 +84,9 @@ class MenuSeeder extends Seeder
         // Galeri
         Menu::create([
             'title' => 'Galeri',
-            'route_name' => 'gallery.index',
-            'order' => 5,
+            'route_name' => 'public.gallery.index',
+            'parent_id' => null,
+            'order' => 50,
             'target' => '_self',
             'status' => 'active',
         ]);
@@ -80,7 +95,8 @@ class MenuSeeder extends Seeder
         Menu::create([
             'title' => 'PPDB',
             'route_name' => 'ppdb.register',
-            'order' => 6,
+            'parent_id' => null,
+            'order' => 60,
             'target' => '_self',
             'status' => 'active',
         ]);
@@ -89,7 +105,8 @@ class MenuSeeder extends Seeder
         Menu::create([
             'title' => 'Kontak',
             'route_name' => 'info.contact',
-            'order' => 7,
+            'parent_id' => null,
+            'order' => 70,
             'target' => '_self',
             'status' => 'active',
         ]);

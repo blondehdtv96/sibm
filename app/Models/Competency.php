@@ -20,6 +20,9 @@ class Competency extends Model
         'slug',
         'description',
         'image',
+        'head_of_program_name',
+        'head_of_program_photo',
+        'head_of_program_message',
         'sort_order',
         'status',
     ];
@@ -102,6 +105,17 @@ class Competency extends Model
     {
         if ($this->image) {
             return asset('storage/' . $this->image);
+        }
+        return null;
+    }
+
+    /**
+     * Get the head of program photo URL
+     */
+    public function getHeadOfProgramPhotoUrlAttribute(): ?string
+    {
+        if ($this->head_of_program_photo) {
+            return asset('storage/' . $this->head_of_program_photo);
         }
         return null;
     }

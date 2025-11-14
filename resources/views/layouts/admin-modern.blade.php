@@ -210,6 +210,13 @@
                             </svg>
                             Pengguna
                         </a>
+                        <a href="{{ route('admin.home-sliders.index') }}" 
+                           class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.home-sliders.*') ? 'bg-ios-blue text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            Home Slider
+                        </a>
                         <a href="{{ route('admin.menus.index') }}" 
                            class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.menus.*') ? 'bg-ios-blue text-white' : 'text-gray-700 hover:bg-gray-100' }}">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -372,6 +379,57 @@
 
     <!-- Mobile Sidebar Overlay -->
     <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden" x-transition></div>
+
+    <!-- Quill Rich Text Editor -->
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Quill for all textareas with class 'tinymce' or 'rich-editor'
+            document.querySelectorAll('textarea.tinymce, textarea.rich-editor').forEach(function(textarea) {
+                // Create editor container
+                const editorDiv = document.createElement('div');
+                editorDiv.style.height = '400px';
+                editorDiv.style.backgroundColor = 'white';
+                textarea.style.display = 'none';
+                textarea.parentNode.insertBefore(editorDiv, textarea);
+                
+                // Initialize Quill
+                const quill = new Quill(editorDiv, {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: [
+                            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                            [{ 'indent': '-1'}, { 'indent': '+1' }],
+                            [{ 'align': [] }],
+                            ['link'],
+                            ['clean']
+                        ]
+                    }
+                });
+                
+                // Set initial content
+                if (textarea.value) {
+                    quill.root.innerHTML = textarea.value;
+                }
+                
+                // Update textarea on change
+                quill.on('text-change', function() {
+                    textarea.value = quill.root.innerHTML;
+                });
+                
+                // Update on form submit
+                const form = textarea.closest('form');
+                if (form) {
+                    form.addEventListener('submit', function() {
+                        textarea.value = quill.root.innerHTML;
+                    });
+                }
+            });
+        });
+    </script>
 
     @stack('scripts')
     

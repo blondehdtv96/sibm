@@ -168,6 +168,9 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     // Menu Management routes
     Route::resource('menus', \App\Http\Controllers\Admin\MenuController::class);
     Route::post('menus/reorder', [\App\Http\Controllers\Admin\MenuController::class, 'reorder'])->name('menus.reorder');
+    
+    // Home Slider Management routes
+    Route::resource('home-sliders', \App\Http\Controllers\Admin\HomeSliderController::class);
     Route::post('settings/update-logo', [\App\Http\Controllers\Admin\SettingController::class, 'updateLogo'])->name('settings.update-logo');
     Route::delete('settings/delete-logo', [\App\Http\Controllers\Admin\SettingController::class, 'deleteLogo'])->name('settings.delete-logo');
     Route::post('settings/clear-cache', [\App\Http\Controllers\Admin\SettingController::class, 'clearCache'])->name('settings.clear-cache');
