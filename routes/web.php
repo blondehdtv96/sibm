@@ -161,6 +161,7 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     Route::post('settings/update-overview', [\App\Http\Controllers\Admin\SettingController::class, 'updateOverview'])->name('settings.update-overview');
     Route::post('settings/update-principal-message', [\App\Http\Controllers\Admin\SettingController::class, 'updatePrincipalMessage'])->name('settings.update-principal-message');
     Route::delete('settings/delete-principal-photo', [\App\Http\Controllers\Admin\SettingController::class, 'deletePrincipalPhoto'])->name('settings.delete-principal-photo');
+    Route::post('settings/update-statistics', [\App\Http\Controllers\Admin\SettingController::class, 'updateStatistics'])->name('settings.update-statistics');
     Route::get('settings/contact-social', [\App\Http\Controllers\Admin\SettingController::class, 'contactSocial'])->name('settings.contact-social');
     Route::post('settings/update-contact', [\App\Http\Controllers\Admin\SettingController::class, 'updateContact'])->name('settings.update-contact');
     Route::post('settings/update-social-media', [\App\Http\Controllers\Admin\SettingController::class, 'updateSocialMedia'])->name('settings.update-social-media');

@@ -148,12 +148,12 @@
                     <article class="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-100 relative">
                         <!-- Image Section -->
                         @if($competency->image)
-                            <div class="relative h-64 overflow-hidden">
+                            <div class="relative h-64 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
                                 <img src="{{ asset('storage/' . $competency->image) }}" 
                                      alt="{{ $competency->name }}"
-                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                     class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                                      loading="lazy">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                 <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                     <div class="w-16 h-16 bg-white/20 backdrop-blur-lg rounded-full flex items-center justify-center">
                                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

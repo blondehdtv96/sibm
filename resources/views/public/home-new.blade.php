@@ -82,20 +82,20 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div class="text-center">
-                <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">1000+</div>
-                <div class="text-gray-600">Alumni Sukses</div>
+                <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">{{ setting('stat1_value', '1000+') }}</div>
+                <div class="text-gray-600">{{ setting('stat1_label', 'Alumni Sukses') }}</div>
             </div>
             <div class="text-center">
-                <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">15+</div>
-                <div class="text-gray-600">Program Keahlian</div>
+                <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">{{ setting('stat2_value', '15+') }}</div>
+                <div class="text-gray-600">{{ setting('stat2_label', 'Program Keahlian') }}</div>
             </div>
             <div class="text-center">
-                <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">50+</div>
-                <div class="text-gray-600">Guru Berpengalaman</div>
+                <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">{{ setting('stat3_value', '50+') }}</div>
+                <div class="text-gray-600">{{ setting('stat3_label', 'Guru Berpengalaman') }}</div>
             </div>
             <div class="text-center">
-                <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">95%</div>
-                <div class="text-gray-600">Tingkat Kelulusan</div>
+                <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">{{ setting('stat4_value', '95%') }}</div>
+                <div class="text-gray-600">{{ setting('stat4_label', 'Tingkat Kelulusan') }}</div>
             </div>
         </div>
     </div>
@@ -365,10 +365,10 @@
             @foreach($featuredCompetencies as $competency)
             <div class="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
                 @if($competency->image)
-                <div class="relative h-56 overflow-hidden">
+                <div class="relative h-56 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
                     <img src="{{ Storage::url($competency->image) }}" 
                          alt="{{ $competency->name }}"
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                         class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                          loading="lazy">
                 </div>
                 @endif

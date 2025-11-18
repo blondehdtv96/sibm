@@ -8,7 +8,7 @@
     <div class="flex items-center justify-between">
         <div>
             <h2 class="text-2xl font-bold text-gray-900">Konten Sekolah</h2>
-            <p class="text-sm text-gray-500 mt-1">Kelola konten Selayang Pandang dan Sambutan Kepala Sekolah</p>
+            <p class="text-sm text-gray-500 mt-1">Kelola konten Selayang Pandang, Sambutan Kepala Sekolah, dan Statistik Homepage</p>
         </div>
         <a href="{{ route('admin.settings.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,6 +166,140 @@
                         Simpan Sambutan Kepala Sekolah
                     </button>
                 </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Homepage Statistics Section -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                <h3 class="text-lg font-semibold text-gray-900">Statistik Homepage</h3>
+            </div>
+            <a href="{{ route('home') }}" target="_blank" class="text-sm text-blue-600 hover:text-blue-700">
+                Lihat Homepage →
+            </a>
+        </div>
+
+        <form action="{{ route('admin.settings.update-statistics') }}" method="POST" class="p-6">
+            @csrf
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Statistic 1 -->
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-900 mb-4">Statistik 1</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nilai</label>
+                            <input 
+                                type="text" 
+                                name="stat1_value" 
+                                value="{{ old('stat1_value', setting('stat1_value', '1000+')) }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
+                                placeholder="1000+"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Label</label>
+                            <input 
+                                type="text" 
+                                name="stat1_label" 
+                                value="{{ old('stat1_label', setting('stat1_label', 'Alumni Sukses')) }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
+                                placeholder="Alumni Sukses"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistic 2 -->
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-900 mb-4">Statistik 2</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nilai</label>
+                            <input 
+                                type="text" 
+                                name="stat2_value" 
+                                value="{{ old('stat2_value', setting('stat2_value', '15+')) }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
+                                placeholder="15+"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Label</label>
+                            <input 
+                                type="text" 
+                                name="stat2_label" 
+                                value="{{ old('stat2_label', setting('stat2_label', 'Program Keahlian')) }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
+                                placeholder="Program Keahlian"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistic 3 -->
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-900 mb-4">Statistik 3</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nilai</label>
+                            <input 
+                                type="text" 
+                                name="stat3_value" 
+                                value="{{ old('stat3_value', setting('stat3_value', '50+')) }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
+                                placeholder="50+"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Label</label>
+                            <input 
+                                type="text" 
+                                name="stat3_label" 
+                                value="{{ old('stat3_label', setting('stat3_label', 'Guru Berpengalaman')) }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
+                                placeholder="Guru Berpengalaman"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistic 4 -->
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-900 mb-4">Statistik 4</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nilai</label>
+                            <input 
+                                type="text" 
+                                name="stat4_value" 
+                                value="{{ old('stat4_value', setting('stat4_value', '95%')) }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
+                                placeholder="95%"
+                            >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Label</label>
+                            <input 
+                                type="text" 
+                                name="stat4_label" 
+                                value="{{ old('stat4_label', setting('stat4_label', 'Tingkat Kelulusan')) }}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
+                                placeholder="Tingkat Kelulusan"
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button type="submit" class="px-6 py-2 bg-ios-blue text-white rounded-lg hover:bg-blue-600 transition-colors">
+                    Simpan Statistik
+                </button>
             </div>
         </form>
     </div>

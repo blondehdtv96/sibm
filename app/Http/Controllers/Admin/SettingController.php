@@ -260,4 +260,27 @@ class SettingController extends Controller
 
         return redirect()->back()->with('success', 'Link sosial media berhasil diperbarui!');
     }
+
+    public function updateStatistics(Request $request)
+    {
+        $validated = $request->validate([
+            'stat1_value' => 'required|string|max:50',
+            'stat1_label' => 'required|string|max:100',
+            'stat2_value' => 'required|string|max:50',
+            'stat2_label' => 'required|string|max:100',
+            'stat3_value' => 'required|string|max:50',
+            'stat3_label' => 'required|string|max:100',
+            'stat4_value' => 'required|string|max:50',
+            'stat4_label' => 'required|string|max:100',
+        ]);
+
+        foreach ($validated as $key => $value) {
+            Setting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value]
+            );
+        }
+
+        return redirect()->back()->with('success', 'Statistik homepage berhasil diperbarui!');
+    }
 }
