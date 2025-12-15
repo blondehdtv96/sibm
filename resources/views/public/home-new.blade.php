@@ -147,6 +147,75 @@
 </section>
 
 
+<!-- PPDB Brochure Section -->
+@php
+    $ppdbBrochure = setting('ppdb_brochure');
+    $ppdbBrochureTitle = setting('ppdb_brochure_title', 'Brosur PPDB');
+    $ppdbBrochureDescription = setting('ppdb_brochure_description', 'Download brosur PPDB untuk informasi lengkap tentang pendaftaran siswa baru');
+@endphp
+
+@if($ppdbBrochure)
+<section class="py-16 bg-gradient-to-br from-orange-50 to-red-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                <!-- Image Section -->
+                <div class="relative h-64 lg:h-auto bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center p-8">
+                    <img src="{{ asset('storage/' . $ppdbBrochure) }}" 
+                         alt="{{ $ppdbBrochureTitle }}" 
+                         class="w-full h-full object-contain rounded-xl shadow-lg hover:scale-105 transition-transform duration-300">
+                </div>
+                
+                <!-- Content Section -->
+                <div class="p-8 lg:p-12 flex flex-col justify-center">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-orange-100 text-orange-600 rounded-full font-semibold text-sm mb-6 w-fit">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                        Informasi PPDB
+                    </div>
+                    
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{{ $ppdbBrochureTitle }}</h2>
+                    <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                        {{ $ppdbBrochureDescription }}
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="{{ asset('storage/' . $ppdbBrochure) }}" 
+                           target="_blank"
+                           class="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                            Lihat Brosur
+                        </a>
+                        <a href="{{ asset('storage/' . $ppdbBrochure) }}" 
+                           download
+                           class="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white border-2 border-orange-600 text-orange-600 rounded-2xl font-bold text-lg hover:bg-orange-50 transition-all duration-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                            </svg>
+                            Download
+                        </a>
+                    </div>
+                    
+                    <div class="mt-8 pt-8 border-t border-gray-200">
+                        <a href="{{ route('ppdb.register') }}" 
+                           class="inline-flex items-center gap-2 text-orange-600 hover:text-orange-700 font-semibold transition-colors">
+                            <span>Daftar Sekarang</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@endif
+
 <!-- Quick Links Section -->
 <section class="py-20 bg-gradient-to-b from-gray-50 to-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -158,19 +158,13 @@
                        class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
                         Daftar PPDB
                     </a>
-                    @guest
-                    <a href="{{ route('login') }}" 
-                       :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
-                       class="font-medium transition-colors">
-                        Login
-                    </a>
-                    @else
+                    @auth
                     <a href="{{ route('dashboard') }}" 
                        :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
                        class="font-medium transition-colors">
                         Dashboard
                     </a>
-                    @endguest
+                    @endauth
                 </div>
                 
                 <!-- Mobile Menu Button -->
@@ -218,15 +212,11 @@
                     <a href="{{ route('ppdb.register') }}" class="px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-center">
                         Daftar PPDB
                     </a>
-                    @guest
-                    <a href="{{ route('login') }}" class="px-4 py-3 text-center rounded-xl hover:bg-gray-100 font-medium text-gray-700">
-                        Login
-                    </a>
-                    @else
+                    @auth
                     <a href="{{ route('dashboard') }}" class="px-4 py-3 text-center rounded-xl hover:bg-gray-100 font-medium text-gray-700">
                         Dashboard
                     </a>
-                    @endguest
+                    @endauth
                 </div>
             </div>
         </div>

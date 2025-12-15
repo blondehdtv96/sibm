@@ -2,7 +2,15 @@
     "name": "smk-bina-mandiri-bekasi/sistem-informasi",
     "type": "project",
     "description": "Sistem Informasi SMK Bina Mandiri Kota Bekasi - Laravel School Management System with iOS 16 Design",
-    "keywords": ["laravel", "school", "management", "ios16", "smk", "bekasi", "bina-mandiri"],
+    "keywords": [
+        "laravel",
+        "school",
+        "management",
+        "ios16",
+        "smk",
+        "bekasi",
+        "bina-mandiri"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.1",
@@ -27,7 +35,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

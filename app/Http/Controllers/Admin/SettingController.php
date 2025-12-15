@@ -283,4 +283,58 @@ class SettingController extends Controller
 
         return redirect()->back()->with('success', 'Statistik homepage berhasil diperbarui!');
     }
+
+    public function updatePpdbBrochure(Request $request)
+    {
+        $validated = $request->validate([
+            'ppdb_brochure' => 'nullable|image|mimes:jpeg,png,jpg,pdf|max:5120',
+            'ppdb_brochure_title' => 'nullable|string|max:255',
+            'ppdb_brochure_description' => 'nullable|string|max:500',
+        ]);
+
+        // Handle file upload
+        if ($request->hasFile('ppdb_brochure')) {
+            // Delete old brochure if exists
+            $oldBrochure = Setting::where('key', 'ppdb_brochure')->first();
+            if ($oldBrochure && $oldBrochure->value && Storage::disk('public')->exists($oldBrochure->value)) {
+                Storage::disk('public')->delete($oldBrochure->value);
+            }
+
+            // Store new brochure
+            $path = $request->file('ppdb_brochure')->store('brochures', 'public');
+            Setting::updateOrCreate(
+                ['key' => 'ppdb_brochure'],
+                ['value' => $path]
+            );
+        }
+
+        // Update title and description
+        if ($request->filled('ppdb_brochure_title')) {
+            Setting::updateOrCreate(
+                ['key' => 'ppdb_brochure_title'],
+                ['value' => $request->ppdb_brochure_title]
+            );
+        }
+
+        if ($request->filled('ppdb_brochure_description')) {
+            Setting::updateOrCreate(
+                ['key' => 'ppdb_brochure_description'],
+                ['value' => $request->ppdb_brochure_description]
+            );
+        }
+
+        return redirect()->back()->with('success', 'Brosur PPDB berhasil diperbarui!');
+    }
+
+    public function deletePpdbBrochure()
+    {
+        $brochure = Setting::where('key', 'ppdb_brochure')->first();
+        
+        if ($brochure && $brochure->value && Storage::disk('public')->exists($brochure->value)) {
+            Storage::disk('public')->delete($brochure->value);
+            $brochure->delete();
+        }
+
+        return redirect()->back()->with('success', 'Brosur PPDB berhasil dihapus!');
+    }
 }
