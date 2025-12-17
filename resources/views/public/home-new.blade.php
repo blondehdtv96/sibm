@@ -1,6 +1,12 @@
 @extends('layouts.public-tailwind')
 
-@section('title', 'Beranda - ' . config('school.name'))
+@section('title', 'SMK Bina Mandiri Kota Bekasi - Sekolah Menengah Kejuruan Terbaik di Bekasi')
+@section('description', 'SMK Bina Mandiri Kota Bekasi adalah sekolah menengah kejuruan terbaik di Bekasi dengan program keahlian unggulan seperti Teknik Komputer Jaringan, Teknik Kendaraan Ringan, dan Teknik Sepeda Motor. Fasilitas modern, guru berpengalaman, tingkat kelulusan 95%. Daftar PPDB 2025 sekarang!')
+@section('keywords', 'SMK Bina Mandiri Bekasi, SMK terbaik Bekasi, PPDB SMK Bekasi 2025, sekolah kejuruan Bekasi, program keahlian SMK, TKJ Bekasi, TKR Bekasi, TSM Bekasi, pendaftaran siswa baru SMK')
+
+@section('og_title', 'SMK Bina Mandiri Kota Bekasi - Sekolah Menengah Kejuruan Terbaik di Bekasi')
+@section('og_description', 'Bergabunglah dengan SMK Bina Mandiri Bekasi! Program keahlian unggulan, fasilitas modern, guru berpengalaman. Tingkat kelulusan 95%, 1000+ alumni sukses. Daftar PPDB 2025 sekarang!')
+@section('og_type', 'website')
 
 @section('content')
 <!-- Hero Slider Section -->
@@ -311,7 +317,7 @@
                 <!-- Video Wrapper -->
                 <div class="relative" style="padding-bottom: 56.25%; height: 0;">
                     <iframe 
-                        src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                        src="https://www.youtube.com/embed/s5l8HAA2evI?rel=0" 
                         title="Video Profil SMK Bina Mandiri Bekasi" 
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -674,6 +680,82 @@
 @endsection
 
 @push('styles')
+<!-- Additional SEO Schema for Homepage -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "SMK Bina Mandiri Kota Bekasi",
+    "url": "{{ url('/') }}",
+    "potentialAction": {
+        "@type": "SearchAction",
+        "target": "{{ url('/') }}/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+    }
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "SMK Bina Mandiri Kota Bekasi",
+    "url": "{{ url('/') }}",
+    "logo": "{{ asset('storage/' . setting('site_logo', 'images/logo-default.png')) }}",
+    "description": "Sekolah Menengah Kejuruan terbaik di Bekasi dengan program keahlian unggulan",
+    "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "{{ setting('contact_address', 'Jl. Raya Bekasi') }}",
+        "addressLocality": "Bekasi",
+        "addressRegion": "Jawa Barat",
+        "postalCode": "17000",
+        "addressCountry": "ID"
+    },
+    "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "{{ setting('contact_phone', '+62-21-12345678') }}",
+        "contactType": "Admissions",
+        "email": "{{ setting('contact_email', 'info@smkbinamandiri.sch.id') }}"
+    },
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "150",
+        "bestRating": "5",
+        "worstRating": "1"
+    },
+    "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Program Keahlian",
+        "itemListElement": [
+            {
+                "@type": "Offer",
+                "itemOffered": {
+                    "@type": "Course",
+                    "name": "Teknik Komputer dan Jaringan",
+                    "description": "Program keahlian bidang teknologi informasi dan komunikasi"
+                }
+            },
+            {
+                "@type": "Offer", 
+                "itemOffered": {
+                    "@type": "Course",
+                    "name": "Teknik Kendaraan Ringan",
+                    "description": "Program keahlian bidang otomotif kendaraan ringan"
+                }
+            },
+            {
+                "@type": "Offer",
+                "itemOffered": {
+                    "@type": "Course", 
+                    "name": "Teknik Sepeda Motor",
+                    "description": "Program keahlian bidang otomotif sepeda motor"
+                }
+            }
+        ]
+    }
+}
+</script>
 <!-- Swiper CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 

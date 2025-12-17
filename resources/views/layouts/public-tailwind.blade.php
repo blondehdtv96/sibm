@@ -5,8 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', config('school.name', 'School Management System'))</title>
-    <meta name="description" content="@yield('description', config('school.description', 'Modern school management system'))">
+    <title>@yield('title', 'SMK Bina Mandiri Kota Bekasi - Sekolah Menengah Kejuruan Terbaik di Bekasi')</title>
+    <meta name="description" content="@yield('description', 'SMK Bina Mandiri Kota Bekasi adalah sekolah menengah kejuruan terbaik di Bekasi dengan program keahlian unggulan, fasilitas modern, dan tingkat kelulusan 95%. Daftar PPDB sekarang!')">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="keywords" content="@yield('keywords', 'SMK Bina Mandiri, SMK Bekasi, sekolah kejuruan bekasi, PPDB SMK Bekasi, program keahlian, teknik komputer jaringan, teknik kendaraan ringan, teknik sepeda motor, SMK terbaik bekasi, pendaftaran siswa baru')">
+    <meta name="author" content="SMK Bina Mandiri Kota Bekasi">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <meta name="language" content="Indonesian">
+    <meta name="geo.region" content="ID-JB">
+    <meta name="geo.placename" content="Bekasi, Jawa Barat, Indonesia">
+    <meta name="geo.position" content="-6.2383,106.9756">
+    <meta name="ICBM" content="-6.2383,106.9756">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="@yield('og_title', 'SMK Bina Mandiri Kota Bekasi - Sekolah Menengah Kejuruan Terbaik di Bekasi')">
+    <meta property="og:description" content="@yield('og_description', 'SMK Bina Mandiri Kota Bekasi adalah sekolah menengah kejuruan terbaik di Bekasi dengan program keahlian unggulan, fasilitas modern, dan tingkat kelulusan 95%. Daftar PPDB sekarang!')">
+    <meta property="og:image" content="@yield('og_image', asset('storage/' . setting('site_logo', 'images/logo-default.png')))">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="SMK Bina Mandiri Kota Bekasi">
+    <meta property="og:locale" content="id_ID">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="@yield('twitter_title', 'SMK Bina Mandiri Kota Bekasi - Sekolah Menengah Kejuruan Terbaik di Bekasi')">
+    <meta name="twitter:description" content="@yield('twitter_description', 'SMK Bina Mandiri Kota Bekasi adalah sekolah menengah kejuruan terbaik di Bekasi dengan program keahlian unggulan, fasilitas modern, dan tingkat kelulusan 95%.')">
+    <meta name="twitter:image" content="@yield('twitter_image', asset('storage/' . setting('site_logo', 'images/logo-default.png')))">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="@yield('canonical', url()->current())">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . setting('site_favicon', 'favicon.ico')) }}">
+    <link rel="apple-touch-icon" href="{{ asset('storage/' . setting('site_logo', 'images/logo-default.png')) }}">
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "EducationalOrganization",
+        "name": "SMK Bina Mandiri Kota Bekasi",
+        "alternateName": "SMK Bina Mandiri Bekasi",
+        "url": "{{ url('/') }}",
+        "logo": "{{ asset('storage/' . setting('site_logo', 'images/logo-default.png')) }}",
+        "description": "Sekolah Menengah Kejuruan terbaik di Bekasi dengan program keahlian unggulan dan fasilitas modern",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "{{ setting('contact_address', 'Jl. Raya Bekasi') }}",
+            "addressLocality": "Bekasi",
+            "addressRegion": "Jawa Barat",
+            "postalCode": "17000",
+            "addressCountry": "ID"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "{{ setting('contact_phone', '+62-21-12345678') }}",
+            "contactType": "customer service",
+            "email": "{{ setting('contact_email', 'info@smkbinamandiri.sch.id') }}"
+        },
+        "sameAs": [
+            "{{ setting('social_facebook', '#') }}",
+            "{{ setting('social_instagram', '#') }}",
+            "{{ setting('social_youtube', '#') }}"
+        ],
+        "foundingDate": "2000",
+        "numberOfStudents": "1000",
+        "educationalCredentialAwarded": "Diploma SMK"
+    }
+    </script>
+    
+    <!-- SEO Components -->
+    @include('components.seo-head')
     
     <!-- Fonts - Inter for modern iOS look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -189,3 +189,7 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
 
 // Chatbot routes (public)
 Route::post('/chatbot', [\App\Http\Controllers\ChatbotController::class, 'sendMessage'])->name('chatbot.send');
+
+// SEO routes
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', [\App\Http\Controllers\SitemapController::class, 'robots'])->name('robots');

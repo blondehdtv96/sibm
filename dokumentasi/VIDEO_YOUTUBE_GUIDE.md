@@ -34,7 +34,7 @@ Cari bagian ini (sekitar line 60-70):
 
 ```html
 <iframe 
-    src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+    src="https://www.youtube.com/watch?v=s5l8HAA2evI" 
     title="Video Profil SMK Bina Mandiri Bekasi" 
     frameborder="0" 
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
