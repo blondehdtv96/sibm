@@ -19,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS in production
+        if (app()->environment('production')) {
+            \URL::forceScheme('https');
+        }
+        
         // Share settings data with all public views
         view()->composer('layouts.public-tailwind', \App\View\Composers\SettingsComposer::class);
     }
