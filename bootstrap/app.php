@@ -43,6 +43,36 @@ $app->singleton(
 
 /*
 |--------------------------------------------------------------------------
+| Handle Storage Permission Issues
+|--------------------------------------------------------------------------
+|
+| Check if storage directory is writable and set appropriate logging
+| configuration to prevent permission errors on server deployment.
+|
+*/
+
+try {
+    $storagePath = $app->storagePath();
+    $logsPath = $storagePath . '/logs';
+    
+    // Check if logs directory exists and is writable
+    if (!is_dir($logsPath) || !is_writable($logsPath)) {
+        // Set environment to use error_log instead of file logging
+        $_ENV['LOG_CHANNEL'] = 'errorlog';
+        putenv('LOG_CHANNEL=errorlog');
+        
+        // Log the issue to PHP error log
+        error_log('Laravel: storage/logs directory not writable, using errorlog channel');
+    }
+} catch (Exception $e) {
+    // If any error occurs during check, fallback to errorlog
+    $_ENV['LOG_CHANNEL'] = 'errorlog';
+    putenv('LOG_CHANNEL=errorlog');
+    error_log('Laravel: Error checking storage permissions, using errorlog channel');
+}
+
+/*
+|--------------------------------------------------------------------------
 | Return The Application
 |--------------------------------------------------------------------------
 |

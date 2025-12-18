@@ -24,7 +24,28 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            //
+            // Try to log to file, fallback to error_log if permission denied
+            try {
+                \Log::error($e->getMessage(), ['exception' => $e]);
+            } catch (\Exception $logException) {
+                // Fallback to PHP error log if Laravel logging fails
+                error_log('Laravel Exception: ' . $e->getMessage());
+                error_log('Logging Exception: ' . $logException->getMessage());
+            }
         });
+    }
+
+    /**
+     * Report or log an exception with fallback handling.
+     */
+    public function report(Throwable $e)
+    {
+        try {
+            parent::report($e);
+        } catch (\Exception $reportException) {
+            // If reporting fails, use PHP's error_log as fallback
+            error_log('Failed to report exception: ' . $e->getMessage());
+            error_log('Report error: ' . $reportException->getMessage());
+        }
     }
 }

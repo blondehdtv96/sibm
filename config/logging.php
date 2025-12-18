@@ -126,6 +126,20 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        // Safe logging channel for server deployment
+        'safe' => [
+            'driver' => 'stack',
+            'channels' => ['errorlog', 'null'],
+            'ignore_exceptions' => true,
+        ],
+
+        // Production safe logging
+        'production' => [
+            'driver' => 'errorlog',
+            'level' => env('LOG_LEVEL', 'error'),
+            'replace_placeholders' => true,
+        ],
     ],
 
 ];
