@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Force HTTPS for all requests -->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
     <title>@yield('title', 'SMK Bina Mandiri Kota Bekasi - Sekolah Menengah Kejuruan Terbaik di Bekasi')</title>
     <meta name="description" content="@yield('description', 'SMK Bina Mandiri Kota Bekasi adalah sekolah menengah kejuruan terbaik di Bekasi dengan program keahlian unggulan, fasilitas modern, dan tingkat kelulusan 95%. Daftar PPDB sekarang!')">
@@ -450,6 +453,23 @@
             </div>
         </div>
     </footer>
+    
+    <!-- Force HTTPS Script -->
+    <script>
+        // Force all requests to use HTTPS
+        if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+            location.replace('https:' + window.location.href.substring(window.location.protocol.length));
+        }
+        
+        // Override fetch to force HTTPS
+        const originalFetch = window.fetch;
+        window.fetch = function(url, options) {
+            if (typeof url === 'string' && url.startsWith('http://')) {
+                url = url.replace('http://', 'https://');
+            }
+            return originalFetch(url, options);
+        };
+    </script>
     
     <!-- Alpine.js -->
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>

@@ -17,8 +17,8 @@ class SecureHeaders
     {
         $response = $next($request);
         
-        // Only add security headers in production
-        if (app()->environment('production')) {
+        // Add security headers in production and when HTTPS is detected
+        if (app()->environment('production') || $request->secure()) {
             // Force HTTPS for all content
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
             

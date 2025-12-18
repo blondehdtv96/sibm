@@ -188,8 +188,12 @@ function chatbot() {
             this.isTyping = true;
 
             try {
-                // Kirim ke server
-                const response = await fetch('{{ route("chatbot.send") }}', {
+                // Kirim ke server - Force HTTPS URL
+                const chatbotUrl = '{{ route("chatbot.send") }}';
+                const httpsUrl = chatbotUrl.replace('http://', 'https://');
+                console.log('Chatbot URL:', chatbotUrl);
+                console.log('HTTPS URL:', httpsUrl);
+                const response = await fetch(httpsUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
