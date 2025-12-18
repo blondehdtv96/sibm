@@ -1,11 +1,9 @@
 # Laravel Selective .gitignore
 # Only ignore logs and temporary files, keep folder structure
 
-# Environment files (NEVER commit these!)
-.env
-.env.*
-!.env.example
-!.env.server
+# Environment files
+# Note: .env is tracked for deployment convenience
+# Make sure to update credentials on server manually
 .env.backup
 .env.production
 .env.local
