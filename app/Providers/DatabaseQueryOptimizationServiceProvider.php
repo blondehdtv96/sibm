@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class DatabaseQueryOptimizationServiceProvider extends ServiceProvider
@@ -22,8 +21,9 @@ class DatabaseQueryOptimizationServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Only enable query logging in development or when explicitly enabled
-        if (config('app.debug') || config('database.log_queries', false)) {
+        // Only enable query logging in LOCAL development environment
+        // Disable on production to avoid permission issues
+        if (app()->environment('local') && config('database.log_queries', false)) {
             $this->enableQueryLogging();
         }
 
@@ -37,19 +37,23 @@ class DatabaseQueryOptimizationServiceProvider extends ServiceProvider
     protected function enableQueryLogging(): void
     {
         DB::listen(function (QueryExecuted $query) {
-            // Log slow queries (over 1000ms)
-            if ($query->time > 1000) {
-                Log::warning('Slow query detected', [
-                    'sql' => $query->sql,
-                    'bindings' => $query->bindings,
-                    'time' => $query->time . 'ms',
-                    'connection' => $query->connectionName,
-                ]);
-            }
+            try {
+                // Log slow queries (over 1000ms)
+                if ($query->time > 1000) {
+                    $this->safeLog('Slow query detected', [
+                        'sql' => $query->sql,
+                        'bindings' => $query->bindings,
+                        'time' => $query->time . 'ms',
+                        'connection' => $query->connectionName,
+                    ]);
+                }
 
-            // Log N+1 query problems in development
-            if (config('app.debug')) {
-                $this->detectNPlusOne($query);
+                // Log N+1 query problems in development
+                if (app()->environment('local')) {
+                    $this->detectNPlusOne($query);
+                }
+            } catch (\Exception $e) {
+                // Silently ignore logging errors to prevent app crash
             }
         });
     }
@@ -72,12 +76,27 @@ class DatabaseQueryOptimizationServiceProvider extends ServiceProvider
 
         // If the same query is executed more than 10 times, it might be N+1
         if ($queryCount[$sql] > 10 && $lastQuery !== $sql) {
-            Log::warning('Potential N+1 query problem detected', [
+            $this->safeLog('Potential N+1 query problem detected', [
                 'sql' => $sql,
                 'count' => $queryCount[$sql],
                 'suggestion' => 'Consider using eager loading with with() or load()',
             ]);
             $lastQuery = $sql;
+        }
+    }
+    
+    /**
+     * Safe logging that won't throw exceptions
+     */
+    protected function safeLog(string $message, array $context = []): void
+    {
+        try {
+            // Only log if we're in local environment and logging is working
+            if (app()->environment('local')) {
+                \Log::warning($message, $context);
+            }
+        } catch (\Exception $e) {
+            // Silently ignore - don't crash the app for logging issues
         }
     }
 
