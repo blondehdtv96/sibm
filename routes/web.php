@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\PageController;
@@ -21,6 +22,30 @@ use App\Http\Controllers\Public\SearchController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+// Storage file serving route (fallback if symlink doesn't work)
+Route::get('/storage/{path}', function ($path) {
+    // Security: only allow specific directories
+    $allowedDirs = ['sliders', 'home_sliders', 'uploads', 'images', 'news', 'gallery', 'competencies', 'settings', 'logos', 'banners'];
+    $firstDir = explode('/', $path)[0] ?? '';
+    
+    if (!in_array($firstDir, $allowedDirs)) {
+        abort(404);
+    }
+    
+    if (!Storage::disk('public')->exists($path)) {
+        abort(404);
+    }
+    
+    $file = Storage::disk('public')->get($path);
+    $mimeType = Storage::disk('public')->mimeType($path);
+    $lastModified = Storage::disk('public')->lastModified($path);
+    
+    return response($file, 200)
+        ->header('Content-Type', $mimeType)
+        ->header('Cache-Control', 'public, max-age=31536000') // Cache for 1 year
+        ->header('Last-Modified', gmdate('D, d M Y H:i:s', $lastModified) . ' GMT');
+})->where('path', '.*')->name('storage.serve');
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');

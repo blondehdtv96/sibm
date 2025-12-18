@@ -45,9 +45,9 @@ class HomeSlider extends Model
             return $this->image_path;
         }
         
-        // Use Storage::url() for proper URL generation
-        // This handles both local and cloud storage
-        return Storage::url($this->image_path);
+        // Use route-based URL which works even without symlink
+        // This is more reliable on shared hosting
+        return url('/storage/' . $this->image_path);
     }
     
     /**
