@@ -1,0 +1,115 @@
+# Laravel Selective .gitignore
+# Only ignore logs and temporary files, keep folder structure
+
+# Environment files
+.env
+.env.backup
+.env.production
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# Log files only (keep folder structure)
+storage/logs/*.log
+storage/logs/laravel*.log
+
+# Cache files only (keep folder structure)
+storage/framework/cache/data/*
+!storage/framework/cache/data/.gitkeep
+
+# Session files only (keep folder structure)
+storage/framework/sessions/*
+!storage/framework/sessions/.gitkeep
+
+# View cache files only (keep folder structure)
+storage/framework/views/*
+!storage/framework/views/.gitkeep
+
+# Testing files only (keep folder structure)
+storage/framework/testing/*
+!storage/framework/testing/.gitkeep
+
+# Bootstrap cache files only (keep folder structure)
+bootstrap/cache/*
+!bootstrap/cache/.gitkeep
+
+# Compiled assets (if using Laravel Mix)
+/public/hot
+/public/storage
+/public/css/app.css
+/public/js/app.js
+/public/mix-manifest.json
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Error logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# next.js build output
+.next
+
+# nuxt.js build output
+.nuxt
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/

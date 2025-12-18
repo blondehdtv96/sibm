@@ -1,0 +1,5 @@
+# Ignore all compiled view files but keep the folder
+*
+
+# Keep the folder structure
+!.gitignore

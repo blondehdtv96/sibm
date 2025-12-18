@@ -1,0 +1,6 @@
+# Ignore all log files but keep the folder
+*.log
+laravel*.log
+
+# Keep the folder structure
+!.gitignore

@@ -1,0 +1,5 @@
+# Ignore all bootstrap cache files but keep the folder
+*
+
+# Keep the folder structure
+!.gitignore
