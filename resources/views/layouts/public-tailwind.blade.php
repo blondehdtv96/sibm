@@ -108,146 +108,143 @@
 </head>
 
 <body class="font-sans antialiased bg-white text-gray-900">
-    <!-- Navbar with Glassmorphism -->
+    <!-- Navbar with Glassmorphism - Responsive -->
     <nav x-data="{ mobileMenuOpen: false, scrolled: false }" 
          @scroll.window="scrolled = window.pageYOffset > 20"
-         :class="scrolled ? 'bg-white/80 backdrop-blur-lg shadow-lg' : 'bg-transparent'"
+         :class="scrolled ? 'bg-white/95 backdrop-blur-lg shadow-lg' : 'bg-black/20 backdrop-blur-sm'"
          class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <!-- Logo -->
-                <a href="{{ route('home') }}" class="flex items-center gap-3">
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+            <div class="flex items-center justify-between h-16 lg:h-18">
+                <!-- Logo - Compact & Responsive -->
+                <a href="{{ route('home') }}" class="flex items-center gap-2 flex-shrink-0">
                     @php
                         $siteLogo = setting('site_logo');
                         $siteName = setting('site_name', 'SMK Bina Mandiri Bekasi');
-                        $siteTagline = setting('site_tagline', 'Unggul dalam Prestasi, Berkarakter dalam Kehidupan');
+                        $siteTagline = setting('site_tagline', 'Ikhlas Berkarya Pelayanan Prima');
                         $logoUrl = $siteLogo ? asset('storage/' . $siteLogo) : null;
                     @endphp
                     
                     @if($logoUrl)
-                        <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="h-12 w-auto object-contain bg-white border-2 border-white rounded-lg p-1 shadow-sm" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="h-10 w-auto object-contain bg-white rounded-lg p-0.5 shadow-sm" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center" style="display: none;">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                             </svg>
                         </div>
                     @else
-                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                             </svg>
                         </div>
                     @endif
-                    <div class="hidden sm:block">
-                        <div class="text-lg font-bold" :class="scrolled ? 'text-gray-900' : 'text-white'">
+                    <div class="hidden md:block min-w-0">
+                        <div class="text-sm lg:text-base font-bold truncate" :class="scrolled ? 'text-gray-900' : 'text-white'">
                             {{ $siteName }}
                         </div>
-                        <div class="text-xs" :class="scrolled ? 'text-gray-600' : 'text-white/80'">
+                        <div class="text-xs truncate" :class="scrolled ? 'text-gray-500' : 'text-white/70'">
                             {{ $siteTagline }}
                         </div>
                     </div>
                 </a>
                 
-                <!-- Desktop Navigation -->
-                <div class="hidden lg:flex items-center gap-8">
-                    <a href="{{ route('home') }}" 
-                       :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
-                       class="font-medium transition-colors {{ request()->routeIs('home') ? 'border-b-2 border-current' : '' }}">
-                        Beranda
-                    </a>
-                    
-                    <!-- Tentang Dropdown -->
-                    <div x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" class="relative">
-                        <button 
-                            :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
-                            class="font-medium transition-colors flex items-center gap-1 {{ request()->routeIs('info.about') || request()->routeIs('info.overview') || request()->routeIs('info.principal-message') ? 'border-b-2 border-current' : '' }}">
+                <!-- Desktop Navigation - Responsive & Compact -->
+                <div class="hidden xl:flex items-center gap-1">
+                    <!-- Dynamic Menu Items from Database -->
+                    @if(isset($navigationMenus) && $navigationMenus->count() > 0)
+                        @foreach($navigationMenus as $menu)
+                            @if($menu->children->count() > 0)
+                                <!-- Dropdown Menu -->
+                                <div x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" class="relative">
+                                    <button 
+                                        :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
+                                        class="px-3 py-2 text-sm font-medium transition-colors flex items-center gap-1 rounded-lg hover:bg-white/10">
+                                        {{ $menu->title }}
+                                        <svg class="w-3 h-3 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                        </svg>
+                                    </button>
+                                    
+                                    <!-- Dropdown Items -->
+                                    <div x-show="open" 
+                                         x-transition:enter="transition ease-out duration-150"
+                                         x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                         x-transition:enter-end="opacity-100 transform translate-y-0"
+                                         x-transition:leave="transition ease-in duration-100"
+                                         x-transition:leave-start="opacity-100"
+                                         x-transition:leave-end="opacity-0"
+                                         class="absolute left-0 mt-1 w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
+                                        @foreach($menu->children as $child)
+                                            <a href="{{ $child->full_url }}" 
+                                               @if($child->target) target="{{ $child->target }}" @endif
+                                               class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                                                {{ $child->title }}
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @else
+                                <!-- Single Menu Item -->
+                                <a href="{{ $menu->full_url }}" 
+                                   @if($menu->target) target="{{ $menu->target }}" @endif
+                                   :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
+                                   class="px-3 py-2 text-sm font-medium transition-colors rounded-lg hover:bg-white/10 {{ $menu->route_name === 'home' && request()->routeIs('home') ? 'bg-white/20' : '' }}">
+                                    {{ $menu->title }}
+                                </a>
+                            @endif
+                        @endforeach
+                    @else
+                        <!-- Fallback static menu if no database menus -->
+                        <a href="{{ route('home') }}" 
+                           :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
+                           class="px-3 py-2 text-sm font-medium transition-colors rounded-lg hover:bg-white/10 {{ request()->routeIs('home') ? 'bg-white/20' : '' }}">
+                            Beranda
+                        </a>
+                        <a href="{{ route('info.about') }}" 
+                           :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
+                           class="px-3 py-2 text-sm font-medium transition-colors rounded-lg hover:bg-white/10">
                             Tentang
-                            <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-                        
-                        <!-- Dropdown Menu -->
-                        <div x-show="open" 
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 transform scale-95"
-                             x-transition:enter-end="opacity-100 transform scale-100"
-                             x-transition:leave="transition ease-in duration-150"
-                             x-transition:leave-start="opacity-100 transform scale-100"
-                             x-transition:leave-end="opacity-0 transform scale-95"
-                             class="absolute left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
-                            <a href="{{ route('info.about') }}" 
-                               class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors {{ request()->routeIs('info.about') ? 'bg-blue-50 text-blue-600' : '' }}">
-                                <div class="flex items-center gap-3">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                    <span class="font-medium">Profil Sekolah</span>
-                                </div>
-                            </a>
-                            <a href="{{ route('info.overview') }}" 
-                               class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors {{ request()->routeIs('info.overview') ? 'bg-blue-50 text-blue-600' : '' }}">
-                                <div class="flex items-center gap-3">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                    <span class="font-medium">Selayang Pandang</span>
-                                </div>
-                            </a>
-                            <a href="{{ route('info.principal-message') }}" 
-                               class="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors {{ request()->routeIs('info.principal-message') ? 'bg-blue-50 text-blue-600' : '' }}">
-                                <div class="flex items-center gap-3">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                    </svg>
-                                    <span class="font-medium">Sambutan Kepala Sekolah</span>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
+                        </a>
+                        <a href="{{ route('public.competencies.index') }}" 
+                           :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
+                           class="px-3 py-2 text-sm font-medium transition-colors rounded-lg hover:bg-white/10">
+                            Jurusan
+                        </a>
+                        <a href="{{ route('public.news.index') }}" 
+                           :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
+                           class="px-3 py-2 text-sm font-medium transition-colors rounded-lg hover:bg-white/10">
+                            Berita
+                        </a>
+                        <a href="{{ route('public.gallery.index') }}" 
+                           :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
+                           class="px-3 py-2 text-sm font-medium transition-colors rounded-lg hover:bg-white/10">
+                            Galeri
+                        </a>
+                        <a href="{{ route('info.contact') }}" 
+                           :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
+                           class="px-3 py-2 text-sm font-medium transition-colors rounded-lg hover:bg-white/10">
+                            Kontak
+                        </a>
+                    @endif
                     
-                    <a href="{{ route('public.competencies.index') }}" 
-                       :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
-                       class="font-medium transition-colors {{ request()->routeIs('public.competencies.*') ? 'border-b-2 border-current' : '' }}">
-                        Program
-                    </a>
-                    <a href="{{ route('public.news.index') }}" 
-                       :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
-                       class="font-medium transition-colors {{ request()->routeIs('public.news.*') ? 'border-b-2 border-current' : '' }}">
-                        Berita
-                    </a>
-                    <a href="{{ route('public.gallery.index') }}" 
-                       :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
-                       class="font-medium transition-colors {{ request()->routeIs('public.gallery.*') ? 'border-b-2 border-current' : '' }}">
-                        Galeri
-                    </a>
-                    <a href="{{ route('info.contact') }}" 
-                       :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
-                       class="font-medium transition-colors {{ request()->routeIs('info.contact') ? 'border-b-2 border-current' : '' }}">
-                        Kontak
-                    </a>
-                </div>
-                
-                <!-- CTA Buttons -->
-                <div class="hidden lg:flex items-center gap-4">
+                    <!-- CTA Button - Integrated -->
                     <a href="{{ route('ppdb.register') }}" 
-                       class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
+                       class="ml-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm rounded-lg font-semibold hover:shadow-lg transition-all whitespace-nowrap">
                         Daftar PPDB
                     </a>
                     @auth
                     <a href="{{ route('dashboard') }}" 
                        :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
-                       class="font-medium transition-colors">
+                       class="px-3 py-2 text-sm font-medium transition-colors rounded-lg hover:bg-white/10">
                         Dashboard
                     </a>
                     @endauth
                 </div>
                 
-                <!-- Mobile Menu Button -->
+                <!-- Mobile/Tablet Menu Button -->
                 <button @click="mobileMenuOpen = !mobileMenuOpen" 
                         :class="scrolled ? 'text-gray-900' : 'text-white'"
-                        class="lg:hidden p-2">
+                        class="xl:hidden p-2 rounded-lg hover:bg-white/10 transition-colors">
                     <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
@@ -257,40 +254,77 @@
                 </button>
             </div>
             
-            <!-- Mobile Menu -->
+            <!-- Mobile/Tablet Menu -->
             <div x-show="mobileMenuOpen" 
                  x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0 transform scale-95"
-                 x-transition:enter-end="opacity-100 transform scale-100"
+                 x-transition:enter-start="opacity-0 transform -translate-y-2"
+                 x-transition:enter-end="opacity-100 transform translate-y-0"
                  x-transition:leave="transition ease-in duration-150"
-                 x-transition:leave-start="opacity-100 transform scale-100"
-                 x-transition:leave-end="opacity-0 transform scale-95"
-                 class="lg:hidden py-4 bg-white rounded-2xl shadow-xl mt-2">
-                <div class="flex flex-col gap-2 px-4">
-                    <a href="{{ route('home') }}" class="px-4 py-3 rounded-xl hover:bg-gray-100 font-medium {{ request()->routeIs('home') ? 'bg-blue-50 text-blue-600' : 'text-gray-700' }}">
-                        Beranda
-                    </a>
-                    <a href="{{ route('info.about') }}" class="px-4 py-3 rounded-xl hover:bg-gray-100 font-medium {{ request()->routeIs('info.about') ? 'bg-blue-50 text-blue-600' : 'text-gray-700' }}">
-                        Tentang
-                    </a>
-                    <a href="{{ route('public.competencies.index') }}" class="px-4 py-3 rounded-xl hover:bg-gray-100 font-medium {{ request()->routeIs('public.competencies.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-700' }}">
-                        Program
-                    </a>
-                    <a href="{{ route('public.news.index') }}" class="px-4 py-3 rounded-xl hover:bg-gray-100 font-medium {{ request()->routeIs('public.news.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-700' }}">
-                        Berita
-                    </a>
-                    <a href="{{ route('public.gallery.index') }}" class="px-4 py-3 rounded-xl hover:bg-gray-100 font-medium {{ request()->routeIs('public.gallery.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-700' }}">
-                        Galeri
-                    </a>
-                    <a href="{{ route('info.contact') }}" class="px-4 py-3 rounded-xl hover:bg-gray-100 font-medium {{ request()->routeIs('info.contact') ? 'bg-blue-50 text-blue-600' : 'text-gray-700' }}">
-                        Kontak
-                    </a>
-                    <div class="border-t border-gray-200 my-2"></div>
-                    <a href="{{ route('ppdb.register') }}" class="px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-center">
-                        Daftar PPDB
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 @click.away="mobileMenuOpen = false"
+                 class="xl:hidden absolute left-4 right-4 top-full mt-2 py-4 bg-white rounded-2xl shadow-2xl border border-gray-100">
+                <div class="flex flex-col gap-1 px-3 max-h-[70vh] overflow-y-auto">
+                    <!-- Dynamic Menu Items from Database -->
+                    @if(isset($navigationMenus) && $navigationMenus->count() > 0)
+                        @foreach($navigationMenus as $menu)
+                            @if($menu->children->count() > 0)
+                                <!-- Parent with Children -->
+                                <div x-data="{ open: false }" class="space-y-1">
+                                    <button @click="open = !open" class="w-full px-4 py-3 rounded-xl hover:bg-gray-50 font-medium text-gray-700 flex items-center justify-between text-left">
+                                        <span>{{ $menu->title }}</span>
+                                        <svg class="w-4 h-4 transition-transform flex-shrink-0" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                        </svg>
+                                    </button>
+                                    <div x-show="open" x-transition class="pl-4 space-y-1 bg-gray-50 rounded-lg py-2 mt-1">
+                                        @foreach($menu->children as $child)
+                                            <a href="{{ $child->full_url }}" 
+                                               @if($child->target) target="{{ $child->target }}" @endif
+                                               class="block px-4 py-2.5 rounded-lg hover:bg-white text-gray-600 text-sm transition-colors">
+                                                {{ $child->title }}
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @else
+                                <!-- Single Menu Item -->
+                                <a href="{{ $menu->full_url }}" 
+                                   @if($menu->target) target="{{ $menu->target }}" @endif
+                                   class="px-4 py-3 rounded-xl hover:bg-gray-50 font-medium transition-colors {{ $menu->route_name === 'home' && request()->routeIs('home') ? 'bg-blue-50 text-blue-600' : 'text-gray-700' }}">
+                                    {{ $menu->title }}
+                                </a>
+                            @endif
+                        @endforeach
+                    @else
+                        <!-- Fallback static menu if no database menus -->
+                        <a href="{{ route('home') }}" class="px-4 py-3 rounded-xl hover:bg-gray-50 font-medium transition-colors {{ request()->routeIs('home') ? 'bg-blue-50 text-blue-600' : 'text-gray-700' }}">
+                            Beranda
+                        </a>
+                        <a href="{{ route('info.about') }}" class="px-4 py-3 rounded-xl hover:bg-gray-50 font-medium text-gray-700 transition-colors">
+                            Tentang Kami
+                        </a>
+                        <a href="{{ route('public.competencies.index') }}" class="px-4 py-3 rounded-xl hover:bg-gray-50 font-medium text-gray-700 transition-colors">
+                            Program Keahlian
+                        </a>
+                        <a href="{{ route('public.news.index') }}" class="px-4 py-3 rounded-xl hover:bg-gray-50 font-medium text-gray-700 transition-colors">
+                            Berita
+                        </a>
+                        <a href="{{ route('public.gallery.index') }}" class="px-4 py-3 rounded-xl hover:bg-gray-50 font-medium text-gray-700 transition-colors">
+                            Galeri
+                        </a>
+                        <a href="{{ route('info.contact') }}" class="px-4 py-3 rounded-xl hover:bg-gray-50 font-medium text-gray-700 transition-colors">
+                            Kontak
+                        </a>
+                    @endif
+                    
+                    <!-- Mobile CTA -->
+                    <div class="border-t border-gray-100 my-3 mx-2"></div>
+                    <a href="{{ route('ppdb.register') }}" class="mx-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-center shadow-lg hover:shadow-xl transition-shadow">
+                        Daftar PPDB Online
                     </a>
                     @auth
-                    <a href="{{ route('dashboard') }}" class="px-4 py-3 text-center rounded-xl hover:bg-gray-100 font-medium text-gray-700">
+                    <a href="{{ route('dashboard') }}" class="px-4 py-3 text-center rounded-xl hover:bg-gray-50 font-medium text-gray-700 transition-colors">
                         Dashboard
                     </a>
                     @endauth

@@ -16,9 +16,12 @@
         <div class="swiper-wrapper">
             @foreach($sliders as $slider)
                 <div class="swiper-slide">
-                    <div class="relative h-[500px] md:h-[600px] lg:h-[650px] bg-gray-900">
-                        <!-- Background Image -->
-                        <img src="{{ $slider->image_url }}" alt="{{ $slider->title }}" class="absolute inset-0 w-full h-full object-contain">
+                    <div class="relative h-[500px] md:h-[600px] lg:h-[650px] bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700">
+                        <!-- Background Image with fallback -->
+                        <img src="{{ $slider->image_url }}" 
+                             alt="{{ $slider->title }}" 
+                             class="absolute inset-0 w-full h-full object-cover"
+                             onerror="this.style.display='none'">
                         
                         <!-- Overlay -->
                         <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>

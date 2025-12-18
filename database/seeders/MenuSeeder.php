@@ -22,9 +22,9 @@ class MenuSeeder extends Seeder
             'status' => 'active',
         ]);
 
-        // Tentang Kami (Parent)
+        // Tentang Kami (Parent with dropdown)
         $aboutMenu = Menu::create([
-            'title' => 'Tentang Kami',
+            'title' => 'Tentang',
             'route_name' => null,
             'url' => '#',
             'parent_id' => null,
@@ -53,7 +53,7 @@ class MenuSeeder extends Seeder
         ]);
 
         Menu::create([
-            'title' => 'Sambutan Kepala Sekolah',
+            'title' => 'Sambutan Kepsek',
             'route_name' => 'info.principal-message',
             'parent_id' => $aboutMenu->id,
             'order' => 3,
@@ -63,8 +63,9 @@ class MenuSeeder extends Seeder
 
         // Program Keahlian
         Menu::create([
-            'title' => 'Program Keahlian',
+            'title' => 'Jurusan',
             'route_name' => 'public.competencies.index',
+            'url' => '/competencies', // Fallback URL
             'parent_id' => null,
             'order' => 30,
             'target' => '_self',
@@ -75,6 +76,7 @@ class MenuSeeder extends Seeder
         Menu::create([
             'title' => 'Berita',
             'route_name' => 'public.news.index',
+            'url' => '/news', // Fallback URL
             'parent_id' => null,
             'order' => 40,
             'target' => '_self',
@@ -85,18 +87,9 @@ class MenuSeeder extends Seeder
         Menu::create([
             'title' => 'Galeri',
             'route_name' => 'public.gallery.index',
+            'url' => '/gallery', // Fallback URL
             'parent_id' => null,
             'order' => 50,
-            'target' => '_self',
-            'status' => 'active',
-        ]);
-
-        // PPDB
-        Menu::create([
-            'title' => 'PPDB',
-            'route_name' => 'ppdb.register',
-            'parent_id' => null,
-            'order' => 60,
             'target' => '_self',
             'status' => 'active',
         ]);
@@ -105,8 +98,9 @@ class MenuSeeder extends Seeder
         Menu::create([
             'title' => 'Kontak',
             'route_name' => 'info.contact',
+            'url' => '/contact', // Fallback URL
             'parent_id' => null,
-            'order' => 70,
+            'order' => 60,
             'target' => '_self',
             'status' => 'active',
         ]);

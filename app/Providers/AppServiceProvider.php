@@ -26,5 +26,8 @@ class AppServiceProvider extends ServiceProvider
         
         // Share settings data with all public views
         view()->composer('layouts.public-tailwind', \App\View\Composers\SettingsComposer::class);
+        
+        // Share menu data with all public views
+        view()->composer('layouts.public-tailwind', \App\View\Composers\MenuComposer::class);
     }
 }

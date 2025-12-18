@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class HomeSlider extends Model
 {
@@ -35,6 +36,29 @@ class HomeSlider extends Model
 
     public function getImageUrlAttribute()
     {
-        return asset('storage/' . $this->image_path);
+        if (!$this->image_path) {
+            return asset('images/placeholder-slider.jpg');
+        }
+        
+        // Check if it's already a full URL
+        if (str_starts_with($this->image_path, 'http')) {
+            return $this->image_path;
+        }
+        
+        // Use Storage::url() for proper URL generation
+        // This handles both local and cloud storage
+        return Storage::url($this->image_path);
+    }
+    
+    /**
+     * Check if image file exists
+     */
+    public function imageExists(): bool
+    {
+        if (!$this->image_path) {
+            return false;
+        }
+        
+        return Storage::disk('public')->exists($this->image_path);
     }
 }
