@@ -64,7 +64,7 @@
                 <!-- Ganti VIDEO_ID dengan ID video YouTube Anda -->
                 <!-- Contoh: https://www.youtube.com/watch?v=dQw4w9WgXcQ -> ID: dQw4w9WgXcQ -->
                 <iframe 
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                    src="https://www.youtube.com/watch?v=s5l8HAA2evI" 
                     title="Video Profil SMK Bina Mandiri Bekasi" 
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
