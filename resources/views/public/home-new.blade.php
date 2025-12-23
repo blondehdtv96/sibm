@@ -215,15 +215,14 @@
 
                     <!-- Action Buttons -->
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="{{ asset('storage/' . setting('ppdb_brochure')) }}" 
-                           target="_blank"
+                        <button onclick="openBrosurModal()" 
                            class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                             </svg>
                             Lihat Brosur
-                        </a>
+                        </button>
                         <a href="{{ asset('storage/' . setting('ppdb_brochure')) }}" 
                            download
                            class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 bg-white border-2 border-orange-500 text-orange-600 font-bold rounded-xl hover:bg-orange-50 transition-all duration-300">
@@ -278,6 +277,54 @@
                class="bg-white rounded-2xl p-6 text-center shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                 <div class="text-4xl mb-3">📸</div>
                 <div class="font-bold text-lg text-gray-800">Galeri</div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- School Video Section -->
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full mb-4">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"/>
+                </svg>
+                Video Sekolah Kami
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Profil SMK Bina Mandiri Kota Bekasi</h2>
+            <p class="text-gray-600 text-lg">
+                Saksikan perjalanan dan prestasi siswa-siswi kami dalam video dokumenter sekolah yang menampilkan keunggulan program, fasilitas modern, dan pencapaian luar biasa.
+            </p>
+        </div>
+
+        <!-- Video Container -->
+        <div class="bg-black rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-300">
+            <div class="relative w-full" style="padding-bottom: 56.25%;">
+                <iframe 
+                    class="absolute inset-0 w-full h-full"
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0" 
+                    title="Video Profil SMK Bina Mandiri Kota Bekasi" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen
+                ></iframe>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="text-center mt-10">
+            <a href="https://www.youtube.com/@smkbinamandiri" 
+               target="_blank" 
+               class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+                Lihat Video Lainnya di Channel YouTube
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
             </a>
         </div>
     </div>
@@ -641,6 +688,156 @@ document.addEventListener('DOMContentLoaded', function() {
 .swiper-slide:not(.swiper-slide-active) img {
     filter: brightness(0.95);
 }
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: slideIn 0.3s ease-out;
+    z-index: 60;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+.toast.removing {
+    animation: slideOut 0.3s ease-in;
+}
+
+.toast svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
 </style>
+
+<!-- Brosur Modal -->
+<div id="brosurModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-300">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-orange-500 to-red-500">
+            <h2 class="text-2xl font-bold text-white">{{ setting('ppdb_brochure_title', 'Brosur PPDB') }}</h2>
+            <button onclick="closeBrosurModal()" class="text-white hover:bg-white/20 p-2 rounded-full transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Modal Body - Image Viewer -->
+        <div class="flex-1 overflow-auto bg-gray-50 flex items-center justify-center p-6">
+            <img src="{{ asset('storage/' . setting('ppdb_brochure')) }}" 
+                 alt="{{ setting('ppdb_brochure_title', 'Brosur PPDB') }}"
+                 class="max-w-full h-auto shadow-lg rounded-xl">
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="flex items-center gap-4 p-6 border-t border-gray-200 bg-gray-50">
+            <button onclick="downloadBrosur()" 
+               class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                Download Brosur
+            </button>
+            <button onclick="closeBrosurModal()" 
+                   class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-300 text-gray-800 font-bold rounded-xl hover:bg-gray-400 transition-all duration-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+function openBrosurModal() {
+    const modal = document.getElementById('brosurModal');
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeBrosurModal() {
+    const modal = document.getElementById('brosurModal');
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+function downloadBrosur() {
+    const brochureUrl = "{{ asset('storage/' . setting('ppdb_brochure')) }}";
+    const link = document.createElement('a');
+    link.href = brochureUrl;
+    link.download = true;
+    link.click();
+    
+    // Show success toast notification
+    showToast('✓ Download dimulai, brosur akan tersimpan di folder download Anda');
+}
+
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `
+        <svg fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <span>${message}</span>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Remove toast after 3 seconds
+    setTimeout(() => {
+        toast.classList.add('removing');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
+}
+
+// Close modal when clicking outside
+document.getElementById('brosurModal')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeBrosurModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeBrosurModal();
+    }
+});
+</script>
 @endpush
 @endsection

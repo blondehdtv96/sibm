@@ -63,7 +63,7 @@ class MenuSeeder extends Seeder
 
         // Program Keahlian
         Menu::create([
-            'title' => 'Jurusan',
+            'title' => 'Program Keahlian',
             'route_name' => 'public.competencies.index',
             'url' => '/competencies', // Fallback URL
             'parent_id' => null,
