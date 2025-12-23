@@ -179,6 +179,16 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     Route::resource('chatbot-responses', \App\Http\Controllers\Admin\ChatbotResponseController::class);
     Route::post('chatbot-responses/{chatbotResponse}/toggle-status', [\App\Http\Controllers\Admin\ChatbotResponseController::class, 'toggleStatus'])->name('chatbot-responses.toggle-status');
     
+    // Contact Messages Management routes
+    Route::get('contact-messages', [\App\Http\Controllers\Admin\ContactMessageController::class, 'index'])->name('contact-messages.index');
+    Route::get('contact-messages/{contactMessage}', [\App\Http\Controllers\Admin\ContactMessageController::class, 'show'])->name('contact-messages.show');
+    Route::patch('contact-messages/{contactMessage}/mark-read', [\App\Http\Controllers\Admin\ContactMessageController::class, 'markAsRead'])->name('contact-messages.mark-read');
+    Route::patch('contact-messages/{contactMessage}/mark-replied', [\App\Http\Controllers\Admin\ContactMessageController::class, 'markAsReplied'])->name('contact-messages.mark-replied');
+    Route::patch('contact-messages/{contactMessage}/update-notes', [\App\Http\Controllers\Admin\ContactMessageController::class, 'updateNotes'])->name('contact-messages.update-notes');
+    Route::delete('contact-messages/{contactMessage}', [\App\Http\Controllers\Admin\ContactMessageController::class, 'destroy'])->name('contact-messages.destroy');
+    Route::post('contact-messages/destroy-multiple', [\App\Http\Controllers\Admin\ContactMessageController::class, 'destroyMultiple'])->name('contact-messages.destroy-multiple');
+    Route::get('contact-messages-unread-count', [\App\Http\Controllers\Admin\ContactMessageController::class, 'getUnreadCount'])->name('contact-messages.unread-count');
+    
     // Settings Management routes
     Route::get('settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
     Route::post('settings/update-general', [\App\Http\Controllers\Admin\SettingController::class, 'updateGeneral'])->name('settings.update-general');
@@ -192,6 +202,17 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     Route::get('settings/contact-social', [\App\Http\Controllers\Admin\SettingController::class, 'contactSocial'])->name('settings.contact-social');
     Route::post('settings/update-contact', [\App\Http\Controllers\Admin\SettingController::class, 'updateContact'])->name('settings.update-contact');
     Route::post('settings/update-social-media', [\App\Http\Controllers\Admin\SettingController::class, 'updateSocialMedia'])->name('settings.update-social-media');
+    
+    // About Content Management routes
+    Route::get('settings/about-content', [\App\Http\Controllers\Admin\SettingController::class, 'aboutContent'])->name('settings.about-content');
+    Route::post('settings/update-about-hero', [\App\Http\Controllers\Admin\SettingController::class, 'updateAboutHero'])->name('settings.update-about-hero');
+    Route::post('settings/update-about-stats', [\App\Http\Controllers\Admin\SettingController::class, 'updateAboutStats'])->name('settings.update-about-stats');
+    Route::post('settings/update-about-vision-mission', [\App\Http\Controllers\Admin\SettingController::class, 'updateAboutVisionMission'])->name('settings.update-about-vision-mission');
+    Route::post('settings/update-about-values', [\App\Http\Controllers\Admin\SettingController::class, 'updateAboutValues'])->name('settings.update-about-values');
+    
+    // Contact Content Management routes
+    Route::get('settings/contact-content', [\App\Http\Controllers\Admin\SettingController::class, 'contactContent'])->name('settings.contact-content');
+    Route::post('settings/update-contact-content', [\App\Http\Controllers\Admin\SettingController::class, 'updateContactContent'])->name('settings.update-contact-content');
     
     // Menu Management routes
     Route::resource('menus', \App\Http\Controllers\Admin\MenuController::class);

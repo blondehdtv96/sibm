@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
+use App\Models\ContactMessage;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class InfoController extends Controller
@@ -31,14 +33,22 @@ class InfoController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:20',
             'subject' => 'required|string|max:255',
             'message' => 'required|string|max:2000',
         ]);
 
-        // In a real application, you would send an email here
-        // For now, we'll just return success
+        // Save to database
+        ContactMessage::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+            'subject' => $validated['subject'],
+            'message' => $validated['message'],
+            'ip_address' => $request->ip(),
+        ]);
         
-        return back()->with('success', 'Thank you for your message. We will get back to you soon!');
+        return back()->with('success', 'Terima kasih! Pesan Anda telah terkirim. Kami akan segera menghubungi Anda.');
     }
 
     /**
@@ -46,7 +56,7 @@ class InfoController extends Controller
      */
     public function overview()
     {
-        $overview = \App\Models\Setting::get('school_overview', '');
+        $overview = Setting::get('school_overview', '');
         
         return view('public.info.overview', compact('overview'));
     }
@@ -56,9 +66,9 @@ class InfoController extends Controller
      */
     public function principalMessage()
     {
-        $principalName = \App\Models\Setting::get('principal_name', 'Kepala Sekolah');
-        $principalPhoto = \App\Models\Setting::get('principal_photo', '');
-        $principalMessage = \App\Models\Setting::get('principal_message', '');
+        $principalName = Setting::get('principal_name', 'Kepala Sekolah');
+        $principalPhoto = Setting::get('principal_photo', '');
+        $principalMessage = Setting::get('principal_message', '');
         
         return view('public.info.principal-message', compact(
             'principalName',

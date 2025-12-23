@@ -337,4 +337,192 @@ class SettingController extends Controller
 
         return redirect()->back()->with('success', 'Brosur PPDB berhasil dihapus!');
     }
+
+    /**
+     * Show about page content management
+     */
+    public function aboutContent()
+    {
+        // Hero Section
+        $aboutHeroTitle = Setting::get('about_hero_title', 'Tentang SMK Bina Mandiri Bekasi');
+        $aboutHeroSubtitle = Setting::get('about_hero_subtitle', 'Membangun Generasi Unggul Melalui Pendidikan Berkualitas');
+        $aboutHeroDescription = Setting::get('about_hero_description', 'Pelajari lebih lanjut tentang sejarah, visi, misi, dan komitmen kami dalam memberikan pendidikan terbaik untuk masa depan yang cemerlang');
+
+        // Quick Stats
+        $aboutStat1Value = Setting::get('about_stat1_value', '25+');
+        $aboutStat1Label = Setting::get('about_stat1_label', 'Tahun Pengalaman');
+        $aboutStat2Value = Setting::get('about_stat2_value', '5000+');
+        $aboutStat2Label = Setting::get('about_stat2_label', 'Alumni Sukses');
+        $aboutStat3Value = Setting::get('about_stat3_value', '100+');
+        $aboutStat3Label = Setting::get('about_stat3_label', 'Tenaga Pendidik');
+        $aboutStat4Value = Setting::get('about_stat4_value', '15+');
+        $aboutStat4Label = Setting::get('about_stat4_label', 'Program Keahlian');
+
+        // Vision & Mission
+        $aboutVision = Setting::get('about_vision', 'Menjadi lembaga pendidikan terdepan yang menghasilkan lulusan kompeten, inovatif, dan berkarakter yang siap menghadapi tantangan global serta berkontribusi positif bagi masyarakat.');
+        $aboutMission = Setting::get('about_mission', "1. Menyelenggarakan pendidikan berkualitas yang memenuhi standar nasional dan internasional\n2. Mengembangkan kompetensi siswa melalui pendekatan pembelajaran inovatif dan praktis\n3. Membina pengembangan karakter berdasarkan nilai-nilai moral dan etika\n4. Membangun kemitraan dengan industri dan masyarakat untuk hasil pembelajaran yang optimal\n5. Menciptakan lingkungan belajar yang kondusif dan berbasis teknologi");
+
+        // Values
+        $aboutValue1Title = Setting::get('about_value1_title', 'Keunggulan');
+        $aboutValue1Desc = Setting::get('about_value1_desc', 'Berusaha mencapai standar tertinggi dalam setiap hal yang kami lakukan');
+        $aboutValue2Title = Setting::get('about_value2_title', 'Integritas');
+        $aboutValue2Desc = Setting::get('about_value2_desc', 'Bertindak dengan kejujuran dan prinsip moral yang kuat');
+        $aboutValue3Title = Setting::get('about_value3_title', 'Inovasi');
+        $aboutValue3Desc = Setting::get('about_value3_desc', 'Mengembangkan kreativitas dan ide-ide baru dalam pembelajaran');
+        $aboutValue4Title = Setting::get('about_value4_title', 'Menghargai');
+        $aboutValue4Desc = Setting::get('about_value4_desc', 'Menghargai keberagaman dan memperlakukan setiap orang dengan martabat');
+
+        return view('admin.settings.about-content', compact(
+            'aboutHeroTitle', 'aboutHeroSubtitle', 'aboutHeroDescription',
+            'aboutStat1Value', 'aboutStat1Label', 'aboutStat2Value', 'aboutStat2Label',
+            'aboutStat3Value', 'aboutStat3Label', 'aboutStat4Value', 'aboutStat4Label',
+            'aboutVision', 'aboutMission',
+            'aboutValue1Title', 'aboutValue1Desc', 'aboutValue2Title', 'aboutValue2Desc',
+            'aboutValue3Title', 'aboutValue3Desc', 'aboutValue4Title', 'aboutValue4Desc'
+        ));
+    }
+
+    /**
+     * Update about hero section
+     */
+    public function updateAboutHero(Request $request)
+    {
+        $request->validate([
+            'about_hero_title' => 'required|string|max:255',
+            'about_hero_subtitle' => 'required|string|max:255',
+            'about_hero_description' => 'required|string|max:500',
+        ]);
+
+        Setting::set('about_hero_title', $request->about_hero_title);
+        Setting::set('about_hero_subtitle', $request->about_hero_subtitle);
+        Setting::set('about_hero_description', $request->about_hero_description, 'text');
+
+        return redirect()->back()->with('success', 'Hero section berhasil diperbarui!');
+    }
+
+    /**
+     * Update about statistics
+     */
+    public function updateAboutStats(Request $request)
+    {
+        $request->validate([
+            'about_stat1_value' => 'required|string|max:50',
+            'about_stat1_label' => 'required|string|max:100',
+            'about_stat2_value' => 'required|string|max:50',
+            'about_stat2_label' => 'required|string|max:100',
+            'about_stat3_value' => 'required|string|max:50',
+            'about_stat3_label' => 'required|string|max:100',
+            'about_stat4_value' => 'required|string|max:50',
+            'about_stat4_label' => 'required|string|max:100',
+        ]);
+
+        Setting::set('about_stat1_value', $request->about_stat1_value);
+        Setting::set('about_stat1_label', $request->about_stat1_label);
+        Setting::set('about_stat2_value', $request->about_stat2_value);
+        Setting::set('about_stat2_label', $request->about_stat2_label);
+        Setting::set('about_stat3_value', $request->about_stat3_value);
+        Setting::set('about_stat3_label', $request->about_stat3_label);
+        Setting::set('about_stat4_value', $request->about_stat4_value);
+        Setting::set('about_stat4_label', $request->about_stat4_label);
+
+        return redirect()->back()->with('success', 'Statistik berhasil diperbarui!');
+    }
+
+    /**
+     * Update about vision & mission
+     */
+    public function updateAboutVisionMission(Request $request)
+    {
+        $request->validate([
+            'about_vision' => 'required|string',
+            'about_mission' => 'required|string',
+        ]);
+
+        Setting::set('about_vision', $request->about_vision, 'text');
+        Setting::set('about_mission', $request->about_mission, 'text');
+
+        return redirect()->back()->with('success', 'Visi & Misi berhasil diperbarui!');
+    }
+
+    /**
+     * Update about values
+     */
+    public function updateAboutValues(Request $request)
+    {
+        $request->validate([
+            'about_value1_title' => 'required|string|max:100',
+            'about_value1_desc' => 'required|string|max:255',
+            'about_value2_title' => 'required|string|max:100',
+            'about_value2_desc' => 'required|string|max:255',
+            'about_value3_title' => 'required|string|max:100',
+            'about_value3_desc' => 'required|string|max:255',
+            'about_value4_title' => 'required|string|max:100',
+            'about_value4_desc' => 'required|string|max:255',
+        ]);
+
+        Setting::set('about_value1_title', $request->about_value1_title);
+        Setting::set('about_value1_desc', $request->about_value1_desc);
+        Setting::set('about_value2_title', $request->about_value2_title);
+        Setting::set('about_value2_desc', $request->about_value2_desc);
+        Setting::set('about_value3_title', $request->about_value3_title);
+        Setting::set('about_value3_desc', $request->about_value3_desc);
+        Setting::set('about_value4_title', $request->about_value4_title);
+        Setting::set('about_value4_desc', $request->about_value4_desc);
+
+        return redirect()->back()->with('success', 'Nilai-nilai berhasil diperbarui!');
+    }
+
+    /**
+     * Show contact page content management
+     */
+    public function contactContent()
+    {
+        // Hero Section
+        $contactPageTitle = Setting::get('contact_page_title', 'Hubungi Kami');
+        $contactPageSubtitle = Setting::get('contact_page_subtitle', 'Kami Siap Membantu dan Menjawab Pertanyaan Anda');
+        $contactPageDescription = Setting::get('contact_page_description', 'Tim kami siap memberikan informasi lengkap tentang program pendidikan, fasilitas, dan segala hal yang ingin Anda ketahui');
+        
+        // Office Hours
+        $contactOfficeHours = Setting::get('contact_office_hours', '07:00 - 16:00');
+        $contactOfficeHoursWeekday = Setting::get('contact_office_hours_weekday', '07:00 - 16:00');
+        $contactOfficeHoursSaturday = Setting::get('contact_office_hours_saturday', '07:00 - 12:00');
+        $contactOfficeHoursSunday = Setting::get('contact_office_hours_sunday', 'Tutup');
+        
+        // Google Maps
+        $contactMapEmbed = Setting::get('contact_map_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.239246932022!2d106.95795700000001!3d-6.2321594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e698dc327deb0c1%3A0x23448146f6e2f463!2sSMK%20BINA%20MANDIRI!5e0!3m2!1sid!2sid!4v1760448328414!5m2!1sid!2sid');
+
+        return view('admin.settings.contact-content', compact(
+            'contactPageTitle', 'contactPageSubtitle', 'contactPageDescription',
+            'contactOfficeHours', 'contactOfficeHoursWeekday', 'contactOfficeHoursSaturday', 'contactOfficeHoursSunday',
+            'contactMapEmbed'
+        ));
+    }
+
+    /**
+     * Update contact page content
+     */
+    public function updateContactContent(Request $request)
+    {
+        $request->validate([
+            'contact_page_title' => 'required|string|max:255',
+            'contact_page_subtitle' => 'required|string|max:255',
+            'contact_page_description' => 'required|string|max:500',
+            'contact_office_hours' => 'required|string|max:50',
+            'contact_office_hours_weekday' => 'required|string|max:50',
+            'contact_office_hours_saturday' => 'required|string|max:50',
+            'contact_office_hours_sunday' => 'required|string|max:50',
+            'contact_map_embed' => 'nullable|string|max:2000',
+        ]);
+
+        Setting::set('contact_page_title', $request->contact_page_title);
+        Setting::set('contact_page_subtitle', $request->contact_page_subtitle);
+        Setting::set('contact_page_description', $request->contact_page_description, 'text');
+        Setting::set('contact_office_hours', $request->contact_office_hours);
+        Setting::set('contact_office_hours_weekday', $request->contact_office_hours_weekday);
+        Setting::set('contact_office_hours_saturday', $request->contact_office_hours_saturday);
+        Setting::set('contact_office_hours_sunday', $request->contact_office_hours_sunday);
+        Setting::set('contact_map_embed', $request->contact_map_embed, 'text');
+
+        return redirect()->back()->with('success', 'Konten halaman kontak berhasil diperbarui!');
+    }
 }

@@ -39,13 +39,13 @@
         </div>
         
         <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-white mb-6 leading-tight tracking-tight">
-            Hubungi Kami
+            {{ setting('contact_page_title', 'Hubungi Kami') }}
         </h1>
         <p class="text-xl sm:text-2xl md:text-3xl text-white/95 mb-4 max-w-4xl mx-auto leading-relaxed font-light">
-            Kami Siap Membantu dan Menjawab Pertanyaan Anda
+            {{ setting('contact_page_subtitle', 'Kami Siap Membantu dan Menjawab Pertanyaan Anda') }}
         </p>
         <p class="text-lg text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Tim kami siap memberikan informasi lengkap tentang program pendidikan, fasilitas, dan segala hal yang ingin Anda ketahui
+            {{ setting('contact_page_description', 'Tim kami siap memberikan informasi lengkap tentang program pendidikan, fasilitas, dan segala hal yang ingin Anda ketahui') }}
         </p>
         
         <!-- Quick Contact Info -->
@@ -57,7 +57,7 @@
                     </svg>
                 </div>
                 <div class="text-white/80 text-sm md:text-base">Telepon</div>
-                <div class="text-white font-semibold">{{ config('school.phone', '+62 21 1234 5678') }}</div>
+                <div class="text-white font-semibold">{{ setting('contact_phone', config('school.phone', '+62 21 1234 5678')) }}</div>
             </div>
             <div class="text-center">
                 <div class="w-16 h-16 bg-white/20 backdrop-blur-lg rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -66,7 +66,7 @@
                     </svg>
                 </div>
                 <div class="text-white/80 text-sm md:text-base">Email</div>
-                <div class="text-white font-semibold">{{ config('school.email', 'info@smkbinamandiri.sch.id') }}</div>
+                <div class="text-white font-semibold">{{ setting('contact_email', config('school.email', 'info@smkbinamandiri.sch.id')) }}</div>
             </div>
             <div class="text-center">
                 <div class="w-16 h-16 bg-white/20 backdrop-blur-lg rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -75,7 +75,7 @@
                     </svg>
                 </div>
                 <div class="text-white/80 text-sm md:text-base">Jam Operasional</div>
-                <div class="text-white font-semibold">07:00 - 16:00</div>
+                <div class="text-white font-semibold">{{ setting('contact_office_hours', '07:00 - 16:00') }}</div>
             </div>
         </div>
     </div>
@@ -117,7 +117,7 @@
                             </div>
                             <div>
                                 <h4 class="text-lg font-semibold text-gray-800 mb-2">Alamat</h4>
-                                <p class="text-gray-600 leading-relaxed">{{ config('school.address', 'Jl. Pendidikan No. 123, Bekasi Timur, Jawa Barat 17113') }}</p>
+                                <p class="text-gray-600 leading-relaxed">{{ setting('contact_address', config('school.address', 'Jl. Pendidikan No. 123, Bekasi Timur, Jawa Barat 17113')) }}</p>
                             </div>
                         </div>
                         
@@ -131,8 +131,8 @@
                             <div>
                                 <h4 class="text-lg font-semibold text-gray-800 mb-2">Telepon</h4>
                                 <p class="text-gray-600">
-                                    <a href="tel:{{ config('school.phone', '+62 21 1234 5678') }}" class="text-teal-600 hover:text-teal-700 transition-colors">
-                                        {{ config('school.phone', '+62 21 1234 5678') }}
+                                    <a href="tel:{{ setting('contact_phone', config('school.phone', '+62 21 1234 5678')) }}" class="text-teal-600 hover:text-teal-700 transition-colors">
+                                        {{ setting('contact_phone', config('school.phone', '+62 21 1234 5678')) }}
                                     </a>
                                 </p>
                             </div>
@@ -148,8 +148,8 @@
                             <div>
                                 <h4 class="text-lg font-semibold text-gray-800 mb-2">Email</h4>
                                 <p class="text-gray-600">
-                                    <a href="mailto:{{ config('school.email', 'info@smkbinamandiri.sch.id') }}" class="text-teal-600 hover:text-teal-700 transition-colors">
-                                        {{ config('school.email', 'info@smkbinamandiri.sch.id') }}
+                                    <a href="mailto:{{ setting('contact_email', config('school.email', 'info@smkbinamandiri.sch.id')) }}" class="text-teal-600 hover:text-teal-700 transition-colors">
+                                        {{ setting('contact_email', config('school.email', 'info@smkbinamandiri.sch.id')) }}
                                     </a>
                                 </p>
                             </div>
@@ -165,8 +165,8 @@
                             <div>
                                 <h4 class="text-lg font-semibold text-gray-800 mb-2">Website</h4>
                                 <p class="text-gray-600">
-                                    <a href="{{ config('school.website', 'https://smkbinamandiri.sch.id') }}" class="text-teal-600 hover:text-teal-700 transition-colors">
-                                        {{ config('school.website', 'smkbinamandiri.sch.id') }}
+                                    <a href="{{ config('app.url') }}" class="text-teal-600 hover:text-teal-700 transition-colors">
+                                        {{ str_replace(['https://', 'http://'], '', config('app.url')) }}
                                     </a>
                                 </p>
                             </div>
@@ -185,15 +185,15 @@
                     <div class="space-y-3 text-gray-700">
                         <div class="flex justify-between items-center">
                             <span class="font-medium">Senin - Jumat</span>
-                            <span>07:00 - 16:00</span>
+                            <span>{{ setting('contact_office_hours_weekday', '07:00 - 16:00') }}</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="font-medium">Sabtu</span>
-                            <span>07:00 - 12:00</span>
+                            <span>{{ setting('contact_office_hours_saturday', '07:00 - 12:00') }}</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="font-medium">Minggu</span>
-                            <span class="text-red-500">Tutup</span>
+                            <span class="{{ setting('contact_office_hours_sunday', 'Tutup') == 'Tutup' ? 'text-red-500' : '' }}">{{ setting('contact_office_hours_sunday', 'Tutup') }}</span>
                         </div>
                     </div>
                 </div>
@@ -261,6 +261,21 @@
                     </div>
 
                     <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">No. Telepon/WhatsApp</label>
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            name="phone" 
+                            value="{{ old('phone') }}"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all @error('phone') border-red-500 @enderror"
+                            placeholder="08xxxxxxxxxx"
+                        >
+                        @error('phone')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
                         <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subjek *</label>
                         <input 
                             type="text" 
@@ -322,7 +337,7 @@
         <div class="bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100">
             <div class="h-96 md:h-[500px] relative">
                 <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.239246932022!2d106.95795700000001!3d-6.2321594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e698dc327deb0c1%3A0x23448146f6e2f463!2sSMK%20BINA%20MANDIRI!5e0!3m2!1sid!2sid!4v1760448328414!5m2!1sid!2sid"
+                    src="{{ setting('contact_map_embed', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.239246932022!2d106.95795700000001!3d-6.2321594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e698dc327deb0c1%3A0x23448146f6e2f463!2sSMK%20BINA%20MANDIRI!5e0!3m2!1sid!2sid!4v1760448328414!5m2!1sid!2sid') }}"
                     width="100%" 
                     height="100%" 
                     style="border:0;" 

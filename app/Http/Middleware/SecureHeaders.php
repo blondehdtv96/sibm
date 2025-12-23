@@ -17,26 +17,27 @@ class SecureHeaders
     {
         $response = $next($request);
         
-        // Add security headers in production and when HTTPS is detected
-        if (app()->environment('production') || $request->secure()) {
-            // Force HTTPS for all content
+        // Only add security headers in production environment
+        if (app()->environment('production')) {
+            // Force HTTPS for all content (only in production)
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
             
             // Upgrade insecure requests to HTTPS
             $response->headers->set('Content-Security-Policy', 'upgrade-insecure-requests');
-            
-            // Prevent clickjacking
-            $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
-            
-            // Prevent MIME sniffing
-            $response->headers->set('X-Content-Type-Options', 'nosniff');
-            
-            // XSS Protection
-            $response->headers->set('X-XSS-Protection', '1; mode=block');
-            
-            // Referrer Policy
-            $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         }
+        
+        // These headers are safe for all environments
+        // Prevent clickjacking
+        $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
+        
+        // Prevent MIME sniffing
+        $response->headers->set('X-Content-Type-Options', 'nosniff');
+        
+        // XSS Protection
+        $response->headers->set('X-XSS-Protection', '1; mode=block');
+        
+        // Referrer Policy
+        $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         
         return $response;
     }

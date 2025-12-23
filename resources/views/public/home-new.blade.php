@@ -23,9 +23,6 @@
                              class="absolute inset-0 w-full h-full object-cover"
                              onerror="this.style.display='none'">
                         
-                        <!-- Overlay -->
-                        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
-                        
                         <!-- Content -->
                         <div class="relative h-full flex items-center">
                             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -168,11 +165,19 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-0">
-                <!-- Image Section -->
-                <div class="relative h-64 lg:h-auto bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center p-8">
+                <!-- Image Section - Click to open popup -->
+                <div class="relative h-64 lg:h-auto bg-gradient-to-br from-orange-100 to-red-100 flex items-center justify-center p-8 cursor-pointer" onclick="openBrochurePopup()">
                     <img src="{{ asset('storage/' . $ppdbBrochure) }}" 
                          alt="{{ $ppdbBrochureTitle }}" 
                          class="w-full h-full object-contain rounded-xl shadow-lg hover:scale-105 transition-transform duration-300">
+                    <!-- Hover overlay -->
+                    <div class="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors duration-300 flex items-center justify-center opacity-0 hover:opacity-100">
+                        <div class="bg-white/90 rounded-full p-4">
+                            <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Content Section -->
@@ -190,15 +195,14 @@
                     </p>
                     
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="{{ asset('storage/' . $ppdbBrochure) }}" 
-                           target="_blank"
+                        <button type="button" onclick="openBrochurePopup()"
                            class="inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                             </svg>
                             Lihat Brosur
-                        </a>
+                        </button>
                         <a href="{{ asset('storage/' . $ppdbBrochure) }}" 
                            download
                            class="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white border-2 border-orange-600 text-orange-600 rounded-2xl font-bold text-lg hover:bg-orange-50 transition-all duration-300">
@@ -223,6 +227,69 @@
         </div>
     </div>
 </section>
+
+<!-- Brochure Popup Modal -->
+<div id="brochurePopup" class="fixed inset-0 z-50 hidden">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeBrochurePopup()"></div>
+    
+    <!-- Modal Content -->
+    <div class="relative h-full flex items-center justify-center p-4">
+        <div class="relative max-w-4xl w-full max-h-[90vh] bg-white rounded-3xl overflow-hidden shadow-2xl">
+            <!-- Close Button -->
+            <button onclick="closeBrochurePopup()" 
+                    class="absolute top-4 right-4 z-10 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-colors">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            
+            <!-- Image Container -->
+            <div class="overflow-auto max-h-[90vh] p-4">
+                <img src="{{ asset('storage/' . $ppdbBrochure) }}" 
+                     alt="{{ $ppdbBrochureTitle }}" 
+                     class="w-full h-auto rounded-xl">
+            </div>
+            
+            <!-- Bottom Actions -->
+            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white to-transparent p-6">
+                <div class="flex justify-center gap-4">
+                    <a href="{{ asset('storage/' . $ppdbBrochure) }}" 
+                       download
+                       class="inline-flex items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-xl font-semibold hover:bg-orange-700 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Download Brosur
+                    </a>
+                    <button onclick="closeBrochurePopup()" 
+                            class="inline-flex items-center gap-2 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function openBrochurePopup() {
+    document.getElementById('brochurePopup').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeBrochurePopup() {
+    document.getElementById('brochurePopup').classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+// Close on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeBrochurePopup();
+    }
+});
+</script>
 @endif
 
 <!-- Quick Links Section -->
