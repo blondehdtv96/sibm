@@ -11,16 +11,16 @@
         <div class="swiper-wrapper">
             @foreach($sliders as $slider)
             <div class="swiper-slide">
-                <div class="relative h-[450px] md:h-[550px] overflow-hidden w-full">
+                <div class="relative w-full bg-black flex items-center justify-center overflow-hidden">
                     @if($slider->image_url)
                     <img src="{{ $slider->image_url }}" 
                          alt="{{ $slider->title }}" 
-                         class="absolute inset-0 w-full h-full object-cover animate-ken-burns"
+                         class="w-full h-auto object-contain animate-ken-burns"
                          loading="lazy">
                     @endif
                     
-                    <div class="relative h-full flex items-center">
-                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                    <div class="absolute inset-0 flex items-center pointer-events-none">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pointer-events-auto">
                             <div class="max-w-3xl text-white">
                                 @if($slider->title)
                                 <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 leading-tight">
@@ -304,7 +304,7 @@
             <div class="relative w-full" style="padding-bottom: 56.25%;">
                 <iframe 
                     class="absolute inset-0 w-full h-full"
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0" 
+                    src="https://www.youtube.com/embed/s5l8HAA2evI" 
                     title="Video Profil SMK Bina Mandiri Kota Bekasi" 
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -315,7 +315,7 @@
 
         <!-- Call to Action -->
         <div class="text-center mt-10">
-            <a href="https://www.youtube.com/@smkbinamandiri" 
+            <a href="https://www.youtube.com/@smkbinamandiri268" 
                target="_blank" 
                class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -553,6 +553,7 @@ document.addEventListener('DOMContentLoaded', function() {
     width: 100% !important;
     overflow: hidden !important;
     display: block !important;
+    background-color: #000;
 }
 
 .home-hero-slider .swiper-wrapper {
@@ -568,6 +569,37 @@ document.addEventListener('DOMContentLoaded', function() {
     flex-shrink: 0 !important;
     box-sizing: border-box !important;
     transition: opacity 0.5s ease-in-out !important;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Responsive heights for different screen sizes */
+@media (max-width: 768px) {
+    .home-hero-slider .swiper-slide {
+        min-height: 300px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .home-hero-slider .swiper-slide {
+        min-height: 450px;
+    }
+}
+
+@media (min-width: 1025px) {
+    .home-hero-slider .swiper-slide {
+        min-height: 550px;
+    }
+}
+
+/* Image styling */
+.home-hero-slider .swiper-slide img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
 }
 
 /* Smooth transition between slides */
