@@ -7,6 +7,7 @@ use App\Models\News;
 use App\Models\Competency;
 use App\Models\GalleryAlbum;
 use App\Models\HomeSlider;
+use App\Models\Statistic;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -45,12 +46,16 @@ class HomeController extends Controller
             ->orderBy('published_at', 'desc')
             ->first();
 
+        // Get statistics
+        $statistics = Statistic::active()->get();
+
         return view('public.home-new', compact(
             'sliders',
             'latestNews',
             'featuredCompetencies',
             'latestGalleryAlbums',
-            'announcement'
+            'announcement',
+            'statistics'
         ));
     }
 }

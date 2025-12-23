@@ -185,6 +185,33 @@
                     <img id="preview" src="" alt="Preview" class="w-full rounded-lg border border-gray-200">
                 </div>
             </div>
+
+            <!-- Gallery Images -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Gallery Images</h3>
+                <p class="text-sm text-gray-600 mb-4">Upload multiple photos untuk galeri artikel</p>
+                
+                <div>
+                    <label for="gallery_images" class="block text-sm font-medium text-gray-700 mb-2">Images</label>
+                    <input 
+                        type="file" 
+                        id="gallery_images" 
+                        name="images[]" 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('images') border-red-500 @enderror"
+                        accept="image/*"
+                        multiple
+                        onchange="previewGalleryImages(event)"
+                    >
+                    @error('images')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                    <p class="mt-1 text-xs text-gray-500">Max 2MB per image (JPEG, PNG, JPG, GIF). Multiple selection allowed.</p>
+                </div>
+
+                <!-- Gallery Preview -->
+                <div id="gallery-preview" class="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4">
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -220,6 +247,35 @@
             };
             reader.readAsDataURL(file);
         }
+    }
+
+    // Gallery image preview
+    function previewGalleryImages(event) {
+        const files = event.target.files;
+        const preview = document.getElementById('gallery-preview');
+        preview.innerHTML = '';
+
+        if (files.length === 0) return;
+
+        Array.from(files).forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.className = 'relative group';
+                div.innerHTML = `
+                    <div class="relative overflow-hidden rounded-lg bg-gray-100 h-32">
+                        <img src="${e.target.result}" alt="Gallery preview" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity"></div>
+                    </div>
+                    <input type="text" 
+                           name="images_caption[${index}]" 
+                           placeholder="Caption" 
+                           class="w-full mt-2 px-3 py-1 text-xs border border-gray-300 rounded focus:ring-2 focus:ring-ios-blue focus:border-transparent">
+                `;
+                preview.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
     }
 </script>
 @endpush

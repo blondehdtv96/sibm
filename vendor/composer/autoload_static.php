@@ -40,6 +40,7 @@ class ComposerStaticInit1b1789c751eacd262ba3f28af12bd47c
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         '320163ac6b93aebe3dc25b60a0533d56' => __DIR__ . '/..' . '/spatie/laravel-ignition/src/helpers.php',
         '377b22b161c09ed6e5152de788ca020a' => __DIR__ . '/..' . '/spatie/laravel-permission/src/helpers.php',
+        '6873d42f6cb858d0981700dc4a8d96e6' => __DIR__ . '/../..' . '/app/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -325,13 +326,13 @@ class ComposerStaticInit1b1789c751eacd262ba3f28af12bd47c
         ),
         'Spatie\\LaravelIgnition\\' => 
         array (
-            0 => __DIR__ . '/..' . '/spatie/error-solutions/legacy/laravel-ignition',
-            1 => __DIR__ . '/..' . '/spatie/laravel-ignition/src',
+            0 => __DIR__ . '/..' . '/spatie/laravel-ignition/src',
+            1 => __DIR__ . '/..' . '/spatie/error-solutions/legacy/laravel-ignition',
         ),
         'Spatie\\Ignition\\' => 
         array (
-            0 => __DIR__ . '/..' . '/spatie/error-solutions/legacy/ignition',
-            1 => __DIR__ . '/..' . '/spatie/ignition/src',
+            0 => __DIR__ . '/..' . '/spatie/ignition/src',
+            1 => __DIR__ . '/..' . '/spatie/error-solutions/legacy/ignition',
         ),
         'Spatie\\FlareClient\\' => 
         array (
@@ -559,12 +560,15 @@ class ComposerStaticInit1b1789c751eacd262ba3f28af12bd47c
 
     public static $classMap = array (
         'App\\Console\\Commands\\CleanAuditLogs' => __DIR__ . '/../..' . '/app/Console/Commands/CleanAuditLogs.php',
+        'App\\Console\\Commands\\FixMenuRoutes' => __DIR__ . '/../..' . '/app/Console/Commands/FixMenuRoutes.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Http\\Controllers\\Admin\\BackupController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/BackupController.php',
         'App\\Http\\Controllers\\Admin\\ChatHistoryController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ChatHistoryController.php',
         'App\\Http\\Controllers\\Admin\\ChatbotResponseController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ChatbotResponseController.php',
         'App\\Http\\Controllers\\Admin\\CompetencyController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/CompetencyController.php',
         'App\\Http\\Controllers\\Admin\\CompetencyImageController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/CompetencyImageController.php',
+        'App\\Http\\Controllers\\Admin\\ContactMessageController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ContactMessageController.php',
         'App\\Http\\Controllers\\Admin\\DashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/DashboardController.php',
         'App\\Http\\Controllers\\Admin\\GalleryAlbumController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/GalleryAlbumController.php',
         'App\\Http\\Controllers\\Admin\\GalleryItemController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/GalleryItemController.php',
@@ -590,13 +594,17 @@ class ComposerStaticInit1b1789c751eacd262ba3f28af12bd47c
         'App\\Http\\Controllers\\Public\\PageController' => __DIR__ . '/../..' . '/app/Http/Controllers/Public/PageController.php',
         'App\\Http\\Controllers\\Public\\PpdbController' => __DIR__ . '/../..' . '/app/Http/Controllers/Public/PpdbController.php',
         'App\\Http\\Controllers\\Public\\SearchController' => __DIR__ . '/../..' . '/app/Http/Controllers/Public/SearchController.php',
+        'App\\Http\\Controllers\\SitemapController' => __DIR__ . '/../..' . '/app/Http/Controllers/SitemapController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\AdminMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/AdminMiddleware.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
+        'App\\Http\\Middleware\\ForceHttps' => __DIR__ . '/../..' . '/app/Http/Middleware/ForceHttps.php',
         'App\\Http\\Middleware\\PreventRequestsDuringMaintenance' => __DIR__ . '/../..' . '/app/Http/Middleware/PreventRequestsDuringMaintenance.php',
         'App\\Http\\Middleware\\RedirectIfAuthenticated' => __DIR__ . '/../..' . '/app/Http/Middleware/RedirectIfAuthenticated.php',
+        'App\\Http\\Middleware\\SafeLogging' => __DIR__ . '/../..' . '/app/Http/Middleware/SafeLogging.php',
         'App\\Http\\Middleware\\SanitizeInput' => __DIR__ . '/../..' . '/app/Http/Middleware/SanitizeInput.php',
+        'App\\Http\\Middleware\\SecureHeaders' => __DIR__ . '/../..' . '/app/Http/Middleware/SecureHeaders.php',
         'App\\Http\\Middleware\\SecurityMonitoring' => __DIR__ . '/../..' . '/app/Http/Middleware/SecurityMonitoring.php',
         'App\\Http\\Middleware\\SessionTimeout' => __DIR__ . '/../..' . '/app/Http/Middleware/SessionTimeout.php',
         'App\\Http\\Middleware\\TeacherMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/TeacherMiddleware.php',
@@ -614,6 +622,7 @@ class ComposerStaticInit1b1789c751eacd262ba3f28af12bd47c
         'App\\Models\\ChatbotResponse' => __DIR__ . '/../..' . '/app/Models/ChatbotResponse.php',
         'App\\Models\\Competency' => __DIR__ . '/../..' . '/app/Models/Competency.php',
         'App\\Models\\CompetencyImage' => __DIR__ . '/../..' . '/app/Models/CompetencyImage.php',
+        'App\\Models\\ContactMessage' => __DIR__ . '/../..' . '/app/Models/ContactMessage.php',
         'App\\Models\\GalleryAlbum' => __DIR__ . '/../..' . '/app/Models/GalleryAlbum.php',
         'App\\Models\\GalleryItem' => __DIR__ . '/../..' . '/app/Models/GalleryItem.php',
         'App\\Models\\HomeSlider' => __DIR__ . '/../..' . '/app/Models/HomeSlider.php',
@@ -632,12 +641,14 @@ class ComposerStaticInit1b1789c751eacd262ba3f28af12bd47c
         'App\\Providers\\BroadcastServiceProvider' => __DIR__ . '/../..' . '/app/Providers/BroadcastServiceProvider.php',
         'App\\Providers\\DatabaseQueryOptimizationServiceProvider' => __DIR__ . '/../..' . '/app/Providers/DatabaseQueryOptimizationServiceProvider.php',
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',
+        'App\\Providers\\HelperServiceProvider' => __DIR__ . '/../..' . '/app/Providers/HelperServiceProvider.php',
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
         'App\\Rules\\SecureFileUpload' => __DIR__ . '/../..' . '/app/Rules/SecureFileUpload.php',
         'App\\Services\\AuditLogService' => __DIR__ . '/../..' . '/app/Services/AuditLogService.php',
         'App\\Services\\HtmlPurifierService' => __DIR__ . '/../..' . '/app/Services/HtmlPurifierService.php',
         'App\\Services\\SecureFileStorageService' => __DIR__ . '/../..' . '/app/Services/SecureFileStorageService.php',
         'App\\Traits\\Auditable' => __DIR__ . '/../..' . '/app/Traits/Auditable.php',
+        'App\\View\\Composers\\MenuComposer' => __DIR__ . '/../..' . '/app/View/Composers/MenuComposer.php',
         'App\\View\\Composers\\SettingsComposer' => __DIR__ . '/../..' . '/app/View/Composers/SettingsComposer.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',

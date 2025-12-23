@@ -3,116 +3,95 @@
 @section('title', 'Home')
 
 @section('content')
-<!-- Hero Section -->
-<div class="hero-section">
-    <div class="hero-content">
-        <h1 class="hero-title">{{ config('school.name', 'School Management System') }}</h1>
-        <p class="hero-subtitle">{{ config('school.tagline', 'Keunggulan dalam Pendidikan') }}</p>
-        
-        @if($announcement)
-        <div class="announcement-card">
-            <div class="announcement-header">
-                <span class="announcement-icon">📢</span>
-                <strong>Latest Announcement</strong>
+<!-- Hero Section with Stats -->
+<div class="hero-wrapper">
+    <div class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">{{ config('school.name', 'SMK Bina Mandiri Bekasi') }}</h1>
+            <p class="hero-subtitle">{{ config('school.tagline', 'Mencetak Generasi Unggul dan Berdaya Saing') }}</p>
+            
+            @if($announcement)
+            <div class="announcement-card">
+                <div class="announcement-icon">📢</div>
+                <div class="announcement-content">
+                    <h3>{{ $announcement->title }}</h3>
+                    <p>{{ Str::limit(strip_tags($announcement->excerpt ?? $announcement->content), 120) }}</p>
+                    <a href="{{ route('public.news.show', $announcement->slug) }}">Selengkapnya →</a>
+                </div>
             </div>
-            <h3 class="announcement-title">{{ $announcement->title }}</h3>
-            <p class="announcement-text">{{ Str::limit(strip_tags($announcement->excerpt ?? $announcement->content), 150) }}</p>
-            <a href="{{ route('public.news.show', $announcement->slug) }}" class="announcement-btn">
-                Baca Selengkapnya →
-            </a>
+            @endif
         </div>
-        @endif
+    </div>
+    
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">Alumni Sukses</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Program Keahlian</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Guru Profesional</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Tingkat Kelulusan</div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Quick Links Section -->
-<div class="container">
-    <div class="quick-links">
-        <a href="{{ route('public.news.index') }}" class="quick-link-card">
-            <div class="quick-link-icon">📰</div>
-            <h3 class="quick-link-title">News & Events</h3>
-            <p class="quick-link-desc">Stay updated with latest news</p>
+<div class="container main-content">
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <a href="{{ route('ppdb.register') }}" class="action-card primary">
+            <span class="action-icon">📝</span>
+            <span class="action-text">Daftar PPDB</span>
         </a>
-        
-        <a href="{{ route('public.competencies.index') }}" class="quick-link-card">
-            <div class="quick-link-icon">🎓</div>
-            <h3 class="quick-link-title">Competency Programs</h3>
-            <p class="quick-link-desc">Jelajahi program kami</p>
+        <a href="{{ route('public.competencies.index') }}" class="action-card">
+            <span class="action-icon">🎓</span>
+            <span class="action-text">Program Keahlian</span>
         </a>
-        
-        <a href="{{ route('public.gallery.index') }}" class="quick-link-card">
-            <div class="quick-link-icon">📸</div>
-            <h3 class="quick-link-title">Gallery</h3>
-            <p class="quick-link-desc">View school activities</p>
+        <a href="{{ route('public.news.index') }}" class="action-card">
+            <span class="action-icon">📰</span>
+            <span class="action-text">Berita</span>
         </a>
-        
-        <a href="{{ route('ppdb.register') }}" class="quick-link-card quick-link-featured">
-            <div class="quick-link-icon">📝</div>
-            <h3 class="quick-link-title">PPDB Registration</h3>
-            <p class="quick-link-desc">Register as new student</p>
+        <a href="{{ route('public.gallery.index') }}" class="action-card">
+            <span class="action-icon">📸</span>
+            <span class="action-text">Galeri</span>
         </a>
     </div>
 
-    <!-- Video Section -->
-    <section class="content-section">
+    <!-- Latest News -->
+    @if($latestNews && $latestNews->count() > 0)
+    <section class="section">
         <div class="section-header">
-            <h2 class="section-title">Video Profil Sekolah</h2>
+            <h2>Berita Terbaru</h2>
+            <a href="{{ route('public.news.index') }}" class="view-all">Lihat Semua →</a>
         </div>
-        
-        <div class="video-container">
-            <div class="video-wrapper">
-                <!-- Ganti VIDEO_ID dengan ID video YouTube Anda -->
-                <!-- Contoh: https://www.youtube.com/watch?v=dQw4w9WgXcQ -> ID: dQw4w9WgXcQ -->
-                <iframe 
-                    src="https://www.youtube.com/watch?v=s5l8HAA2evI" 
-                    title="Video Profil SMK Bina Mandiri Bekasi" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowfullscreen
-                    loading="lazy"
-                ></iframe>
-            </div>
-            <div class="video-description">
-                <h3 class="video-title">Selamat Datang di SMK Bina Mandiri Bekasi</h3>
-                <p class="video-text">
-                    Tonton video profil kami untuk mengenal lebih dekat tentang fasilitas, program keahlian, 
-                    dan kehidupan siswa di SMK Bina Mandiri Bekasi. Bergabunglah bersama kami dan wujudkan 
-                    masa depan cemerlang Anda!
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Latest News Section -->
-    @if($latestNews->count() > 0)
-    <section class="content-section">
-        <div class="section-header">
-            <h2 class="section-title">Berita Terbaru</h2>
-            <a href="{{ route('public.news.index') }}" class="section-link">Lihat Semua →</a>
-        </div>
-        
-        <div class="news-grid">
-            @foreach($latestNews as $news)
-            <a href="{{ route('public.news.show', $news->slug) }}" class="news-card">
+        <div class="card-grid">
+            @foreach($latestNews->take(3) as $news)
+            <a href="{{ route('public.news.show', $news->slug) }}" class="card">
                 @if($news->featured_image)
-                <div class="news-image">
-                    <img src="{{ Storage::url($news->featured_image) }}" alt="{{ $news->title }}">
+                <div class="card-image">
+                    <img src="{{ Storage::url($news->featured_image) }}" alt="{{ $news->title }}" loading="lazy">
+                    @if($news->category)
+                    <span class="card-badge">{{ $news->category->name }}</span>
+                    @endif
                 </div>
                 @endif
-                
-                <div class="news-content">
-                    @if($news->category)
-                    <span class="news-category">{{ $news->category->name }}</span>
-                    @endif
-                    
-                    <h3 class="news-title">{{ Str::limit($news->title, 60) }}</h3>
-                    <p class="news-excerpt">{{ Str::limit(strip_tags($news->excerpt ?? $news->content), 100) }}</p>
-                    
-                    <div class="news-meta">
-                        <span>{{ $news->published_at->format('M d, Y') }}</span>
-                        @if($news->author)
-                        <span>By {{ $news->author->name }}</span>
-                        @endif
+                <div class="card-body">
+                    <h3>{{ Str::limit($news->title, 60) }}</h3>
+                    <p>{{ Str::limit(strip_tags($news->excerpt ?? $news->content), 80) }}</p>
+                    <div class="card-meta">
+                        <span>{{ $news->published_at->format('d M Y') }}</span>
                     </div>
                 </div>
             </a>
@@ -121,26 +100,24 @@
     </section>
     @endif
 
-    <!-- Featured Competencies Section -->
-    @if($featuredCompetencies->count() > 0)
-    <section class="content-section">
+    <!-- Featured Programs -->
+    @if($featuredCompetencies && $featuredCompetencies->count() > 0)
+    <section class="section">
         <div class="section-header">
-            <h2 class="section-title">Program Kami</h2>
-            <a href="{{ route('public.competencies.index') }}" class="section-link">Lihat Semua →</a>
+            <h2>Program Keahlian</h2>
+            <a href="{{ route('public.competencies.index') }}" class="view-all">Lihat Semua →</a>
         </div>
-        
-        <div class="competency-grid">
-            @foreach($featuredCompetencies as $competency)
-            <a href="{{ route('public.competencies.show', $competency->slug) }}" class="competency-card">
+        <div class="card-grid">
+            @foreach($featuredCompetencies->take(3) as $competency)
+            <a href="{{ route('public.competencies.show', $competency->slug) }}" class="card">
                 @if($competency->image)
-                <div class="competency-image">
-                    <img src="{{ Storage::url($competency->image) }}" alt="{{ $competency->name }}">
+                <div class="card-image">
+                    <img src="{{ Storage::url($competency->image) }}" alt="{{ $competency->name }}" loading="lazy">
                 </div>
                 @endif
-                
-                <div class="competency-content">
-                    <h3 class="competency-title">{{ $competency->name }}</h3>
-                    <p class="competency-desc">{{ Str::limit(strip_tags($competency->description), 120) }}</p>
+                <div class="card-body">
+                    <h3>{{ $competency->name }}</h3>
+                    <p>{{ Str::limit(strip_tags($competency->description), 100) }}</p>
                 </div>
             </a>
             @endforeach
@@ -148,33 +125,24 @@
     </section>
     @endif
 
-    <!-- Latest Gallery Section -->
-    @if($latestGalleryAlbums->count() > 0)
-    <section class="content-section">
+    <!-- Latest Gallery -->
+    @if($latestGalleryAlbums && $latestGalleryAlbums->count() > 0)
+    <section class="section">
         <div class="section-header">
-            <h2 class="section-title">Galeri</h2>
-            <a href="{{ route('public.gallery.index') }}" class="section-link">Lihat Semua →</a>
+            <h2>Galeri Kegiatan</h2>
+            <a href="{{ route('public.gallery.index') }}" class="view-all">Lihat Semua →</a>
         </div>
-        
         <div class="gallery-grid">
-            @foreach($latestGalleryAlbums as $album)
-            <a href="{{ route('public.gallery.show', $album->slug) }}" class="gallery-card">
+            @foreach($latestGalleryAlbums->take(4) as $album)
+            <a href="{{ route('public.gallery.show', $album->slug) }}" class="gallery-item">
                 @if($album->cover_image)
-                <div class="gallery-image">
-                    <img src="{{ Storage::url($album->cover_image) }}" alt="{{ $album->name }}">
-                </div>
+                <img src="{{ Storage::url($album->cover_image) }}" alt="{{ $album->name }}" loading="lazy">
                 @elseif($album->items->first())
-                <div class="gallery-image">
-                    <img src="{{ Storage::url($album->items->first()->image_path) }}" alt="{{ $album->name }}">
-                </div>
+                <img src="{{ Storage::url($album->items->first()->image_path) }}" alt="{{ $album->name }}" loading="lazy">
                 @endif
-                
-                <div class="gallery-content">
-                    <h3 class="gallery-title">{{ $album->name }}</h3>
-                    @if($album->description)
-                    <p class="gallery-desc">{{ Str::limit($album->description, 80) }}</p>
-                    @endif
-                    <p class="gallery-count">{{ $album->items->count() }} {{ Str::plural('photo', $album->items->count()) }}</p>
+                <div class="gallery-overlay">
+                    <h4>{{ $album->name }}</h4>
+                    <span>{{ $album->items->count() }} Foto</span>
                 </div>
             </a>
             @endforeach
@@ -184,142 +152,159 @@
 </div>
 
 <style>
-/* Hero Section */
-.hero-section {
-    background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
-    padding: 60px 20px;
-    text-align: center;
-    color: white;
-    border-radius: 0 0 32px 32px;
-    margin-bottom: 30px;
-}
+* { box-sizing: border-box; }
 
-.hero-content {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.hero-title {
-    font-size: clamp(1.75rem, 5vw, 2.5rem);
-    font-weight: 700;
-    margin-bottom: 1rem;
-    line-height: 1.2;
-}
-
-.hero-subtitle {
-    font-size: clamp(1rem, 3vw, 1.2rem);
-    opacity: 0.9;
-    margin-bottom: 2rem;
-}
-
-/* Announcement Card */
-.announcement-card {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 20px;
-    text-align: left;
-    margin-top: 30px;
-    border-radius: 16px;
-}
-
-.announcement-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.announcement-icon {
-    font-size: 1.5rem;
-}
-
-.announcement-title {
-    margin: 10px 0;
-    font-size: clamp(1.1rem, 3vw, 1.3rem);
-}
-
-.announcement-text {
-    opacity: 0.9;
-    margin: 10px 0;
-    line-height: 1.6;
-}
-
-.announcement-btn {
-    display: inline-block;
-    margin-top: 10px;
-    background: white;
-    color: #007AFF;
-    padding: 10px 20px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.announcement-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Container */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-/* Quick Links */
-.quick-links {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
-    margin-bottom: 50px;
-}
-
-.quick-link-card {
-    background: white;
-    border-radius: 16px;
-    padding: 30px;
-    text-align: center;
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.quick-link-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.quick-link-featured {
+/* Hero & Stats */
+.hero-wrapper {
     background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
     color: white;
 }
 
-.quick-link-icon {
-    font-size: 3rem;
-    margin-bottom: 15px;
+.hero-section {
+    padding: 50px 0 30px;
+    text-align: center;
 }
 
-.quick-link-title {
-    font-size: 1.3rem;
+.hero-title {
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 800;
+    margin-bottom: 12px;
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    opacity: 0.95;
+    margin-bottom: 30px;
+}
+
+.announcement-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    text-align: left;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.announcement-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.announcement-content h3 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.announcement-content p {
+    font-size: 0.95rem;
+    opacity: 0.9;
     margin-bottom: 10px;
-    font-weight: 600;
+    line-height: 1.5;
 }
 
-.quick-link-desc {
-    color: #666;
+.announcement-content a {
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.announcement-content a:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.stats-section {
+    padding: 30px 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    opacity: 0.9;
+}
+
+/* Main Content */
+.main-content {
+    padding: 40px 20px;
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 50px;
+}
+
+.action-card {
+    background: white;
+    border: 2px solid #f0f0f0;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.action-card:hover {
+    transform: translateY(-2px);
+    border-color: #007AFF;
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.15);
+}
+
+.action-card.primary {
+    background: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+    color: white;
+    border-color: transparent;
+}
+
+.action-icon {
+    font-size: 2rem;
+}
+
+.action-text {
+    font-weight: 600;
     font-size: 0.95rem;
 }
 
-.quick-link-featured .quick-link-desc {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-/* Content Sections */
-.content-section {
+/* Sections */
+.section {
     margin-bottom: 50px;
 }
 
@@ -327,424 +312,214 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-    gap: 10px;
+    margin-bottom: 24px;
 }
 
-.section-title {
+.section-header h2 {
     font-size: clamp(1.5rem, 4vw, 2rem);
     font-weight: 700;
+    color: #1a1a1a;
 }
 
-.section-link {
+.view-all {
     color: #007AFF;
     text-decoration: none;
     font-weight: 600;
-    transition: opacity 0.2s ease;
+    font-size: 0.95rem;
+    transition: opacity 0.2s;
 }
 
-.section-link:hover {
+.view-all:hover {
     opacity: 0.7;
 }
 
-/* News Grid */
-.news-grid {
+/* Card Grid */
+.card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
 }
 
-.news-card {
+.card {
     background: white;
     border-radius: 16px;
     overflow: hidden;
     text-decoration: none;
     color: inherit;
-    transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s;
 }
 
-.news-card:hover {
+.card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-.news-image {
+.card-image {
+    position: relative;
     width: 100%;
     height: 200px;
     overflow: hidden;
+    background: #f5f5f5;
 }
 
-.news-image img {
+.card-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s;
 }
 
-.news-card:hover .news-image img {
+.card:hover .card-image img {
     transform: scale(1.05);
 }
 
-.news-content {
-    padding: 20px;
-}
-
-.news-category {
-    display: inline-block;
+.card-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
     background: #007AFF;
     color: white;
     padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    margin-bottom: 10px;
-}
-
-.news-title {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    line-height: 1.4;
+    border-radius: 20px;
+    font-size: 0.8rem;
     font-weight: 600;
 }
 
-.news-excerpt {
-    color: #666;
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-    line-height: 1.6;
-}
-
-.news-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.85rem;
-    color: #999;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-/* Competency Grid */
-.competency-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 20px;
-}
-
-.competency-card {
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.competency-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.competency-image {
-    width: 100%;
-    height: 180px;
-    overflow: hidden;
-}
-
-.competency-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.competency-card:hover .competency-image img {
-    transform: scale(1.05);
-}
-
-.competency-content {
+.card-body {
     padding: 20px;
 }
 
-.competency-title {
-    font-size: 1.3rem;
-    margin-bottom: 10px;
+.card-body h3 {
+    font-size: 1.15rem;
     font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    color: #1a1a1a;
 }
 
-.competency-desc {
+.card-body p {
     color: #666;
     font-size: 0.9rem;
     line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.card-meta {
+    font-size: 0.85rem;
+    color: #999;
 }
 
 /* Gallery Grid */
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
 }
 
-.gallery-card {
-    background: white;
-    border-radius: 16px;
+.gallery-item {
+    position: relative;
+    height: 200px;
+    border-radius: 12px;
     overflow: hidden;
     text-decoration: none;
-    color: inherit;
-    transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s;
 }
 
-.gallery-card:hover {
+.gallery-item:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-.gallery-image {
-    width: 100%;
-    height: 220px;
-    overflow: hidden;
-}
-
-.gallery-image img {
+.gallery-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s;
 }
 
-.gallery-card:hover .gallery-image img {
-    transform: scale(1.05);
+.gallery-item:hover img {
+    transform: scale(1.1);
 }
 
-.gallery-content {
-    padding: 20px;
+.gallery-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    padding: 20px 16px 16px;
+    color: white;
 }
 
-.gallery-title {
-    font-size: 1.2rem;
-    margin-bottom: 8px;
+.gallery-overlay h4 {
+    font-size: 1rem;
     font-weight: 600;
+    margin-bottom: 4px;
 }
 
-.gallery-desc {
-    color: #666;
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-    line-height: 1.6;
+.gallery-overlay span {
+    font-size: 0.85rem;
+    opacity: 0.9;
 }
 
-.gallery-count {
-    color: #007AFF;
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
-/* Tablet Responsive */
+/* Responsive */
 @media (max-width: 768px) {
     .hero-section {
-        padding: 40px 16px;
-        border-radius: 0 0 24px 24px;
+        padding: 40px 0 20px;
     }
     
-    .quick-links {
+    .stats-section {
+        padding: 20px 0;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    
+    .main-content {
+        padding: 30px 16px;
+    }
+    
+    .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+        margin-bottom: 40px;
+    }
+    
+    .section {
+        margin-bottom: 40px;
+    }
+    
+    .card-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .gallery-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
     }
     
-    .quick-link-card {
-        padding: 20px 16px;
-    }
-    
-    .quick-link-icon {
-        font-size: 2.5rem;
-        margin-bottom: 10px;
-    }
-    
-    .quick-link-title {
-        font-size: 1.1rem;
-    }
-    
-    .quick-link-desc {
-        font-size: 0.85rem;
-    }
-    
-    .news-grid,
-    .competency-grid,
-    .gallery-grid {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 16px;
-    }
-    
-    .container {
-        padding: 0 16px;
+    .gallery-item {
+        height: 150px;
     }
 }
 
-/* Mobile Responsive */
 @media (max-width: 480px) {
-    .hero-section {
-        padding: 30px 12px;
-        margin-bottom: 20px;
-    }
-    
     .announcement-card {
+        flex-direction: column;
+        text-align: center;
         padding: 16px;
     }
     
-    .quick-links {
+    .quick-actions {
         grid-template-columns: 1fr;
-        gap: 12px;
-        margin-bottom: 30px;
     }
     
-    .quick-link-card {
-        padding: 24px 16px;
-    }
-    
-    .content-section {
-        margin-bottom: 30px;
-    }
-    
-    .section-header {
-        margin-bottom: 16px;
-    }
-    
-    .news-grid,
-    .competency-grid,
     .gallery-grid {
         grid-template-columns: 1fr;
-        gap: 16px;
-    }
-    
-    .news-image,
-    .competency-image,
-    .gallery-image {
-        height: 180px;
-    }
-    
-    .container {
-        padding: 0 12px;
-    }
-}
-
-/* Touch Device Optimizations */
-@media (hover: none) and (pointer: coarse) {
-    .quick-link-card:active,
-    .news-card:active,
-    .competency-card:active,
-    .gallery-card:active {
-        transform: scale(0.98);
-    }
-    
-    .announcement-btn:active {
-        transform: scale(0.95);
-    }
-}
-
-/* Dark Mode Support (Optional) */
-@media (prefers-color-scheme: dark) {
-    .quick-link-card,
-    .news-card,
-    .competency-card,
-    .gallery-card {
-        background: #1c1c1e;
-        color: #ffffff;
-    }
-    
-    .news-excerpt,
-    .competency-desc,
-    .gallery-desc {
-        color: #a0a0a0;
-    }
-    
-    .news-meta {
-        color: #8e8e93;
-    }
-}
-
-/* Video Section */
-.video-container {
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    margin-bottom: 30px;
-}
-
-.video-wrapper {
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-    height: 0;
-    overflow: hidden;
-    background: #000;
-}
-
-.video-wrapper iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-}
-
-.video-description {
-    padding: 30px;
-    text-align: center;
-}
-
-.video-title {
-    font-size: clamp(1.3rem, 4vw, 1.8rem);
-    font-weight: 700;
-    margin-bottom: 15px;
-    color: #1a1a1a;
-}
-
-.video-text {
-    font-size: 1rem;
-    line-height: 1.7;
-    color: #666;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-/* Tablet Responsive */
-@media (max-width: 768px) {
-    .video-description {
-        padding: 20px;
-    }
-    
-    .video-title {
-        font-size: 1.3rem;
-    }
-    
-    .video-text {
-        font-size: 0.95rem;
-    }
-}
-
-/* Mobile Responsive */
-@media (max-width: 480px) {
-    .video-container {
-        border-radius: 12px;
-        margin-bottom: 20px;
-    }
-    
-    .video-description {
-        padding: 16px;
-    }
-    
-    .video-title {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
-    }
-    
-    .video-text {
-        font-size: 0.9rem;
-        line-height: 1.6;
     }
 }
 </style>

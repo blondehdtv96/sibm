@@ -264,7 +264,10 @@ class ChatbotController extends Controller
             ->get();
 
         foreach ($responses as $response) {
-            if ($this->containsKeywords($message, $response->keywords)) {
+            // Keywords sudah dalam bentuk array karena cast di model
+            $keywords = is_array($response->keywords) ? $response->keywords : [$response->keywords];
+            
+            if ($this->containsKeywords($message, $keywords)) {
                 return $response->response;
             }
         }
@@ -277,8 +280,14 @@ class ChatbotController extends Controller
      */
     private function containsKeywords($message, $keywords)
     {
+        // Pastikan keywords adalah array
+        if (!is_array($keywords)) {
+            $keywords = [$keywords];
+        }
+
         foreach ($keywords as $keyword) {
-            if (strpos($message, strtolower($keyword)) !== false) {
+            // Cek apakah keyword ada dalam message (case insensitive)
+            if (stripos($message, trim($keyword)) !== false) {
                 return true;
             }
         }

@@ -175,75 +175,84 @@
             <!-- News Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($news as $article)
-                    <article class="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-100 relative">
-                        <!-- Image Section -->
-                        @if($article->featured_image)
-                            <div class="relative h-64 overflow-hidden">
+                    <article class="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 h-full flex flex-col">
+                        <!-- Image Section with Overlay -->
+                        <div class="relative h-72 overflow-hidden bg-gradient-to-br from-red-600 via-orange-600 to-red-700 flex-shrink-0">
+                            @if($article->featured_image)
                                 <img src="{{ asset('storage/' . $article->featured_image) }}" 
                                      alt="{{ $article->title }}"
                                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                      loading="lazy">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                <div class="absolute top-4 left-4">
-                                    @if($article->category)
-                                        <span class="px-3 py-1 bg-orange-600 text-white text-sm font-semibold rounded-full">
-                                            {{ $article->category->name }}
-                                        </span>
-                                    @endif
+                                <!-- Overlay for better text contrast -->
+                                <div class="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/40 group-hover:from-black/20 group-hover:to-black/60 transition-all duration-300"></div>
+                            @else
+                                <div class="absolute inset-0 bg-gradient-to-br from-red-600 via-red-500 to-orange-600 flex items-center justify-center">
+                                    <svg class="w-20 h-20 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                                    </svg>
+                                </div>
+                            @endif
+                            
+                            <!-- Category Badge - Floating -->
+                            @if($article->category)
+                                <div class="absolute top-4 left-4 z-10">
+                                    <span class="px-4 py-1.5 bg-white/95 backdrop-blur-md text-red-600 text-xs md:text-sm font-bold rounded-full shadow-lg">
+                                        {{ $article->category->name }}
+                                    </span>
+                                </div>
+                            @endif
+
+                            <!-- Date Badge - Top Right -->
+                            <div class="absolute top-4 right-4 z-10">
+                                <div class="px-3 py-1.5 bg-white/95 backdrop-blur-md rounded-lg shadow-lg">
+                                    <span class="text-gray-800 text-xs md:text-sm font-semibold flex items-center gap-1">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                        {{ $article->published_at->format('d M Y') }}
+                                    </span>
                                 </div>
                             </div>
-                        @else
-                            <div class="h-64 bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center relative">
-                                <svg class="w-16 h-16 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
-                                </svg>
-                                <div class="absolute top-4 left-4">
-                                    @if($article->category)
-                                        <span class="px-3 py-1 bg-white/20 backdrop-blur-lg text-white text-sm font-semibold rounded-full border border-white/30">
-                                            {{ $article->category->name }}
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                        @endif
+                        </div>
                         
                         <!-- Content Section -->
-                        <div class="p-8">
-                            <!-- Meta Info -->
-                            <div class="flex items-center justify-between mb-4 text-sm text-gray-500">
-                                <span class="flex items-center gap-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                    </svg>
-                                    {{ $article->published_at->format('d M Y') }}
-                                </span>
-                                @if($article->author)
-                                    <span class="flex items-center gap-2">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                        </svg>
-                                        {{ $article->author->name }}
-                                    </span>
-                                @endif
-                            </div>
-
-                            <h3 class="text-xl font-bold text-gray-800 mb-4 line-clamp-2 group-hover:text-orange-600 transition-colors">
-                                <a href="{{ route('public.news.show', $article) }}">
-                                    {{ $article->title }}
-                                </a>
+                        <div class="p-6 md:p-8 flex flex-col flex-grow">
+                            <!-- Title -->
+                            <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-red-600 transition-colors duration-300">
+                                {{ $article->title }}
                             </h3>
 
-                            <p class="text-gray-600 mb-6 line-clamp-3 leading-relaxed">
-                                {{ $article->excerpt ?: Str::limit(strip_tags($article->content), 150) }}
+                            <!-- Excerpt -->
+                            <p class="text-gray-600 text-sm md:text-base leading-relaxed line-clamp-3 mb-4 flex-grow">
+                                {{ Str::limit(strip_tags($article->excerpt ?? $article->content), 150) }}
                             </p>
 
-                            <a href="{{ route('public.news.show', $article) }}" 
-                               class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 group/btn">
-                                <span>Baca Selengkapnya</span>
-                                <svg class="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                                </svg>
-                            </a>
+                            <!-- Footer with Author and Read More -->
+                            <div class="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
+                                <div class="flex items-center gap-2">
+                                    @if($article->author && $article->author->profile_image)
+                                        <img src="{{ asset('storage/' . $article->author->profile_image) }}" 
+                                             alt="{{ $article->author->name }}"
+                                             class="w-7 h-7 rounded-full object-cover">
+                                    @else
+                                        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-red-400 to-orange-500 flex items-center justify-center">
+                                            <span class="text-white text-xs font-bold">
+                                                {{ substr($article->author->name ?? 'A', 0, 1) }}
+                                            </span>
+                                        </div>
+                                    @endif
+                                    <span class="text-xs text-gray-600 font-medium truncate">
+                                        {{ $article->author->name ?? 'Admin' }}
+                                    </span>
+                                </div>
+                                <a href="{{ route('public.news.show', $article->slug) }}" 
+                                   class="text-red-600 hover:text-red-700 font-semibold text-sm flex items-center gap-1 group/link">
+                                    <span>Baca</span>
+                                    <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </a>
+                            </div>
                         </div>
                     </article>
                 @endforeach

@@ -97,6 +97,14 @@ class News extends Model
     }
 
     /**
+     * Get the images for the news
+     */
+    public function images()
+    {
+        return $this->hasMany(NewsImage::class)->orderBy('order');
+    }
+
+    /**
      * Scope to get only published news
      */
     public function scopePublished($query)

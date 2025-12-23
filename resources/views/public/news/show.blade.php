@@ -77,6 +77,42 @@
                             {!! nl2br(e($news->content)) !!}
                         </div>
 
+                        <!-- Gallery Section -->
+                        @if($news->images && $news->images->count() > 0)
+                            <div class="mt-12">
+                                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Galeri Foto</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    @foreach($news->images as $image)
+                                        <a href="{{ asset('storage/' . $image->image_path) }}" 
+                                           class="group relative overflow-hidden rounded-2xl bg-gray-100 h-64 md:h-72 flex items-center justify-center"
+                                           data-lightbox="gallery"
+                                           data-title="{{ $image->caption }}">
+                                            <img src="{{ asset('storage/' . $image->image_path) }}" 
+                                                 alt="{{ $image->caption }}"
+                                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                            
+                                            <!-- Overlay -->
+                                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                            
+                                            <!-- Info -->
+                                            <div class="absolute bottom-0 left-0 right-0 p-4 text-white translate-y-8 group-hover:translate-y-0 transition-transform duration-300">
+                                                @if($image->caption)
+                                                    <p class="text-sm font-semibold">{{ $image->caption }}</p>
+                                                @else
+                                                    <p class="text-sm font-semibold">Klik untuk melihat lebih besar</p>
+                                                @endif
+                                            </div>
+                                            
+                                            <!-- Icon -->
+                                            <svg class="absolute top-4 right-4 w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 13H7"/>
+                                            </svg>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
                         <!-- Article Footer -->
                         <div class="mt-12 pt-8 border-t border-gray-200">
                             <a href="{{ route('public.news.index') }}" 

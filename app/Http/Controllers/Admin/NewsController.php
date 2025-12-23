@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\News;
+use App\Models\NewsImage;
 use App\Models\NewsCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -65,6 +66,9 @@ class NewsController extends Controller
             'excerpt' => 'nullable|string',
             'category_id' => 'required|exists:news_categories,id',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images_caption.*' => 'nullable|string|max:255',
             'status' => 'required|in:draft,published',
             'published_at' => 'nullable|date',
         ]);
@@ -89,7 +93,22 @@ class NewsController extends Controller
             $validated['published_at'] = now();
         }
 
-        News::create($validated);
+        $news = News::create($validated);
+
+        // Handle multiple images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                $path = $image->store('news/gallery', 'public');
+                $caption = $request->input('images_caption.' . $index) ?? null;
+                
+                NewsImage::create([
+                    'news_id' => $news->id,
+                    'image_path' => $path,
+                    'caption' => $caption,
+                    'order' => $index,
+                ]);
+            }
+        }
 
         return redirect()->route('admin.news.index')
             ->with('success', 'News article created successfully.');
@@ -110,7 +129,8 @@ class NewsController extends Controller
     public function edit(News $news)
     {
         $categories = NewsCategory::all();
-        return view('admin.news.edit', compact('news', 'categories'));
+        $images = $news->images()->orderBy('order')->get();
+        return view('admin.news.edit', compact('news', 'categories', 'images'));
     }
 
     /**
@@ -125,6 +145,9 @@ class NewsController extends Controller
             'excerpt' => 'nullable|string',
             'category_id' => 'required|exists:news_categories,id',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images_caption.*' => 'nullable|string|max:255',
             'status' => 'required|in:draft,published',
             'published_at' => 'nullable|date',
         ]);
@@ -152,6 +175,21 @@ class NewsController extends Controller
 
         $news->update($validated);
 
+        // Handle multiple images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                $path = $image->store('news/gallery', 'public');
+                $caption = $request->input('images_caption.' . $index) ?? null;
+                
+                NewsImage::create([
+                    'news_id' => $news->id,
+                    'image_path' => $path,
+                    'caption' => $caption,
+                    'order' => $news->images()->count() + $index,
+                ]);
+            }
+        }
+
         return redirect()->route('admin.news.index')
             ->with('success', 'News article updated successfully.');
     }
@@ -166,9 +204,29 @@ class NewsController extends Controller
             Storage::disk('public')->delete($news->featured_image);
         }
 
+        // Delete gallery images
+        foreach ($news->images as $image) {
+            Storage::disk('public')->delete($image->image_path);
+        }
+
         $news->delete();
 
         return redirect()->route('admin.news.index')
             ->with('success', 'News article deleted successfully.');
+    }
+
+    /**
+     * Delete a specific image from a news article
+     */
+    public function deleteImage(Request $request, News $news, NewsImage $image)
+    {
+        if ($image->news_id !== $news->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        Storage::disk('public')->delete($image->image_path);
+        $image->delete();
+
+        return response()->json(['success' => true]);
     }
 }
