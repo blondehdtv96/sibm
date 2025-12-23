@@ -6,16 +6,16 @@
 @section('content')
 <!-- Hero Section with Slider -->
 @if($sliders && $sliders->count() > 0)
-<section class="relative bg-black">
+<section class="relative bg-black w-full overflow-hidden">
     <div class="swiper home-hero-slider">
         <div class="swiper-wrapper">
             @foreach($sliders as $slider)
             <div class="swiper-slide">
-                <div class="relative h-[450px] md:h-[550px]">
+                <div class="relative h-[450px] md:h-[550px] overflow-hidden w-full">
                     @if($slider->image_url)
                     <img src="{{ $slider->image_url }}" 
                          alt="{{ $slider->title }}" 
-                         class="absolute inset-0 w-full h-full object-cover"
+                         class="absolute inset-0 w-full h-full object-cover animate-ken-burns"
                          loading="lazy">
                     @endif
                     
@@ -451,10 +451,10 @@
 @if($sliders && $sliders->count() > 1)
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    new Swiper('.home-hero-slider', {
+    const slider = new Swiper('.home-hero-slider', {
         loop: true,
         autoplay: {
-            delay: 5000,
+            delay: 6000,
             disableOnInteraction: false,
         },
         pagination: {
@@ -467,8 +467,32 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         effect: 'fade',
         fadeEffect: {
-            crossFade: true
+            crossFade: true,
         },
+        speed: 1000,
+        spaceBetween: 0,
+        slidesPerView: 1,
+        slidesPerGroup: 1,
+        centeredSlides: false,
+        grabCursor: true,
+        touchRatio: 1,
+        touchAngle: 45,
+        keyboard: {
+            enabled: true,
+            onlyInViewport: true,
+        },
+        on: {
+            slideChange: function() {
+                // Reset animation on slide change
+                const images = document.querySelectorAll('.home-hero-slider .swiper-slide img');
+                images.forEach(img => {
+                    img.style.animation = 'none';
+                    setTimeout(() => {
+                        img.style.animation = '';
+                    }, 10);
+                });
+            }
+        }
     });
 });
 </script>
@@ -477,6 +501,69 @@ document.addEventListener('DOMContentLoaded', function() {
 
 @push('styles')
 <style>
+/* Swiper Base Styles */
+.home-hero-slider {
+    width: 100% !important;
+    overflow: hidden !important;
+    display: block !important;
+}
+
+.home-hero-slider .swiper-wrapper {
+    width: 100% !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    box-sizing: border-box !important;
+}
+
+.home-hero-slider .swiper-slide {
+    width: 100% !important;
+    height: auto !important;
+    flex-shrink: 0 !important;
+    box-sizing: border-box !important;
+    transition: opacity 0.5s ease-in-out !important;
+}
+
+/* Smooth transition between slides */
+.home-hero-slider .swiper-slide:not(.swiper-slide-active) {
+    pointer-events: none;
+    opacity: 0;
+}
+
+.home-hero-slider .swiper-slide-active {
+    opacity: 1;
+    z-index: 10;
+}
+
+/* Ken Burns Animation - Zoom and Pan Effect */
+@keyframes ken-burns {
+    0% {
+        transform: scale(1) translate(0, 0);
+    }
+    50% {
+        transform: scale(1.05) translate(5px, -5px);
+    }
+    100% {
+        transform: scale(1.1) translate(10px, -10px);
+    }
+}
+
+.animate-ken-burns {
+    animation: ken-burns 8s ease-in-out forwards;
+    transform-origin: center center;
+}
+
+/* Alternative smooth pan effect */
+@keyframes slide-zoom {
+    0% {
+        transform: scale(1) translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.08) translateX(20px);
+        opacity: 1;
+    }
+}
+
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -494,24 +581,65 @@ document.addEventListener('DOMContentLoaded', function() {
 .swiper-button-next,
 .swiper-button-prev {
     color: white;
-    background: rgba(0, 0, 0, 0.3);
-    width: 44px;
-    height: 44px;
+    background: rgba(0, 0, 0, 0.4);
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
 }
 
-.swiper-button-next:after,
-.swiper-button-prev:after {
-    font-size: 20px;
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    background: rgba(0, 0, 0, 0.7);
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.swiper-button-next:active,
+.swiper-button-prev:active {
+    transform: scale(0.95);
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.swiper-button-prev::after {
+    content: '❮';
+}
+
+.swiper-button-next::after {
+    content: '❯';
 }
 
 .swiper-pagination-bullet {
     background: white;
     opacity: 0.5;
+    transition: opacity 0.3s ease;
 }
 
 .swiper-pagination-bullet-active {
     opacity: 1;
+}
+
+/* Smooth fade transition */
+.swiper-slide img {
+    transition: all 0.5s ease-in-out;
+}
+
+.swiper-slide-active img {
+    filter: brightness(1);
+}
+
+.swiper-slide:not(.swiper-slide-active) img {
+    filter: brightness(0.95);
 }
 </style>
 @endpush
