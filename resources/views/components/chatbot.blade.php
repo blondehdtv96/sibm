@@ -3,7 +3,7 @@
     Widget chat yang muncul di pojok kanan bawah
     Menggunakan Tailwind CSS dan Alpine.js
 -->
-<div x-data="chatbot()" x-init="init()" class="fixed md:bottom-6 md:right-6 bottom-0 right-0 z-50">
+<div id="chatbot-widget" x-data="chatbot()" x-init="init()" class="fixed md:bottom-6 md:right-6 bottom-0 right-0 z-50">
     <!-- Chat Button -->
     <button 
         @click="toggleChat()" 

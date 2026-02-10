@@ -107,12 +107,18 @@
         }
     </script>
     
+    <!-- Alpine.js x-cloak CSS -->
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+    
     @stack('styles')
 </head>
 
 <body class="font-sans antialiased bg-white text-gray-900">
     <!-- Navbar with Glassmorphism - Responsive -->
     <nav x-data="{ mobileMenuOpen: false, scrolled: false }" 
+         x-init="mobileMenuOpen = false"
          @scroll.window="scrolled = window.pageYOffset > 20"
          :class="scrolled ? 'bg-white/95 backdrop-blur-lg shadow-lg' : 'bg-black/20 backdrop-blur-sm'"
          class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
@@ -158,7 +164,7 @@
                         @foreach($navigationMenus as $menu)
                             @if($menu->children->count() > 0)
                                 <!-- Dropdown Menu -->
-                                <div x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" class="relative">
+                                <div x-data="{ open: false }" x-init="open = false" @mouseenter="open = true" @mouseleave="open = false" class="relative">
                                     <button 
                                         :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
                                         class="px-3 py-2 text-sm font-medium transition-colors flex items-center gap-1 rounded-lg hover:bg-white/10">
@@ -170,6 +176,8 @@
                                     
                                     <!-- Dropdown Items -->
                                     <div x-show="open" 
+                                         x-cloak
+                                         style="display: none;"
                                          x-transition:enter="transition ease-out duration-150"
                                          x-transition:enter-start="opacity-0 transform -translate-y-2"
                                          x-transition:enter-end="opacity-100 transform translate-y-0"
@@ -273,14 +281,14 @@
                         @foreach($navigationMenus as $menu)
                             @if($menu->children->count() > 0)
                                 <!-- Parent with Children -->
-                                <div x-data="{ open: false }" class="space-y-1">
+                                <div x-data="{ open: false }" x-init="open = false" class="space-y-1">
                                     <button @click="open = !open" class="w-full px-4 py-3 rounded-xl hover:bg-gray-50 font-medium text-gray-700 flex items-center justify-between text-left">
                                         <span>{{ $menu->title }}</span>
                                         <svg class="w-4 h-4 transition-transform flex-shrink-0" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                         </svg>
                                     </button>
-                                    <div x-show="open" x-transition class="pl-4 space-y-1 bg-gray-50 rounded-lg py-2 mt-1">
+                                    <div x-show="open" x-cloak style="display: none;" x-transition class="pl-4 space-y-1 bg-gray-50 rounded-lg py-2 mt-1">
                                         @foreach($menu->children as $child)
                                             <a href="{{ $child->full_url }}" 
                                                @if($child->target) target="{{ $child->target }}" @endif
@@ -514,6 +522,80 @@
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     
+    <!-- Alpine.js State Reset on Page Load -->
+    <script>
+        // TARGETED: Only hide navbar dropdowns, NOT chatbot or WhatsApp
+        (function() {
+            // Only hide dropdown menus in navbar
+            document.querySelectorAll('nav [x-show]').forEach(function(el) {
+                el.style.display = 'none';
+            });
+        })();
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Reset navbar dropdown states only
+            setTimeout(function() {
+                if (window.Alpine) {
+                    // Only target nav elements
+                    document.querySelectorAll('nav [x-data]').forEach(function(el) {
+                        if (el.__x && el.__x.$data) {
+                            if (el.__x.$data.mobileMenuOpen !== undefined) {
+                                el.__x.$data.mobileMenuOpen = false;
+                            }
+                            if (el.__x.$data.open !== undefined) {
+                                el.__x.$data.open = false;
+                            }
+                        }
+                    });
+                    
+                    // Force hide navbar dropdowns only
+                    document.querySelectorAll('nav [x-show]').forEach(function(el) {
+                        if (el.style.display !== 'none') {
+                            el.style.display = 'none';
+                        }
+                    });
+                }
+                
+                // Ensure body overflow is reset
+                document.body.style.overflow = '';
+            }, 0);
+        });
+        
+        // Also reset on page show (handles back/forward navigation)
+        window.addEventListener('pageshow', function(event) {
+            document.body.style.overflow = '';
+            
+            // Force hide navbar dropdowns only
+            document.querySelectorAll('nav [x-show]').forEach(function(el) {
+                el.style.display = 'none';
+            });
+            
+            // Close navbar dropdowns via Alpine
+            setTimeout(function() {
+                document.querySelectorAll('nav [x-data]').forEach(function(el) {
+                    if (el.__x && el.__x.$data) {
+                        if (el.__x.$data.mobileMenuOpen !== undefined) {
+                            el.__x.$data.mobileMenuOpen = false;
+                        }
+                        if (el.__x.$data.open !== undefined) {
+                            el.__x.$data.open = false;
+                        }
+                    }
+                });
+            }, 0);
+        });
+        
+        // Reset on visibility change
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // Only hide navbar dropdowns
+                document.querySelectorAll('nav [x-show]').forEach(function(el) {
+                    el.style.display = 'none';
+                });
+            }
+        });
+    </script>
+    
     @stack('scripts')
     
     <!-- Loading Components -->
@@ -524,11 +606,59 @@
     <!-- Chatbot Widget -->
     @include('components.chatbot')
     
-    <!-- WhatsApp Float Button (Left side) -->
-    <x-whatsapp-float 
-        phone="6281292760717" 
-        message="Halo, saya ingin bertanya tentang SMK Bina Mandiri Bekasi"
-        position="left"
-    />
+    <!-- WhatsApp Float Button - Pure HTML (Left Bottom) -->
+    <div id="whatsapp-float-button" style="position: fixed; left: 24px; bottom: 24px; z-index: 9998;">
+        <a href="https://wa.me/6281292760717?text=Halo%2C%20saya%20ingin%20bertanya%20tentang%20SMK%20Bina%20Mandiri%20Bekasi" 
+           target="_blank"
+           rel="noopener noreferrer"
+           style="position: relative; display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); border-radius: 50%; box-shadow: 0 10px 40px rgba(37, 211, 102, 0.4); transition: all 0.3s ease; text-decoration: none;"
+           onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 15px 50px rgba(37, 211, 102, 0.6)';"
+           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 40px rgba(37, 211, 102, 0.4)';"
+           title="Chat via WhatsApp">
+            
+            <!-- Ping Animation -->
+            <span style="position: absolute; inset: 0; border-radius: 50%; background: rgba(37, 211, 102, 0.6); animation: wa-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;"></span>
+            
+            <!-- WhatsApp Icon -->
+            <svg style="position: relative; width: 36px; height: 36px; fill: white; z-index: 1;" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+                <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+            </svg>
+            
+            <!-- Notification Badge -->
+            <span style="position: absolute; top: -4px; right: -4px; width: 20px; height: 20px; background: #FF3B30; color: white; font-size: 12px; font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 8px rgba(255, 59, 48, 0.4);">!</span>
+        </a>
+    </div>
+    
+    <style>
+        @keyframes wa-ping {
+            75%, 100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+        
+        /* Ensure WhatsApp button is always visible */
+        #whatsapp-float-button {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #whatsapp-float-button {
+                left: 16px !important;
+                bottom: 16px !important;
+            }
+            #whatsapp-float-button a {
+                width: 56px !important;
+                height: 56px !important;
+            }
+            #whatsapp-float-button svg {
+                width: 30px !important;
+                height: 30px !important;
+            }
+        }
+    </style>
 </body>
 </html>
