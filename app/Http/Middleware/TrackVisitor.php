@@ -19,6 +19,11 @@ class TrackVisitor
         // Only track GET requests to avoid tracking form submissions
         if ($request->isMethod('GET') && !$request->is('admin/*') && !$request->is('api/*')) {
             try {
+                // Check if database connection is available
+                if (!DB::connection()->getDatabaseName()) {
+                    return $next($request);
+                }
+                
                 // Check if table exists before attempting to insert
                 if (DB::getSchemaBuilder()->hasTable('visitor_logs')) {
                     DB::table('visitor_logs')->insert([
@@ -32,8 +37,8 @@ class TrackVisitor
                 }
             } catch (\Exception $e) {
                 // Silently fail to not disrupt user experience
-                // In production, you might want to log this error
-                \Log::error('Visitor tracking failed: ' . $e->getMessage());
+                // Don't log to avoid permission errors
+                // error_log('Visitor tracking failed: ' . $e->getMessage());
             }
         }
 
