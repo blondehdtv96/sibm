@@ -125,6 +125,8 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     // News management routes
     Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
     Route::delete('news/{news}/images/{image}', [\App\Http\Controllers\Admin\NewsController::class, 'deleteImage'])->name('news.deleteImage');
+    Route::post('news/upload-image', [\App\Http\Controllers\Admin\NewsController::class, 'uploadImage'])->name('news.upload-image');
+    Route::post('news/upload-file', [\App\Http\Controllers\Admin\NewsController::class, 'uploadFile'])->name('news.upload-file');
 
     
     // Competency management routes

@@ -387,53 +387,114 @@
     <!-- Mobile Sidebar Overlay -->
     <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden" x-transition></div>
 
-    <!-- Quill Rich Text Editor -->
-    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
-    <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+    <!-- CKEditor 5 - Rich Text Editor -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
     <script>
+        // Custom Upload Adapter for CKEditor
+        class MyUploadAdapter {
+            constructor(loader) {
+                this.loader = loader;
+            }
+
+            upload() {
+                return this.loader.file
+                    .then(file => new Promise((resolve, reject) => {
+                        const data = new FormData();
+                        data.append('upload', file);
+                        data.append('_token', '{{ csrf_token() }}');
+
+                        fetch('{{ route("admin.news.upload-image") }}', {
+                            method: 'POST',
+                            body: data
+                        })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.url) {
+                                resolve({
+                                    default: result.url
+                                });
+                            } else {
+                                reject(result.error?.message || 'Upload failed');
+                            }
+                        })
+                        .catch(error => {
+                            reject('Upload failed: ' + error.message);
+                        });
+                    }));
+            }
+
+            abort() {
+                // Reject the promise returned from the upload() method.
+            }
+        }
+
+        function MyCustomUploadAdapterPlugin(editor) {
+            editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                return new MyUploadAdapter(loader);
+            };
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Quill for all textareas with class 'tinymce' or 'rich-editor'
+            // Initialize CKEditor for all textareas with class 'tinymce' or 'rich-editor'
             document.querySelectorAll('textarea.tinymce, textarea.rich-editor').forEach(function(textarea) {
-                // Create editor container
-                const editorDiv = document.createElement('div');
-                editorDiv.style.height = '400px';
-                editorDiv.style.backgroundColor = 'white';
-                textarea.style.display = 'none';
-                textarea.parentNode.insertBefore(editorDiv, textarea);
-                
-                // Initialize Quill
-                const quill = new Quill(editorDiv, {
-                    theme: 'snow',
-                    modules: {
-                        toolbar: [
-                            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                            ['bold', 'italic', 'underline', 'strike'],
-                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                            [{ 'indent': '-1'}, { 'indent': '+1' }],
-                            [{ 'align': [] }],
-                            ['link'],
-                            ['clean']
-                        ]
-                    }
-                });
-                
-                // Set initial content
-                if (textarea.value) {
-                    quill.root.innerHTML = textarea.value;
-                }
-                
-                // Update textarea on change
-                quill.on('text-change', function() {
-                    textarea.value = quill.root.innerHTML;
-                });
-                
-                // Update on form submit
-                const form = textarea.closest('form');
-                if (form) {
-                    form.addEventListener('submit', function() {
-                        textarea.value = quill.root.innerHTML;
+                ClassicEditor
+                    .create(textarea, {
+                        extraPlugins: [MyCustomUploadAdapterPlugin],
+                        toolbar: {
+                            items: [
+                                'heading', '|',
+                                'bold', 'italic', 'underline', 'strikethrough', '|',
+                                'link', 'uploadImage', 'insertTable', 'blockQuote', '|',
+                                'bulletedList', 'numberedList', '|',
+                                'outdent', 'indent', '|',
+                                'alignment', '|',
+                                'undo', 'redo', '|',
+                                'sourceEditing'
+                            ],
+                            shouldNotGroupWhenFull: true
+                        },
+                        image: {
+                            toolbar: [
+                                'imageTextAlternative', 'imageStyle:inline', 'imageStyle:block', 'imageStyle:side'
+                            ]
+                        },
+                        table: {
+                            contentToolbar: [
+                                'tableColumn', 'tableRow', 'mergeTableCells'
+                            ]
+                        },
+                        heading: {
+                            options: [
+                                { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                                { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                                { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                                { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
+                                { model: 'heading4', view: 'h4', title: 'Heading 4', class: 'ck-heading_heading4' }
+                            ]
+                        }
+                    })
+                    .then(editor => {
+                        console.log('CKEditor initialized successfully');
+                        
+                        // Store editor instance
+                        textarea.ckeditorInstance = editor;
+                        
+                        // Update textarea on change
+                        editor.model.document.on('change:data', () => {
+                            textarea.value = editor.getData();
+                        });
+                        
+                        // Update on form submit
+                        const form = textarea.closest('form');
+                        if (form) {
+                            form.addEventListener('submit', function() {
+                                textarea.value = editor.getData();
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('CKEditor initialization error:', error);
                     });
-                }
             });
         });
     </script>

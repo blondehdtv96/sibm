@@ -73,8 +73,8 @@
                         </h1>
 
                         <!-- Article Content -->
-                        <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-                            {!! nl2br(e($news->content)) !!}
+                        <div class="prose prose-lg max-w-none text-gray-700 leading-relaxed article-content-html">
+                            {!! $news->content !!}
                         </div>
 
                         <!-- Gallery Section -->
@@ -205,6 +205,187 @@
 
 @push('styles')
 <style>
+    /* Article Content HTML Styling */
+    .article-content-html {
+        font-size: 1.125rem;
+        line-height: 1.8;
+        color: #374151;
+    }
+
+    .article-content-html p {
+        margin-bottom: 1.5rem;
+    }
+
+    .article-content-html h1,
+    .article-content-html h2,
+    .article-content-html h3,
+    .article-content-html h4,
+    .article-content-html h5,
+    .article-content-html h6 {
+        font-weight: 700;
+        color: #1f2937;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+    }
+
+    .article-content-html h1 { font-size: 2.25rem; }
+    .article-content-html h2 { font-size: 1.875rem; }
+    .article-content-html h3 { font-size: 1.5rem; }
+    .article-content-html h4 { font-size: 1.25rem; }
+
+    .article-content-html ul,
+    .article-content-html ol {
+        margin-bottom: 1.5rem;
+        padding-left: 2rem;
+    }
+
+    .article-content-html li {
+        margin-bottom: 0.5rem;
+    }
+
+    .article-content-html a {
+        color: #ea580c;
+        text-decoration: underline;
+        transition: color 0.2s;
+    }
+
+    .article-content-html a:hover {
+        color: #dc2626;
+    }
+
+    .article-content-html blockquote {
+        border-left: 4px solid #ea580c;
+        padding-left: 1.5rem;
+        margin: 1.5rem 0;
+        font-style: italic;
+        color: #6b7280;
+    }
+
+    .article-content-html code {
+        background: #f3f4f6;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.875em;
+        font-family: 'Courier New', monospace;
+    }
+
+    .article-content-html pre {
+        background: #1f2937;
+        color: #f3f4f6;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        margin-bottom: 1.5rem;
+    }
+
+    .article-content-html pre code {
+        background: transparent;
+        padding: 0;
+        color: inherit;
+    }
+
+    /* CKEditor Image Styling */
+    .article-content-html figure.image {
+        margin: 2rem 0;
+        text-align: center;
+    }
+
+    .article-content-html figure.image img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .article-content-html figure.image img:hover {
+        transform: scale(1.02);
+        box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.15), 0 10px 15px -6px rgba(0, 0, 0, 0.1);
+    }
+
+    .article-content-html figure.image figcaption {
+        margin-top: 0.75rem;
+        font-size: 0.875rem;
+        color: #6b7280;
+        font-style: italic;
+    }
+
+    /* Image alignment classes from CKEditor */
+    .article-content-html figure.image.image-style-side {
+        float: right;
+        margin-left: 1.5rem;
+        margin-bottom: 1rem;
+        max-width: 50%;
+    }
+
+    .article-content-html figure.image.image-style-align-left {
+        float: left;
+        margin-right: 1.5rem;
+        margin-bottom: 1rem;
+        max-width: 50%;
+    }
+
+    .article-content-html figure.image.image-style-align-center {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .article-content-html figure.image.image-style-align-right {
+        float: right;
+        margin-left: 1.5rem;
+        margin-bottom: 1rem;
+        max-width: 50%;
+    }
+
+    /* Clear floats */
+    .article-content-html::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    /* Responsive images */
+    @media (max-width: 768px) {
+        .article-content-html figure.image.image-style-side,
+        .article-content-html figure.image.image-style-align-left,
+        .article-content-html figure.image.image-style-align-right {
+            float: none;
+            margin-left: 0;
+            margin-right: 0;
+            max-width: 100%;
+        }
+    }
+
+    /* Table Styling */
+    .article-content-html table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+        overflow-x: auto;
+        display: block;
+    }
+
+    .article-content-html table thead {
+        background: #f3f4f6;
+    }
+
+    .article-content-html table th,
+    .article-content-html table td {
+        padding: 0.75rem;
+        border: 1px solid #e5e7eb;
+        text-align: left;
+    }
+
+    .article-content-html table th {
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .article-content-html table tbody tr:hover {
+        background: #f9fafb;
+    }
+
     .article-container {
         padding: 2rem 0 4rem;
     }

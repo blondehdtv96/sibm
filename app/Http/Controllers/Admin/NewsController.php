@@ -89,8 +89,20 @@ class NewsController extends Controller
         $validated['author_id'] = auth()->id();
 
         // Set published_at if status is published and no date provided
-        if ($validated['status'] === 'published' && empty($validated['published_at'])) {
-            $validated['published_at'] = now();
+        if ($validated['status'] === 'published') {
+            if (empty($validated['published_at'])) {
+                // Set to current time to ensure it's immediately visible
+                $validated['published_at'] = now();
+            } else {
+                // Ensure the provided date is not in the future
+                $publishedDate = \Carbon\Carbon::parse($validated['published_at']);
+                if ($publishedDate->isFuture()) {
+                    $validated['published_at'] = now();
+                }
+            }
+        } else {
+            // If draft, set published_at to null
+            $validated['published_at'] = null;
         }
 
         $news = News::create($validated);
@@ -168,9 +180,15 @@ class NewsController extends Controller
             $validated['featured_image'] = $request->file('featured_image')->store('news', 'public');
         }
 
-        // Set published_at if status changed to published and no date provided
-        if ($validated['status'] === 'published' && empty($validated['published_at']) && $news->status !== 'published') {
-            $validated['published_at'] = now();
+        // Set published_at if status changed to published
+        if ($validated['status'] === 'published') {
+            if (empty($validated['published_at'])) {
+                // If no published_at set, use now
+                $validated['published_at'] = now();
+            }
+        } else {
+            // If changed to draft, keep existing published_at (don't set to null)
+            // This allows re-publishing without changing the date
         }
 
         $news->update($validated);
@@ -228,5 +246,65 @@ class NewsController extends Controller
         $image->delete();
 
         return response()->json(['success' => true]);
+    }
+
+    /**
+     * Upload image from CKEditor
+     */
+    public function uploadImage(Request $request)
+    {
+        // CKEditor sends file with name 'upload'
+        $request->validate([
+            'upload' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+        ]);
+
+        try {
+            $file = $request->file('upload');
+            $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('news/content-images', $filename, 'public');
+
+            // CKEditor 5 expects 'url' in response
+            return response()->json([
+                'url' => asset('storage/' . $path),
+                'uploaded' => 1,
+                'fileName' => $filename
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'uploaded' => 0,
+                'error' => [
+                    'message' => 'Upload failed: ' . $e->getMessage()
+                ]
+            ], 500);
+        }
+    }
+
+    /**
+     * Upload file (PDF, DOC, etc) from editor
+     */
+    public function uploadFile(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,zip,rar|max:10240' // Max 10MB
+        ]);
+
+        try {
+            $file = $request->file('file');
+            $filename = time() . '_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('news/content-files', $filename, 'public');
+
+            return response()->json([
+                'url' => asset('storage/' . $path),
+                'uploaded' => 1,
+                'fileName' => $filename
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'uploaded' => 0,
+                'error' => [
+                    'message' => 'Upload failed: ' . $e->getMessage()
+                ]
+            ], 500);
+        }
     }
 }
