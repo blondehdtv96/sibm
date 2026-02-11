@@ -292,11 +292,21 @@
     }
 
     .article-content-html figure.image img {
-        max-width: 100%;
-        height: auto;
+        max-width: 100% !important;
+        width: auto !important;
+        height: auto !important;
+        display: block;
+        margin: 0 auto;
         border-radius: 0.75rem;
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Override any inline styles from CKEditor */
+    .article-content-html img {
+        max-width: 100% !important;
+        height: auto !important;
+        width: auto !important;
     }
 
     .article-content-html figure.image img:hover {
@@ -624,6 +634,34 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Fix images in article content
+    const articleContent = document.querySelector('.article-content-html');
+    if (articleContent) {
+        const images = articleContent.querySelectorAll('img');
+        images.forEach(img => {
+            // Remove inline width/height attributes that might cause issues
+            img.removeAttribute('width');
+            img.removeAttribute('height');
+            
+            // Handle image load errors
+            img.addEventListener('error', function() {
+                console.error('Failed to load image:', this.src);
+                this.style.display = 'none';
+                
+                // Show error message
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-4';
+                errorMsg.innerHTML = '<strong>Error:</strong> Gambar gagal dimuat.';
+                this.parentElement.appendChild(errorMsg);
+            });
+            
+            // Log successful loads for debugging
+            img.addEventListener('load', function() {
+                console.log('Image loaded successfully:', this.src);
+            });
+        });
+    }
+    
     // Gallery Slider
     if (document.querySelector('.gallery-slider')) {
         new Swiper('.gallery-slider', {
