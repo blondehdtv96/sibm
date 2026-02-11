@@ -56,7 +56,20 @@ class NewsCategoryController extends Controller
             $validated['slug'] = Str::slug($validated['slug']);
         }
 
-        NewsCategory::create($validated);
+        $category = NewsCategory::create($validated);
+
+        // Check if request is AJAX
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Category created successfully',
+                'category' => [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'slug' => $category->slug
+                ]
+            ], 200);
+        }
 
         return redirect()->route('admin.news-categories.index')
             ->with('success', 'News category created successfully.');

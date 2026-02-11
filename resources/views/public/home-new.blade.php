@@ -13,23 +13,34 @@
         <div class="swiper-wrapper">
             @foreach($sliders as $slider)
             <div class="swiper-slide">
-                <div class="min-h-[500px] md:min-h-[600px] flex items-center">
+                <!-- Background Image -->
+                @if($slider->image_path)
+                <div class="absolute inset-0 z-0">
+                    <img src="{{ asset('storage/' . $slider->image_path) }}" 
+                         alt="{{ $slider->title }}" 
+                         class="w-full h-full object-cover"
+                         onerror="this.src='{{ asset('images/placeholder-slider.jpg') }}'">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
+                </div>
+                @endif
+                
+                <div class="min-h-[500px] md:min-h-[600px] flex items-center relative z-10">
                     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
                         <div class="max-w-4xl mx-auto text-center text-white">
                             @if($slider->title)
-                            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-lg">
                                 {{ $slider->title }}
                             </h1>
                             @endif
                             @if($slider->subtitle)
-                            <p class="text-xl md:text-2xl mb-8 text-gray-100">
+                            <p class="text-xl md:text-2xl mb-8 text-gray-100 drop-shadow-md">
                                 {{ $slider->subtitle }}
                             </p>
                             @endif
                             @if($slider->button_text && $slider->button_link)
                             <div class="flex flex-wrap gap-4 justify-center">
                                 <a href="{{ $slider->button_link }}" 
-                                   class="inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
+                                   class="inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all hover:scale-105 shadow-xl">
                                     {{ $slider->button_text }}
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
