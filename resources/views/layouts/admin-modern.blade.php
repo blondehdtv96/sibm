@@ -74,6 +74,33 @@
         .scrollbar-thin {
             scroll-behavior: smooth;
         }
+        
+        /* CKEditor Image Styling */
+        .ck-content .image {
+            margin: 1em 0;
+        }
+        
+        .ck-content .image img {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+        }
+        
+        .ck-content .image > img {
+            width: auto !important;
+            max-width: 100% !important;
+            height: auto !important;
+        }
+        
+        /* Fix for CKEditor image display */
+        .ck.ck-editor__editable_inline {
+            min-height: 300px;
+        }
+        
+        .ck.ck-editor__editable_inline img {
+            max-width: 100% !important;
+            height: auto !important;
+        }
     </style>
     
     @stack('styles')
@@ -455,7 +482,31 @@
                         },
                         image: {
                             toolbar: [
-                                'imageTextAlternative', 'imageStyle:inline', 'imageStyle:block', 'imageStyle:side'
+                                'imageTextAlternative', 'imageStyle:inline', 'imageStyle:block', 'imageStyle:side', '|',
+                                'linkImage'
+                            ],
+                            styles: [
+                                'full',
+                                'alignLeft',
+                                'alignCenter',
+                                'alignRight'
+                            ],
+                            resizeOptions: [
+                                {
+                                    name: 'resizeImage:original',
+                                    label: 'Original',
+                                    value: null
+                                },
+                                {
+                                    name: 'resizeImage:50',
+                                    label: '50%',
+                                    value: '50'
+                                },
+                                {
+                                    name: 'resizeImage:75',
+                                    label: '75%',
+                                    value: '75'
+                                }
                             ]
                         },
                         table: {
@@ -491,6 +542,12 @@
                                 textarea.value = editor.getData();
                             });
                         }
+                        
+                        // Fix image display in editor
+                        editor.editing.view.change(writer => {
+                            const viewEditableRoot = editor.editing.view.document.getRoot();
+                            writer.setStyle('min-height', '300px', viewEditableRoot);
+                        });
                     })
                     .catch(error => {
                         console.error('CKEditor initialization error:', error);
