@@ -26,7 +26,7 @@ use App\Http\Controllers\Public\SearchController;
 // Storage file serving route (fallback if symlink doesn't work)
 Route::get('/storage/{path}', function ($path) {
     // Security: only allow specific directories
-    $allowedDirs = ['sliders', 'home_sliders', 'uploads', 'images', 'news', 'gallery', 'competencies', 'settings', 'logos', 'banners'];
+    $allowedDirs = ['sliders', 'home_sliders', 'uploads', 'images', 'news', 'gallery', 'competencies', 'settings', 'logos', 'banners', 'industry-partners'];
     $firstDir = explode('/', $path)[0] ?? '';
     
     if (!in_array($firstDir, $allowedDirs)) {
@@ -224,6 +224,10 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     
     // Home Slider Management routes
     Route::resource('home-sliders', \App\Http\Controllers\Admin\HomeSliderController::class);
+    
+    // Industry Partners Management routes
+    Route::resource('industry-partners', \App\Http\Controllers\Admin\IndustryPartnerController::class);
+    
     Route::post('settings/update-logo', [\App\Http\Controllers\Admin\SettingController::class, 'updateLogo'])->name('settings.update-logo');
     Route::delete('settings/delete-logo', [\App\Http\Controllers\Admin\SettingController::class, 'deleteLogo'])->name('settings.delete-logo');
     Route::post('settings/clear-cache', [\App\Http\Controllers\Admin\SettingController::class, 'clearCache'])->name('settings.clear-cache');

@@ -8,6 +8,7 @@ use App\Models\Competency;
 use App\Models\GalleryAlbum;
 use App\Models\HomeSlider;
 use App\Models\Statistic;
+use App\Models\IndustryPartner;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -49,13 +50,17 @@ class HomeController extends Controller
         // Get statistics
         $statistics = Statistic::active()->get();
 
+        // Get active industry partners
+        $industryPartners = IndustryPartner::active()->ordered()->get();
+
         return view('public.home-new', compact(
             'sliders',
             'latestNews',
             'featuredCompetencies',
             'latestGalleryAlbums',
             'announcement',
-            'statistics'
+            'statistics',
+            'industryPartners'
         ));
     }
 }

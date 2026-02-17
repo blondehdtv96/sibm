@@ -164,10 +164,10 @@
             <a href="{{ route('public.competencies.show', $competency->slug) }}" 
                class="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow">
                 @if($competency->image)
-                <div class="h-48 overflow-hidden bg-gray-100">
+                <div class="h-48 overflow-hidden bg-white flex items-center justify-center p-4">
                     <img src="{{ Storage::url($competency->image) }}" 
                          alt="{{ $competency->name }}" 
-                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                         class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300"
                          loading="lazy">
                 </div>
                 @else
@@ -335,6 +335,51 @@
                     </div>
                 </div>
             </a>
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
+<!-- Industry Partners -->
+@if($industryPartners && $industryPartners->count() > 0)
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Kerjasama Dunia Industri
+            </h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Kami menjalin kerjasama dengan berbagai perusahaan dan industri untuk memberikan pengalaman terbaik bagi siswa
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            @foreach($industryPartners as $partner)
+            <div class="group">
+                @if($partner->website)
+                <a href="{{ $partner->website }}" 
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="block bg-white border-2 border-gray-200 rounded-xl p-8 hover:shadow-xl transition-all duration-300 hover:border-blue-400">
+                    <div class="h-40 flex items-center justify-center">
+                        <img src="{{ asset('storage/' . $partner->logo) }}" 
+                             alt="{{ $partner->name }}"
+                             title="{{ $partner->name }}"
+                             class="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300">
+                    </div>
+                </a>
+                @else
+                <div class="bg-white border-2 border-gray-200 rounded-xl p-8 hover:shadow-xl transition-all duration-300">
+                    <div class="h-40 flex items-center justify-center">
+                        <img src="{{ asset('storage/' . $partner->logo) }}" 
+                             alt="{{ $partner->name }}"
+                             title="{{ $partner->name }}"
+                             class="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300">
+                    </div>
+                </div>
+                @endif
+            </div>
             @endforeach
         </div>
     </div>
