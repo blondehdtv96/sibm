@@ -569,33 +569,38 @@ document.addEventListener('keydown', function(e) {
 /* Swiper container fills the section */
 .hero-swiper { width: 100%; position: relative; }
 
-/* Each slide: stacked positioning for image + overlay */
+/* Each slide — fixed proportional height, not raw image size */
 .hero-slide {
     position: relative;
     overflow: hidden;
     background: #111;
+    height: 62vw;        /* scales with viewport: ~597px on 1200px wide */
+    min-height: 320px;   /* never too small on narrow screens */
+    max-height: 520px;   /* never taller than this on wide screens */
 }
 
-/* Image wrapper: fills width, height follows natural aspect ratio */
+/* Image wrapper fills the entire slide box */
 .slide-image-wrap {
     width: 100%;
+    height: 100%;
     display: block;
-    line-height: 0; /* remove bottom gap */
+    line-height: 0;
 }
 
-/* The image itself – full width, auto height = preserves aspect ratio */
+/* Image covers the slide — no distortion, just clean crop */
 .slide-img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
-    object-fit: contain;
+    object-fit: cover;
+    object-position: center;
     transform-origin: center center;
     transition: transform 6s ease;
 }
 
-/* Ken-Burns: active slide zooms in gently */
+/* Ken-Burns: gentle zoom on active slide */
 .swiper-slide-active .slide-img {
-    transform: scale(1.04);
+    transform: scale(1.05);
 }
 
 /* Text overlay – sits at bottom with gradient */

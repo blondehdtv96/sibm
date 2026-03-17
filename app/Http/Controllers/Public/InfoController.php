@@ -56,8 +56,13 @@ class InfoController extends Controller
      */
     public function overview()
     {
-        $overview = Setting::get('school_overview', '');
-        
+        try {
+            $overview = Setting::get('school_overview', '');
+        } catch (\Exception $e) {
+            \Log::error('principalMessage Setting::get error: ' . $e->getMessage());
+            $overview = '';
+        }
+
         return view('public.info.overview', compact('overview'));
     }
 
@@ -66,10 +71,17 @@ class InfoController extends Controller
      */
     public function principalMessage()
     {
-        $principalName = Setting::get('principal_name', 'Kepala Sekolah');
-        $principalPhoto = Setting::get('principal_photo', '');
-        $principalMessage = Setting::get('principal_message', '');
-        
+        try {
+            $principalName    = Setting::get('principal_name', 'Kepala Sekolah');
+            $principalPhoto   = Setting::get('principal_photo', '');
+            $principalMessage = Setting::get('principal_message', '');
+        } catch (\Exception $e) {
+            \Log::error('principalMessage Setting::get error: ' . $e->getMessage());
+            $principalName    = 'Kepala Sekolah';
+            $principalPhoto   = '';
+            $principalMessage = '';
+        }
+
         return view('public.info.principal-message', compact(
             'principalName',
             'principalPhoto',

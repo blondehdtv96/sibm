@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class Setting extends Model
@@ -24,10 +25,25 @@ class Setting extends Model
      */
     public static function get($key, $default = null)
     {
-        return Cache::remember("setting_{$key}", 3600, function () use ($key, $default) {
-            $setting = self::where('key', $key)->first();
-            return $setting ? $setting->value : $default;
-        });
+        try {
+            return Cache::remember("setting_{$key}", 3600, function () use ($key, $default) {
+                $setting = self::where('key', $key)->first();
+                return $setting ? $setting->value : $default;
+            });
+        }
+        catch (\Exception $e) {
+            // Cache driver not available (e.g. file permission, Redis down)
+            // Fall back to direct DB query
+            try {
+                $setting = self::where('key', $key)->first();
+                return $setting ? $setting->value : $default;
+            }
+            catch (\Exception $dbException) {
+                // Database also unavailable — return safe default
+                Log::error("Setting::get('{$key}') failed: " . $dbException->getMessage());
+                return $default;
+            }
+        }
     }
 
     /**
@@ -36,11 +52,11 @@ class Setting extends Model
     public static function set($key, $value, $type = 'text')
     {
         $setting = self::updateOrCreate(
-            ['key' => $key],
-            [
-                'value' => $value,
-                'type' => $type,
-            ]
+        ['key' => $key],
+        [
+            'value' => $value,
+            'type' => $type,
+        ]
         );
 
         // Clear cache
@@ -56,11 +72,12 @@ class Setting extends Model
     {
         try {
             $logo = self::get($type);
-            
+
             if ($logo && Storage::disk('public')->exists($logo)) {
                 return asset('storage/' . $logo);
             }
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             // Log error but don't break the page
             \Log::warning("Error getting logo {$type}: " . $e->getMessage());
         }
@@ -76,11 +93,12 @@ class Setting extends Model
     {
         try {
             $favicon = self::get('site_favicon');
-            
+
             if ($favicon && Storage::disk('public')->exists($favicon)) {
                 return asset('storage/' . $favicon);
             }
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             // Log error but don't break the page
             \Log::warning("Error getting favicon: " . $e->getMessage());
         }
@@ -97,7 +115,8 @@ class Setting extends Model
         try {
             $logo = self::get($type);
             return $logo && Storage::disk('public')->exists($logo);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             return false;
         }
     }
