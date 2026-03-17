@@ -44,7 +44,7 @@ class ChatbotResponseSeeder extends Seeder
             [
                 'trigger_name' => 'programs',
                 'title' => 'Program Keahlian',
-                'keywords' => ['jurusan', 'program', 'keahlian', 'kompetensi', 'tkj', 'rpl', 'multimedia', 'akuntansi'],
+                'keywords' => ['jurusan', 'program', 'keahlian', 'kompetensi', 'tkj', 'tsm', 'tkr', 'otomotif', 'motor', 'mobil'],
                 'response' => 'Kami memiliki berbagai program keahlian yang bisa Anda pilih. Silakan kunjungi halaman Program Keahlian untuk informasi lengkap tentang setiap jurusan. 🎓',
                 'is_active' => true,
                 'priority' => 7,

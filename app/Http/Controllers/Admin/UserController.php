@@ -62,7 +62,7 @@ class UserController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'role' => ['required', Rule::in(['admin', 'teacher', 'student'])],
             'phone' => ['nullable', 'string', 'max:20'],
-            'profile_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'profile_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:20480'],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -106,7 +106,7 @@ class UserController extends Controller
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'role' => ['required', Rule::in(['admin', 'teacher', 'student'])],
             'phone' => ['nullable', 'string', 'max:20'],
-            'profile_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'profile_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:20480'],
         ]);
 
         // Update password only if provided

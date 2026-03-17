@@ -88,17 +88,17 @@ class ChatbotController extends Controller
         }
 
         // Rule 4: Jurusan/Program Keahlian
-        if ($this->containsKeywords($message, ['jurusan', 'program keahlian', 'kompetensi', 'tkj', 'akuntansi', 'dkv'])) {
+        if ($this->containsKeywords($message, ['jurusan', 'program keahlian', 'kompetensi', 'tkj', 'tsm', 'tkr'])) {
             return "📚 **Program Keahlian di SMK Bina Mandiri Bekasi:**\n\n" .
                    "1. **Teknik Komputer & Jaringan (TKJ)** 💻\n" .
                    "   - Belajar networking, programming, dan sistem komputer\n" .
                    "   - Prospek: Network Administrator, IT Support, Web Developer\n\n" .
-                   "2. **Akuntansi** 💰\n" .
-                   "   - Belajar pembukuan, perpajakan, dan keuangan\n" .
-                   "   - Prospek: Akuntan, Staff Keuangan, Auditor\n\n" .
-                   "3. **Desain Komunikasi Visual (DKV)** 🎨\n" .
-                   "   - Belajar desain grafis, multimedia, dan animasi\n" .
-                   "   - Prospek: Graphic Designer, Video Editor, UI/UX Designer\n\n" .
+                   "2. **Teknik Sepeda Motor (TSM)** 🏍️\n" .
+                   "   - Belajar perawatan, perbaikan, dan modifikasi sepeda motor\n" .
+                   "   - Prospek: Mekanik Motor, Teknisi Bengkel, Wirausaha Otomotif\n\n" .
+                   "3. **Teknik Kendaraan Ringan (TKR)** 🚗\n" .
+                   "   - Belajar perawatan, perbaikan, dan teknologi kendaraan ringan\n" .
+                   "   - Prospek: Mekanik Mobil, Teknisi Otomotif, Service Advisor\n\n" .
                    "Mau tahu lebih detail tentang jurusan tertentu? Tanya saja! 😊";
         }
 
@@ -124,8 +124,8 @@ class ChatbotController extends Controller
             return "🏢 **Fasilitas SMK Bina Mandiri Bekasi:**\n\n" .
                    "✅ Ruang kelas ber-AC\n" .
                    "✅ Laboratorium Komputer\n" .
-                   "✅ Laboratorium Akuntansi\n" .
-                   "✅ Studio Desain & Multimedia\n" .
+                   "✅ Bengkel Sepeda Motor (TSM)\n" .
+                   "✅ Bengkel Kendaraan Ringan (TKR)\n" .
                    "✅ Perpustakaan Digital\n" .
                    "✅ Masjid\n" .
                    "✅ Kantin\n" .
@@ -213,8 +213,8 @@ class ChatbotController extends Controller
             return "🏆 **Prestasi SMK Bina Mandiri Bekasi:**\n\n" .
                    "Kami bangga dengan prestasi siswa-siswi kami:\n" .
                    "🥇 Juara 1 LKS Tingkat Provinsi (TKJ)\n" .
-                   "🥈 Juara 2 Lomba Desain Grafis Nasional\n" .
-                   "🥉 Juara 3 Olimpiade Akuntansi\n" .
+                   "🥈 Juara 2 Lomba Skill Otomotif Nasional\n" .
+                   "🥉 Juara 3 Kompetisi Mekanik Motor\n" .
                    "🏅 Best Practice Award dari Kemendikbud\n" .
                    "⭐ Sekolah Adiwiyata Tingkat Kota\n\n" .
                    "Prestasi adalah bukti kualitas pendidikan kami! 💪\n\n" .
@@ -244,7 +244,7 @@ class ChatbotController extends Controller
         return "Maaf, saya belum punya informasi tentang itu. 😅\n\n" .
                "Saya bisa membantu Anda dengan informasi tentang:\n" .
                "📚 Profil sekolah\n" .
-               "🎓 Jurusan (TKJ, Akuntansi, DKV)\n" .
+               "🎓 Jurusan (TKJ, TSM, TKR)\n" .
                "📝 PPDB (Pendaftaran)\n" .
                "🏢 Fasilitas\n" .
                "📍 Alamat & Kontak\n" .
@@ -314,7 +314,7 @@ class ChatbotController extends Controller
             'messages' => [
                 [
                     'role' => 'system',
-                    'content' => 'Kamu adalah asisten virtual SMK Bina Mandiri Bekasi. Jawab pertanyaan dengan ramah, informatif, dan gunakan emoji. Fokus pada informasi sekolah, jurusan (TKJ, Akuntansi, DKV), PPDB, dan fasilitas.'
+                    'content' => 'Kamu adalah asisten virtual SMK Bina Mandiri Bekasi. Jawab pertanyaan dengan ramah, informatif, dan gunakan emoji. Fokus pada informasi sekolah, jurusan (TKJ, TSM, TKR), PPDB, dan fasilitas.'
                 ],
                 [
                     'role' => 'user',

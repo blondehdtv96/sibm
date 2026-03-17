@@ -37,7 +37,7 @@ class GalleryAlbumController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
             'sort_order' => 'nullable|integer|min:0',
         ]);
 
@@ -86,7 +86,7 @@ class GalleryAlbumController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
             'sort_order' => 'nullable|integer|min:0',
         ]);
 

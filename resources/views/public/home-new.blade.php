@@ -4,75 +4,86 @@
 @section('description', 'SMK Bina Mandiri Kota Bekasi adalah sekolah menengah kejuruan terbaik di Bekasi dengan program keahlian unggulan. Fasilitas modern, guru berpengalaman, tingkat kelulusan 100%. Daftar PPDB 2025 sekarang!')
 
 @section('content')
-<!-- Hero Section -->
+<!-- Hero Slider Section -->
 @if($sliders && $sliders->count() > 0)
-<section class="relative bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 overflow-hidden">
-    <div class="absolute inset-0 bg-black/20"></div>
-    
-    <div class="swiper hero-swiper relative z-10">
+<section class="hero-slider-section relative overflow-hidden bg-gray-900">
+
+    <div class="swiper hero-swiper">
         <div class="swiper-wrapper">
-            @foreach($sliders as $slider)
-            <div class="swiper-slide">
-                <!-- Background Image -->
+            @foreach($sliders as $index => $slider)
+            <div class="swiper-slide hero-slide">
+                {{-- Full-size image (follows natural dimensions) --}}
                 @if($slider->image_path)
-                <div class="absolute inset-0 z-0">
-                    <img src="{{ asset('storage/' . $slider->image_path) }}" 
-                         alt="{{ $slider->title }}" 
-                         class="w-full h-full object-cover"
-                         onerror="this.src='{{ asset('images/placeholder-slider.jpg') }}'">
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
+                <div class="slide-image-wrap">
+                    <img src="{{ asset('storage/' . $slider->image_path) }}"
+                         alt="{{ $slider->title ?? 'Slider ' . ($index+1) }}"
+                         class="slide-img"
+                         onerror="this.closest('.slide-image-wrap').style.display='none'">
                 </div>
                 @endif
-                
-                <div class="min-h-[500px] md:min-h-[600px] flex items-center relative z-10">
-                    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
-                        <div class="max-w-4xl mx-auto text-center text-white">
-                            @if($slider->title)
-                            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-lg">
-                                {{ $slider->title }}
-                            </h1>
-                            @endif
-                            @if($slider->subtitle)
-                            <p class="text-xl md:text-2xl mb-8 text-gray-100 drop-shadow-md">
-                                {{ $slider->subtitle }}
-                            </p>
-                            @endif
-                            @if($slider->button_text && $slider->button_link)
-                            <div class="flex flex-wrap gap-4 justify-center">
-                                <a href="{{ $slider->button_link }}" 
-                                   class="inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all hover:scale-105 shadow-xl">
-                                    {{ $slider->button_text }}
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                                    </svg>
-                                </a>
-                            </div>
-                            @endif
+
+                {{-- Overlay text (only shown when title/subtitle/button present) --}}
+                @if($slider->title || $slider->subtitle || $slider->button_text)
+                <div class="slide-overlay">
+                    <div class="slide-content">
+                        @if($slider->title)
+                        <h2 class="slide-title">{{ $slider->title }}</h2>
+                        @endif
+                        @if($slider->subtitle)
+                        <p class="slide-subtitle">{{ $slider->subtitle }}</p>
+                        @endif
+                        @if($slider->button_text && $slider->button_link)
+                        <div class="slide-btn-wrap">
+                            <a href="{{ $slider->button_link }}" class="slide-btn">
+                                {{ $slider->button_text }}
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                                </svg>
+                            </a>
                         </div>
+                        @endif
                     </div>
                 </div>
+                @endif
             </div>
             @endforeach
         </div>
-        
+
         @if($sliders->count() > 1)
-        <div class="swiper-pagination"></div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
+        {{-- Navigation Arrows --}}
+        <button class="hero-nav hero-nav-prev" id="heroPrev" aria-label="Sebelumnya">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <button class="hero-nav hero-nav-next" id="heroNext" aria-label="Berikutnya">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+            </svg>
+        </button>
+
+        {{-- Pagination + Counter --}}
+        <div class="hero-footer">
+            <div class="swiper-pagination hero-pagination"></div>
+            <div class="hero-counter">
+                <span id="heroCurrentSlide">1</span> / <span id="heroTotalSlides">{{ $sliders->count() }}</span>
+            </div>
+        </div>
         @endif
     </div>
 </section>
 @else
-<section class="relative bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 py-20 md:py-32">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
-        <h1 class="text-5xl md:text-6xl font-bold mb-6">
+<section class="relative bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 py-28 md:py-40">
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-white relative z-10">
+        <h1 class="text-5xl md:text-6xl font-black mb-6 leading-tight drop-shadow-lg">
             {{ config('school.name', 'SMK Bina Mandiri Bekasi') }}
         </h1>
-        <p class="text-xl md:text-2xl mb-8 text-gray-100 max-w-3xl mx-auto">
+        <p class="text-xl md:text-2xl mb-10 text-blue-100 max-w-3xl mx-auto leading-relaxed">
             {{ config('school.tagline', 'Mencetak Generasi Unggul dan Berdaya Saing') }}
         </p>
-        <a href="{{ route('ppdb.register') }}" 
-           class="inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
+        <a href="{{ route('ppdb.register') }}"
+           class="inline-flex items-center gap-3 px-10 py-4 bg-white text-blue-600 rounded-2xl font-bold text-lg hover:bg-blue-50 transition-all shadow-2xl hover:shadow-blue-500/30 hover:-translate-y-1">
             Daftar Sekarang
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -488,55 +499,60 @@
 </div>
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 <script>
-// Swiper
-if (document.querySelector('.hero-swiper')) {
-    new Swiper('.hero-swiper', {
-        loop: true,
-        autoplay: {
-            delay: 5000,
-            disableOnInteraction: false,
-        },
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        effect: 'fade',
-        fadeEffect: {
-            crossFade: true
-        },
-    });
-}
+document.addEventListener('DOMContentLoaded', function () {
+    // ── Professional Hero Slider ──────────────────────────────────────────────
+    var heroEl = document.querySelector('.hero-swiper');
+    if (heroEl) {
+        var heroSwiper = new Swiper('.hero-swiper', {
+            loop: true,
+            speed: 800,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+            },
+            effect: 'fade',
+            fadeEffect: { crossFade: true },
+            pagination: {
+                el: '.hero-pagination',
+                clickable: true,
+                dynamicBullets: false,
+            },
+            navigation: {
+                nextEl: '#heroNext',
+                prevEl: '#heroPrev',
+            },
+            keyboard: { enabled: true },
+            a11y: { enabled: true },
+            on: {
+                realIndexChange: function (swiper) {
+                    var cur = document.getElementById('heroCurrentSlide');
+                    if (cur) cur.textContent = swiper.realIndex + 1;
+                },
+            },
+        });
+    }
+});
 
-// Modal functions
+// ── Brosur Modal ──────────────────────────────────────────────────────────────
 function openBrosurModal() {
     document.getElementById('brosurModal').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }
-
 function closeBrosurModal() {
     document.getElementById('brosurModal').classList.add('hidden');
     document.body.style.overflow = '';
 }
-
 function downloadBrosur() {
-    const link = document.createElement('a');
+    var link = document.createElement('a');
     link.href = "{{ asset('storage/' . setting('ppdb_brochure')) }}";
     link.download = true;
     link.click();
 }
-
-// Close on outside click
 document.getElementById('brosurModal')?.addEventListener('click', function(e) {
     if (e.target === this) closeBrosurModal();
 });
-
-// Close on Escape
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeBrosurModal();
 });
@@ -544,31 +560,189 @@ document.addEventListener('keydown', function(e) {
 @endpush
 
 @push('styles')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
 <style>
-.swiper-button-next,
-.swiper-button-prev {
-    color: white;
-    background: rgba(255, 255, 255, 0.2);
-    width: 44px;
-    height: 44px;
+/* ── Hero Slider ───────────────────────────────────────────────────────────── */
+
+/* Section wrapper – matches image height naturally */
+.hero-slider-section { width: 100%; }
+
+/* Swiper container fills the section */
+.hero-swiper { width: 100%; position: relative; }
+
+/* Each slide: stacked positioning for image + overlay */
+.hero-slide {
+    position: relative;
+    overflow: hidden;
+    background: #111;
+}
+
+/* Image wrapper: fills width, height follows natural aspect ratio */
+.slide-image-wrap {
+    width: 100%;
+    display: block;
+    line-height: 0; /* remove bottom gap */
+}
+
+/* The image itself – full width, auto height = preserves aspect ratio */
+.slide-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    transform-origin: center center;
+    transition: transform 6s ease;
+}
+
+/* Ken-Burns: active slide zooms in gently */
+.swiper-slide-active .slide-img {
+    transform: scale(1.04);
+}
+
+/* Text overlay – sits at bottom with gradient */
+.slide-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0,0,0,0.72) 0%,
+        rgba(0,0,0,0.28) 45%,
+        transparent 100%
+    );
+    display: flex;
+    align-items: flex-end;
+    padding: 2.5rem 2rem;
+    pointer-events: none;
+}
+
+.slide-content {
+    max-width: 780px;
+    pointer-events: auto;
+}
+
+.slide-title {
+    font-size: clamp(1.4rem, 4vw, 2.6rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.25;
+    margin-bottom: .6rem;
+    text-shadow: 0 2px 12px rgba(0,0,0,.5);
+}
+
+.slide-subtitle {
+    font-size: clamp(.95rem, 2.2vw, 1.3rem);
+    color: rgba(255,255,255,.92);
+    margin-bottom: 1.2rem;
+    line-height: 1.55;
+    text-shadow: 0 1px 8px rgba(0,0,0,.45);
+}
+
+.slide-btn-wrap { }
+
+.slide-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .75rem 1.75rem;
+    background: #fff;
+    color: #1d4ed8;
+    font-weight: 700;
+    font-size: .95rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    box-shadow: 0 8px 28px rgba(0,0,0,.25);
+    transition: background .2s, transform .2s, box-shadow .2s;
+}
+.slide-btn:hover {
+    background: #eff6ff;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0,0,0,.32);
+}
+.slide-btn svg { width: 18px; height: 18px; }
+
+/* ── Custom Navigation Arrows ──────────────────────────────────────────────── */
+.hero-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,.18);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,.25);
+    transition: background .22s, transform .22s, box-shadow .22s;
+}
+.hero-nav:hover {
+    background: rgba(255,255,255,.35);
+    transform: translateY(-50%) scale(1.08);
+    box-shadow: 0 6px 28px rgba(0,0,0,.35);
+}
+.hero-nav:active { transform: translateY(-50%) scale(.96); }
+.hero-nav svg { width: 22px; height: 22px; }
+
+.hero-nav-prev { left: 18px; }
+.hero-nav-next { right: 18px; }
+
+/* Hide arrows on very small screens */
+@media (max-width: 480px) {
+    .hero-nav { width: 40px; height: 40px; }
+    .hero-nav-prev { left: 10px; }
+    .hero-nav-next { right: 10px; }
+    .hero-nav svg { width: 18px; height: 18px; }
 }
 
-.swiper-button-next:after,
-.swiper-button-prev:after {
-    font-size: 20px;
+/* ── Footer bar: pagination bullets + counter ──────────────────────────────── */
+.hero-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: .8rem 1rem;
+    background: linear-gradient(to top, rgba(0,0,0,.45), transparent);
 }
 
-.swiper-pagination-bullet {
-    background: white;
-    opacity: 0.5;
-}
-
-.swiper-pagination-bullet-active {
+/* Pagination bullets */
+.hero-pagination { position: static; }
+.hero-pagination .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background: rgba(255,255,255,.55);
     opacity: 1;
+    border-radius: 9999px;
+    transition: width .35s, background .25s;
+    display: inline-block;
+    margin: 0 3px;
+    cursor: pointer;
+}
+.hero-pagination .swiper-pagination-bullet-active {
+    width: 28px;
+    background: #fff;
+    border-radius: 9999px;
 }
 
+/* Counter */
+.hero-counter {
+    font-size: .8rem;
+    font-weight: 600;
+    color: rgba(255,255,255,.85);
+    letter-spacing: .04em;
+    white-space: nowrap;
+}
+
+/* ── Utilities ─────────────────────────────────────────────────────────────── */
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;

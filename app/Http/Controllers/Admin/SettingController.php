@@ -41,7 +41,7 @@ class SettingController extends Controller
     {
         $request->validate([
             'logo_type' => 'required|in:site_logo,site_logo_dark,site_favicon',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,svg,ico|max:2048',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,svg,ico|max:20480',
         ]);
 
         $logoType = $request->logo_type;
@@ -145,7 +145,7 @@ class SettingController extends Controller
         $request->validate([
             'principal_name' => 'required|string|max:255',
             'principal_message' => 'required|string',
-            'principal_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'principal_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:20480',
         ]);
 
         Setting::set('principal_name', $request->principal_name);

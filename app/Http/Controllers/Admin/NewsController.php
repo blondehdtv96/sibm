@@ -65,9 +65,9 @@ class NewsController extends Controller
             'content' => 'required|string',
             'excerpt' => 'nullable|string',
             'category_id' => 'required|exists:news_categories,id',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:20480',
             'images_caption.*' => 'nullable|string|max:255',
             'status' => 'required|in:draft,published',
             'published_at' => 'nullable|date',
@@ -156,9 +156,9 @@ class NewsController extends Controller
             'content' => 'required|string',
             'excerpt' => 'nullable|string',
             'category_id' => 'required|exists:news_categories,id',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:20480',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:20480',
             'images_caption.*' => 'nullable|string|max:255',
             'status' => 'required|in:draft,published',
             'published_at' => 'nullable|date',
@@ -255,7 +255,7 @@ class NewsController extends Controller
     {
         // CKEditor sends file with name 'upload'
         $request->validate([
-            'upload' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+            'upload' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:20480'
         ]);
 
         try {

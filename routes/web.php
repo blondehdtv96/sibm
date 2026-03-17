@@ -26,7 +26,7 @@ use App\Http\Controllers\Public\SearchController;
 // Storage file serving route (fallback if symlink doesn't work)
 Route::get('/storage/{path}', function ($path) {
     // Security: only allow specific directories
-    $allowedDirs = ['sliders', 'home_sliders', 'uploads', 'images', 'news', 'gallery', 'competencies', 'settings', 'logos', 'banners', 'industry-partners'];
+    $allowedDirs = ['sliders', 'home_sliders', 'uploads', 'images', 'news', 'gallery', 'competencies', 'settings', 'logos', 'banners', 'industry-partners', 'principal', 'brochures'];
     $firstDir = explode('/', $path)[0] ?? '';
     
     if (!in_array($firstDir, $allowedDirs)) {
