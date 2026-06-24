@@ -238,11 +238,6 @@
                         </a>
                     @endif
                     
-                    <!-- CTA Button - Integrated -->
-                    <a href="{{ route('ppdb.register') }}" 
-                       class="ml-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm rounded-lg font-semibold hover:shadow-lg transition-all whitespace-nowrap">
-                        Daftar PPDB
-                    </a>
                     @auth
                     <a href="{{ route('dashboard') }}" 
                        :class="scrolled ? 'text-gray-700 hover:text-blue-600' : 'text-white hover:text-white/80'"
@@ -329,11 +324,6 @@
                         </a>
                     @endif
                     
-                    <!-- Mobile CTA -->
-                    <div class="border-t border-gray-100 my-3 mx-2"></div>
-                    <a href="{{ route('ppdb.register') }}" class="mx-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-center shadow-lg hover:shadow-xl transition-shadow">
-                        Daftar PPDB Online
-                    </a>
                     @auth
                     <a href="{{ route('dashboard') }}" class="px-4 py-3 text-center rounded-xl hover:bg-gray-50 font-medium text-gray-700 transition-colors">
                         Dashboard

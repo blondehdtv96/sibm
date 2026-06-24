@@ -3,7 +3,7 @@
         'name' => 'smk-bina-mandiri-bekasi/sistem-informasi',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '3451eb6dcded36b5b71b62c1e435bac34b426fe8',
+        'reference' => '2b1b65c9a8f55d067e12f7ab5f5933d05d3f7e61',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -980,7 +980,7 @@
         'smk-bina-mandiri-bekasi/sistem-informasi' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '3451eb6dcded36b5b71b62c1e435bac34b426fe8',
+            'reference' => '2b1b65c9a8f55d067e12f7ab5f5933d05d3f7e61',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
