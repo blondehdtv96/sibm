@@ -95,63 +95,68 @@
 
 <!-- Stats Section -->
 @if($statistics && $statistics->count() > 0)
-<section class="py-16 bg-white">
+<section class="relative -mt-8 sm:-mt-12 z-20 pb-4">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-            @foreach($statistics->take(4) as $stat)
-            <div class="text-center">
-                <div class="text-4xl md:text-5xl font-bold text-blue-600 mb-2">
-                    {{ $stat->value }}{{ $stat->suffix }}
+        <div class="bg-white rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 p-5 sm:p-8 lg:p-10">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 divide-y divide-gray-100 md:divide-y-0 md:divide-x">
+                @foreach($statistics->take(4) as $stat)
+                <div class="text-center px-2 pt-4 md:pt-0 first:pt-0">
+                    <div class="text-3xl sm:text-4xl lg:text-5xl font-extrabold bg-gradient-to-br from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-1 sm:mb-2">
+                        {{ $stat->value }}{{ $stat->suffix }}
+                    </div>
+                    <div class="text-xs sm:text-sm lg:text-base text-gray-500 font-medium leading-tight">{{ $stat->label }}</div>
                 </div>
-                <div class="text-gray-600 font-medium">{{ $stat->label }}</div>
+                @endforeach
             </div>
-            @endforeach
         </div>
     </div>
 </section>
 @endif
 
 <!-- Welcome Section -->
-<section class="py-20 bg-gray-50">
+<section class="py-14 sm:py-16 lg:py-24 bg-gray-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-3xl mx-auto text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <div class="max-w-3xl mx-auto text-center mb-10 sm:mb-14">
+            <span class="inline-block px-4 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs sm:text-sm font-semibold mb-4 tracking-wide uppercase">
+                Mengapa Memilih Kami
+            </span>
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
                 Selamat Datang di SMK Bina Mandiri
             </h2>
-            <p class="text-lg text-gray-600">
+            <p class="text-base sm:text-lg text-gray-600 leading-relaxed">
                 Institusi pendidikan kejuruan terkemuka yang berkomitmen mencetak lulusan berkualitas, siap kerja, dan berdaya saing tinggi di era digital.
             </p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-white p-8 rounded-lg shadow-md">
-                <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+            <div class="group bg-white p-6 sm:p-8 rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 hover:border-blue-200 transition-all duration-300 hover:-translate-y-1">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-7 h-7 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                     </svg>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Fasilitas Modern</h3>
-                <p class="text-gray-600">Laboratorium dan workshop dengan peralatan industri terkini untuk mendukung pembelajaran praktik.</p>
+                <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">Fasilitas Modern</h3>
+                <p class="text-sm sm:text-base text-gray-600 leading-relaxed">Laboratorium dan workshop dengan peralatan industri terkini untuk mendukung pembelajaran praktik.</p>
             </div>
             
-            <div class="bg-white p-8 rounded-lg shadow-md">
-                <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="group bg-white p-6 sm:p-8 rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 hover:border-blue-200 transition-all duration-300 hover:-translate-y-1">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-7 h-7 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
                     </svg>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Guru Profesional</h3>
-                <p class="text-gray-600">Tenaga pengajar bersertifikat dan berpengalaman di bidangnya masing-masing.</p>
+                <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">Guru Profesional</h3>
+                <p class="text-sm sm:text-base text-gray-600 leading-relaxed">Tenaga pengajar bersertifikat dan berpengalaman di bidangnya masing-masing.</p>
             </div>
             
-            <div class="bg-white p-8 rounded-lg shadow-md">
-                <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="group bg-white p-6 sm:p-8 rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 hover:border-blue-200 transition-all duration-300 hover:-translate-y-1 sm:col-span-2 lg:col-span-1">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-purple-500/20 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-7 h-7 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                     </svg>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Kerjasama Industri</h3>
-                <p class="text-gray-600">Program magang dan penempatan kerja di perusahaan terkemuka untuk siswa.</p>
+                <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2">Kerjasama Industri</h3>
+                <p class="text-sm sm:text-base text-gray-600 leading-relaxed">Program magang dan penempatan kerja di perusahaan terkemuka untuk siswa.</p>
             </div>
         </div>
     </div>
@@ -159,44 +164,47 @@
 
 <!-- Program Keahlian -->
 @if($featuredCompetencies && $featuredCompetencies->count() > 0)
-<section class="py-20 bg-white">
+<section class="py-14 sm:py-16 lg:py-24 bg-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <div class="text-center mb-10 sm:mb-14">
+            <span class="inline-block px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-xs sm:text-sm font-semibold mb-4 tracking-wide uppercase">
+                Jurusan Unggulan
+            </span>
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
                 Program Keahlian
             </h2>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                 Pilih program keahlian sesuai minat dan bakat Anda untuk masa depan yang cerah
             </p>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
             @foreach($featuredCompetencies->take(3) as $competency)
             <a href="{{ route('public.competencies.show', $competency->slug) }}" 
-               class="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow">
+               class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl border border-gray-100 transition-all duration-300 hover:-translate-y-1 flex flex-col">
                 @if($competency->image)
-                <div class="h-48 overflow-hidden bg-white flex items-center justify-center p-4">
+                <div class="h-44 sm:h-48 overflow-hidden bg-gray-50 flex items-center justify-center p-6">
                     <img src="{{ Storage::url($competency->image) }}" 
                          alt="{{ $competency->name }}" 
-                         class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                         class="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500"
                          loading="lazy">
                 </div>
                 @else
-                <div class="h-48 bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center">
+                <div class="h-44 sm:h-48 bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center">
                     <svg class="w-20 h-20 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                     </svg>
                 </div>
                 @endif
                 
-                <div class="p-6">
-                    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                <div class="p-5 sm:p-6 flex flex-col flex-grow">
+                    <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                         {{ $competency->name }}
                     </h3>
-                    <p class="text-gray-600 mb-4 line-clamp-2">
+                    <p class="text-sm sm:text-base text-gray-600 mb-4 line-clamp-2 flex-grow">
                         {{ Str::limit(strip_tags($competency->description), 100) }}
                     </p>
-                    <div class="flex items-center text-blue-600 font-semibold">
+                    <div class="flex items-center text-blue-600 font-semibold text-sm sm:text-base mt-auto">
                         <span>Pelajari Lebih Lanjut</span>
                         <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -207,9 +215,9 @@
             @endforeach
         </div>
         
-        <div class="text-center mt-12">
+        <div class="text-center mt-10 sm:mt-12">
             <a href="{{ route('public.competencies.index') }}" 
-               class="inline-flex items-center gap-2 px-8 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-colors">
+               class="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-3.5 bg-blue-600 text-white rounded-xl font-bold text-sm sm:text-base hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5">
                 Lihat Semua Program
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -222,20 +230,20 @@
 
 <!-- PPDB Brochure -->
 @if(setting('ppdb_brochure'))
-<section class="py-20 bg-gradient-to-br from-orange-50 to-red-50">
+<section class="py-14 sm:py-16 lg:py-24 bg-gradient-to-br from-blue-50 to-indigo-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl overflow-hidden shadow-xl">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center p-8 md:p-12">
-                <div class="text-white">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4">
-                        {{ setting('ppdb_brochure_title', 'Download Brosur PPDB') }}
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-center p-6 sm:p-10 lg:p-12">
+                <div class="text-white text-center lg:text-left order-2 lg:order-1">
+                    <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 leading-tight">
+                        {{ setting('ppdb_brochure_title', 'Download Brosur') }}
                     </h2>
-                    <p class="text-lg mb-6 text-white/90">
-                        Dapatkan informasi lengkap tentang pendaftaran siswa baru, program keahlian, fasilitas, dan biaya pendidikan.
+                    <p class="text-base sm:text-lg mb-6 text-white/90 leading-relaxed">
+                        Dapatkan informasi lengkap tentang program keahlian, fasilitas, dan biaya pendidikan.
                     </p>
-                    <div class="flex flex-wrap gap-4">
+                    <div class="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
                         <button onclick="openBrosurModal()" 
-                           class="inline-flex items-center gap-2 px-6 py-3 bg-white text-orange-600 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+                           class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-blue-600 rounded-xl font-bold hover:bg-gray-100 transition-colors">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -244,7 +252,7 @@
                         </button>
                         <a href="{{ asset('storage/' . setting('ppdb_brochure')) }}" 
                            download
-                           class="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white rounded-lg font-bold border-2 border-white hover:bg-white/30 transition-colors">
+                           class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white/20 text-white rounded-xl font-bold border-2 border-white hover:bg-white/30 transition-colors">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                             </svg>
@@ -252,10 +260,10 @@
                         </a>
                     </div>
                 </div>
-                <div class="flex justify-center">
+                <div class="flex justify-center order-1 lg:order-2">
                     <img src="{{ asset('storage/' . setting('ppdb_brochure')) }}" 
-                         alt="Brosur PPDB"
-                         class="max-w-sm w-full h-auto rounded-lg shadow-2xl">
+                         alt="Brosur"
+                         class="max-w-[240px] sm:max-w-sm w-full h-auto rounded-xl shadow-2xl">
                 </div>
             </div>
         </div>
@@ -264,19 +272,22 @@
 @endif
 
 <!-- Video Profile -->
-<section class="py-20 bg-white">
+<section class="py-14 sm:py-16 lg:py-24 bg-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <div class="text-center mb-8 sm:mb-12">
+                <span class="inline-block px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-xs sm:text-sm font-semibold mb-4 tracking-wide uppercase">
+                    Video Profil
+                </span>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
                     Profil SMK Bina Mandiri
                 </h2>
-                <p class="text-lg text-gray-600">
+                <p class="text-base sm:text-lg text-gray-600">
                     Saksikan kegiatan dan prestasi siswa-siswi kami
                 </p>
             </div>
             
-            <div class="relative rounded-2xl overflow-hidden shadow-xl">
+            <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl">
                 <div class="relative" style="padding-bottom: 56.25%;">
                     <iframe 
                         class="absolute inset-0 w-full h-full"
@@ -285,14 +296,15 @@
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen
+                        loading="lazy"
                     ></iframe>
                 </div>
             </div>
             
-            <div class="text-center mt-8">
+            <div class="text-center mt-6 sm:mt-8">
                 <a href="https://www.youtube.com/@smkbinamandiri268" 
                    target="_blank"
-                   class="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition-colors">
+                   class="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-xl font-bold text-sm sm:text-base hover:bg-red-700 transition-colors shadow-lg shadow-red-500/25">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                     </svg>
@@ -305,43 +317,60 @@
 
 <!-- Latest News -->
 @if($latestNews && $latestNews->count() > 0)
-<section class="py-20 bg-gray-50">
+<section class="py-14 sm:py-16 lg:py-24 bg-gray-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
-                Berita Terbaru
-            </h2>
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-3 mb-8 sm:mb-12">
+            <div>
+                <span class="inline-block px-4 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs sm:text-sm font-semibold mb-3 tracking-wide uppercase">
+                    Informasi Terkini
+                </span>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
+                    Berita Terbaru
+                </h2>
+            </div>
             <a href="{{ route('public.news.index') }}" 
-               class="text-blue-600 font-semibold hover:text-blue-700">
-                Lihat Semua →
+               class="inline-flex items-center gap-1 text-blue-600 font-semibold hover:text-blue-700 text-sm sm:text-base whitespace-nowrap">
+                Lihat Semua
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
             </a>
         </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
             @foreach($latestNews->take(3) as $news)
             <a href="{{ route('public.news.show', $news->slug) }}" 
-               class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow">
+               class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl border border-gray-100 transition-all duration-300 hover:-translate-y-1 flex flex-col">
                 @if($news->featured_image)
-                <div class="h-48 overflow-hidden bg-gray-100">
+                <div class="h-44 sm:h-48 overflow-hidden bg-gray-100">
                     <img src="{{ Storage::url($news->featured_image) }}" 
                          alt="{{ $news->title }}" 
-                         class="w-full h-full object-cover"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                          loading="lazy">
                 </div>
+                @else
+                <div class="h-44 sm:h-48 bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m0 0v9a2 2 0 002 2h-2m0 0a2 2 0 01-2-2V9a2 2 0 012-2h2a2 2 0 012 2v9a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
                 @endif
-                <div class="p-6">
+                <div class="p-5 sm:p-6 flex flex-col flex-grow">
                     @if($news->category)
-                    <span class="inline-block bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold mb-3">
+                    <span class="inline-block self-start bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold mb-3">
                         {{ $news->category->name }}
                     </span>
                     @endif
-                    <h3 class="font-bold text-lg mb-2 text-gray-900 line-clamp-2">
+                    <h3 class="font-bold text-base sm:text-lg mb-2 text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
                         {{ $news->title }}
                     </h3>
-                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">
+                    <p class="text-gray-600 text-sm mb-3 line-clamp-2 flex-grow">
                         {{ Str::limit(strip_tags($news->excerpt ?? $news->content), 100) }}
                     </p>
-                    <div class="text-sm text-gray-500">
+                    <div class="flex items-center gap-1.5 text-xs sm:text-sm text-gray-500 mt-auto pt-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
                         {{ $news->published_at->format('d M Y') }}
                     </div>
                 </div>
@@ -354,39 +383,44 @@
 
 <!-- Industry Partners -->
 @if($industryPartners && $industryPartners->count() > 0)
-<section class="py-20 bg-white">
+<section class="py-14 sm:py-16 lg:py-24 bg-gray-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <div class="text-center mb-10 sm:mb-14">
+            <span class="inline-block px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-xs sm:text-sm font-semibold mb-4 tracking-wide uppercase">
+                Mitra Kami
+            </span>
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
                 Kerjasama Dunia Industri
             </h2>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                 Kami menjalin kerjasama dengan berbagai perusahaan dan industri untuk memberikan pengalaman terbaik bagi siswa
             </p>
         </div>
         
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-5">
             @foreach($industryPartners as $partner)
             <div class="group">
                 @if($partner->website)
                 <a href="{{ $partner->website }}" 
                    target="_blank"
                    rel="noopener noreferrer"
-                   class="block bg-white border-2 border-gray-200 rounded-xl p-8 hover:shadow-xl transition-all duration-300 hover:border-blue-400">
-                    <div class="h-40 flex items-center justify-center">
+                   class="block bg-white border border-gray-200 rounded-xl p-3 sm:p-4 hover:shadow-lg transition-all duration-300 hover:border-blue-400 hover:-translate-y-1">
+                    <div class="h-16 sm:h-20 flex items-center justify-center">
                         <img src="{{ asset('storage/' . $partner->logo) }}" 
                              alt="{{ $partner->name }}"
                              title="{{ $partner->name }}"
-                             class="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300">
+                             class="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
+                             loading="lazy">
                     </div>
                 </a>
                 @else
-                <div class="bg-white border-2 border-gray-200 rounded-xl p-8 hover:shadow-xl transition-all duration-300">
-                    <div class="h-40 flex items-center justify-center">
+                <div class="bg-white border border-gray-200 rounded-xl p-3 sm:p-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                    <div class="h-16 sm:h-20 flex items-center justify-center">
                         <img src="{{ asset('storage/' . $partner->logo) }}" 
                              alt="{{ $partner->name }}"
                              title="{{ $partner->name }}"
-                             class="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300">
+                             class="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
+                             loading="lazy">
                     </div>
                 </div>
                 @endif
@@ -399,37 +433,51 @@
 
 <!-- Gallery -->
 @if($latestGalleryAlbums && $latestGalleryAlbums->count() > 0)
-<section class="py-20 bg-white">
+<section class="py-14 sm:py-16 lg:py-24 bg-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
-                Galeri Kegiatan
-            </h2>
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-3 mb-8 sm:mb-12">
+            <div>
+                <span class="inline-block px-4 py-1.5 bg-purple-100 text-purple-700 rounded-full text-xs sm:text-sm font-semibold mb-3 tracking-wide uppercase">
+                    Dokumentasi
+                </span>
+                <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
+                    Galeri Kegiatan
+                </h2>
+            </div>
             <a href="{{ route('public.gallery.index') }}" 
-               class="text-blue-600 font-semibold hover:text-blue-700">
-                Lihat Semua →
+               class="inline-flex items-center gap-1 text-blue-600 font-semibold hover:text-blue-700 text-sm sm:text-base whitespace-nowrap">
+                Lihat Semua
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
             </a>
         </div>
         
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             @foreach($latestGalleryAlbums->take(4) as $album)
             <a href="{{ route('public.gallery.show', $album->slug) }}" 
-               class="group relative h-64 rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow">
+               class="group relative h-44 sm:h-56 lg:h-64 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300">
                 @if($album->cover_image)
                 <img src="{{ Storage::url($album->cover_image) }}" 
                      alt="{{ $album->name }}" 
-                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                      loading="lazy">
                 @elseif($album->items->first())
                 <img src="{{ Storage::url($album->items->first()->image_path) }}" 
                      alt="{{ $album->name }}" 
-                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                      loading="lazy">
+                @else
+                <div class="w-full h-full bg-gradient-to-br from-purple-100 to-indigo-100 flex items-center justify-center">
+                    <svg class="w-12 h-12 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
                 @endif
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-4">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-3 sm:p-4">
                     <div class="text-white">
-                        <h4 class="font-bold text-sm mb-1">{{ $album->name }}</h4>
-                        <span class="text-xs">{{ $album->items->count() }} Foto</span>
+                        <h4 class="font-bold text-xs sm:text-sm mb-0.5 line-clamp-2">{{ $album->name }}</h4>
+                        <span class="text-[10px] sm:text-xs text-white/80">{{ $album->items->count() }} Foto</span>
                     </div>
                 </div>
             </a>
@@ -440,24 +488,25 @@
 @endif
 
 <!-- CTA Section -->
-<section class="py-20 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">
+<section class="relative py-16 sm:py-20 lg:py-28 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 overflow-hidden">
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight">
             Siap Bergabung dengan Kami?
         </h2>
-        <p class="text-xl text-gray-100 mb-10 max-w-2xl mx-auto">
-            Daftarkan diri Anda sekarang dan wujudkan impian menjadi lulusan SMK yang siap kerja dan berdaya saing tinggi
+        <p class="text-base sm:text-xl text-blue-100 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed">
+            Wujudkan impian menjadi lulusan SMK yang siap kerja dan berdaya saing tinggi bersama SMK Bina Mandiri Bekasi
         </p>
-        <div class="flex flex-wrap gap-4 justify-center">
-            <a href="{{ route('ppdb.register') }}" 
-               class="inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
-                Daftar PPDB Sekarang
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md sm:max-w-none mx-auto">
+            <a href="{{ route('public.competencies.index') }}" 
+               class="inline-flex items-center justify-center gap-2 px-8 py-3.5 sm:py-4 bg-white text-blue-600 rounded-xl font-bold text-base sm:text-lg hover:bg-gray-100 transition-all shadow-xl hover:-translate-y-0.5">
+                Lihat Program Keahlian
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                 </svg>
             </a>
             <a href="{{ route('info.contact') }}" 
-               class="inline-flex items-center gap-2 px-8 py-4 bg-white/20 text-white rounded-lg font-bold text-lg border-2 border-white hover:bg-white/30 transition-colors">
+               class="inline-flex items-center justify-center gap-2 px-8 py-3.5 sm:py-4 bg-white/15 text-white rounded-xl font-bold text-base sm:text-lg border-2 border-white/60 hover:bg-white/25 transition-all backdrop-blur-sm">
                 Hubungi Kami
             </a>
         </div>
@@ -467,7 +516,7 @@
 <!-- Brosur Modal -->
 <div id="brosurModal" class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
-        <div class="flex items-center justify-between p-6 border-b bg-gradient-to-r from-orange-500 to-red-500">
+        <div class="flex items-center justify-between p-6 border-b bg-gradient-to-r from-blue-600 to-purple-600">
             <h2 class="text-2xl font-bold text-white">{{ setting('ppdb_brochure_title', 'Brosur PPDB') }}</h2>
             <button onclick="closeBrosurModal()" class="text-white hover:bg-white/20 p-2 rounded-full">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -484,7 +533,7 @@
         
         <div class="flex gap-4 p-6 border-t bg-gray-50">
             <button onclick="downloadBrosur()" 
-               class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold rounded-lg hover:opacity-90">
+               class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-lg hover:opacity-90">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                 </svg>
@@ -576,7 +625,16 @@ document.addEventListener('keydown', function(e) {
     background: #111;
     height: 62vw;        /* scales with viewport: ~597px on 1200px wide */
     min-height: 320px;   /* never too small on narrow screens */
-    max-height: 520px;   /* never taller than this on wide screens */
+    max-height: 560px;   /* never taller than this on wide screens */
+}
+
+/* Mobile: give the hero a comfortable portrait-friendly height */
+@media (max-width: 640px) {
+    .hero-slide {
+        height: 68vw;
+        min-height: 260px;
+        max-height: 420px;
+    }
 }
 
 /* Image wrapper fills the entire slide box */
@@ -617,6 +675,14 @@ document.addEventListener('keydown', function(e) {
     align-items: flex-end;
     padding: 2.5rem 2rem;
     pointer-events: none;
+}
+
+/* Mobile: tighter overlay padding, leave room for footer bar */
+@media (max-width: 640px) {
+    .slide-overlay { padding: 1.25rem 1.25rem 3.25rem; }
+    .slide-title { margin-bottom: .4rem; }
+    .slide-subtitle { margin-bottom: .85rem; }
+    .slide-btn { padding: .6rem 1.35rem; font-size: .85rem; }
 }
 
 .slide-content {

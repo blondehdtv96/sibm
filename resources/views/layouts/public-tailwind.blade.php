@@ -247,15 +247,15 @@
                     @endauth
                 </div>
                 
-                <!-- Mobile/Tablet Menu Button -->
+                <!-- Mobile/Tablet Menu Button - always visible with solid style -->
                 <button @click="mobileMenuOpen = !mobileMenuOpen" 
-                        :class="scrolled ? 'text-gray-900' : 'text-white'"
-                        class="xl:hidden p-2 rounded-lg hover:bg-white/10 transition-colors">
+                        aria-label="Buka menu"
+                        class="xl:hidden flex items-center justify-center w-11 h-11 rounded-xl flex-shrink-0 bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 active:scale-95 transition-all">
                     <svg x-show="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
-                    <svg x-show="mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    <svg x-show="mobileMenuOpen" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
             </div>
@@ -341,7 +341,7 @@
 
     
     <!-- Footer -->
-    <footer class="bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white">
+    <footer class="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white">
         @php
             $contactAddress = setting('contact_address');
             $contactPhone = setting('contact_phone');

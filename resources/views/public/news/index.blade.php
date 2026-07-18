@@ -6,7 +6,7 @@
 <!-- Hero Section -->
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
     <!-- Gradient Background with Pattern -->
-    <div class="absolute inset-0 bg-gradient-to-br from-orange-600 via-red-600 to-pink-700"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700"></div>
     
     <!-- Geometric Pattern Overlay -->
     <div class="absolute inset-0 opacity-10">
@@ -23,8 +23,8 @@
     <!-- Animated Background Elements -->
     <div class="absolute inset-0 opacity-20">
         <div class="absolute top-20 left-10 w-72 h-72 bg-white rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-        <div class="absolute top-40 right-10 w-72 h-72 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-        <div class="absolute bottom-20 left-20 w-72 h-72 bg-red-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
+        <div class="absolute top-40 right-10 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-20 left-20 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
     </div>
     
     <!-- Hero Content -->
@@ -83,7 +83,7 @@
         <!-- Section Header -->
         <div class="text-center mb-12">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Cari Berita</h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-red-600 mx-auto rounded-full mb-6"></div>
+            <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto rounded-full mb-6"></div>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                 Temukan berita dan informasi yang Anda cari dengan mudah
             </p>
@@ -103,7 +103,7 @@
                         name="search" 
                         value="{{ request('search') }}"
                         placeholder="Cari berita..." 
-                        class="w-full pl-12 pr-32 py-4 text-lg border border-gray-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-transparent shadow-lg"
+                        class="w-full pl-12 pr-32 py-4 text-lg border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-lg"
                     >
                     <div class="absolute inset-y-0 right-0 flex items-center gap-2 pr-2">
                         @if(request()->hasAny(['search', 'category']))
@@ -113,7 +113,7 @@
                             </a>
                         @endif
                         <button type="submit" 
-                                class="px-6 py-2 bg-orange-600 text-white rounded-xl hover:bg-orange-700 transition-colors font-semibold">
+                                class="px-6 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-semibold">
                             Cari
                         </button>
                     </div>
@@ -124,13 +124,13 @@
         <!-- Category Filter -->
         <div class="flex flex-wrap justify-center gap-3 mb-8">
             <a href="{{ route('public.news.index') }}" 
-               class="px-6 py-3 rounded-full font-semibold transition-all duration-300 {{ !request('category') ? 'bg-orange-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-orange-50 border border-gray-200' }}">
+               class="px-6 py-3 rounded-full font-semibold transition-all duration-300 {{ !request('category') ? 'bg-blue-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-blue-50 border border-gray-200' }}">
                 Semua Berita
             </a>
             @foreach($categories as $category)
                 @if($category->published_news_count > 0)
                     <a href="{{ route('public.news.index', ['category' => $category->slug]) }}" 
-                       class="px-6 py-3 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 {{ request('category') === $category->slug ? 'bg-orange-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-orange-50 border border-gray-200' }}">
+                       class="px-6 py-3 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 {{ request('category') === $category->slug ? 'bg-blue-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-blue-50 border border-gray-200' }}">
                         {{ $category->name }}
                         <span class="px-2 py-1 text-xs rounded-full {{ request('category') === $category->slug ? 'bg-white/20' : 'bg-gray-100' }}">
                             {{ $category->published_news_count }}
@@ -156,8 +156,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         @if($news->count() > 0)
             <!-- Results Header -->
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4">
                     @if(request('search'))
                         Hasil Pencarian: "{{ request('search') }}"
                     @elseif($selectedCategory)
@@ -166,18 +166,18 @@
                         Semua Berita Terbaru
                     @endif
                 </h2>
-                <div class="w-24 h-1 bg-gradient-to-r from-orange-500 to-red-600 mx-auto rounded-full mb-6"></div>
-                <p class="text-lg text-gray-600">
-                    Ditemukan {{ $news->count() }} berita dari {{ $news->total() }} total berita
+                <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto rounded-full mb-6"></div>
+                <p class="text-base sm:text-lg text-gray-600">
+                    Menampilkan {{ $news->count() }} dari {{ $news->total() }} total berita
                 </p>
             </div>
             
             <!-- News Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
                 @foreach($news as $article)
-                    <article class="group bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 h-full flex flex-col">
+                    <article class="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 h-full flex flex-col">
                         <!-- Image Section with Overlay -->
-                        <div class="relative h-72 overflow-hidden bg-gradient-to-br from-red-600 via-orange-600 to-red-700 flex-shrink-0">
+                        <div class="relative h-36 sm:h-44 overflow-hidden bg-gradient-to-br from-indigo-600 via-blue-600 to-indigo-700 flex-shrink-0">
                             @if($article->featured_image)
                                 <img src="{{ asset('storage/' . $article->featured_image) }}" 
                                      alt="{{ $article->title }}"
@@ -186,8 +186,8 @@
                                 <!-- Overlay for better text contrast -->
                                 <div class="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/40 group-hover:from-black/20 group-hover:to-black/60 transition-all duration-300"></div>
                             @else
-                                <div class="absolute inset-0 bg-gradient-to-br from-red-600 via-red-500 to-orange-600 flex items-center justify-center">
-                                    <svg class="w-20 h-20 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-indigo-500 to-blue-600 flex items-center justify-center">
+                                    <svg class="w-12 h-12 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
                                     </svg>
                                 </div>
@@ -195,64 +195,42 @@
                             
                             <!-- Category Badge - Floating -->
                             @if($article->category)
-                                <div class="absolute top-4 left-4 z-10">
-                                    <span class="px-4 py-1.5 bg-white/95 backdrop-blur-md text-red-600 text-xs md:text-sm font-bold rounded-full shadow-lg">
+                                <div class="absolute top-2.5 left-2.5 z-10">
+                                    <span class="px-2.5 py-1 bg-white/95 backdrop-blur-md text-indigo-600 text-[10px] sm:text-xs font-bold rounded-full shadow-md">
                                         {{ $article->category->name }}
                                     </span>
                                 </div>
                             @endif
-
-                            <!-- Date Badge - Top Right -->
-                            <div class="absolute top-4 right-4 z-10">
-                                <div class="px-3 py-1.5 bg-white/95 backdrop-blur-md rounded-lg shadow-lg">
-                                    <span class="text-gray-800 text-xs md:text-sm font-semibold flex items-center gap-1">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                        </svg>
-                                        {{ $article->published_at->format('d M Y') }}
-                                    </span>
-                                </div>
-                            </div>
                         </div>
                         
                         <!-- Content Section -->
-                        <div class="p-6 md:p-8 flex flex-col flex-grow">
+                        <div class="p-3.5 sm:p-4 flex flex-col flex-grow">
+                            <!-- Date -->
+                            <div class="flex items-center gap-1 text-[11px] sm:text-xs text-gray-400 mb-2">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                {{ $article->published_at->format('d M Y') }}
+                            </div>
+
                             <!-- Title -->
-                            <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-red-600 transition-colors duration-300">
+                            <h3 class="text-sm sm:text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-indigo-600 transition-colors duration-300 leading-snug">
                                 {{ $article->title }}
                             </h3>
 
                             <!-- Excerpt -->
-                            <p class="text-gray-600 text-sm md:text-base leading-relaxed line-clamp-3 mb-4 flex-grow">
-                                {{ Str::limit(strip_tags($article->excerpt ?? $article->content), 150) }}
+                            <p class="text-gray-500 text-xs sm:text-sm leading-relaxed line-clamp-2 mb-3 flex-grow">
+                                {{ Str::limit(strip_tags($article->excerpt ?? $article->content), 90) }}
                             </p>
 
-                            <!-- Footer with Author and Read More -->
-                            <div class="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
-                                <div class="flex items-center gap-2">
-                                    @if($article->author && $article->author->profile_image)
-                                        <img src="{{ asset('storage/' . $article->author->profile_image) }}" 
-                                             alt="{{ $article->author->name }}"
-                                             class="w-7 h-7 rounded-full object-cover">
-                                    @else
-                                        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-red-400 to-orange-500 flex items-center justify-center">
-                                            <span class="text-white text-xs font-bold">
-                                                {{ substr($article->author->name ?? 'A', 0, 1) }}
-                                            </span>
-                                        </div>
-                                    @endif
-                                    <span class="text-xs text-gray-600 font-medium truncate">
-                                        {{ $article->author->name ?? 'Admin' }}
-                                    </span>
-                                </div>
-                                <a href="{{ route('public.news.show', $article->slug) }}" 
-                                   class="text-red-600 hover:text-red-700 font-semibold text-sm flex items-center gap-1 group/link">
-                                    <span>Baca</span>
-                                    <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </a>
-                            </div>
+                            <!-- Read More -->
+                            <a href="{{ route('public.news.show', $article->slug) }}" 
+                               class="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-700 font-semibold text-xs sm:text-sm mt-auto pt-2 border-t border-gray-100 group/link">
+                                <span>Baca Selengkapnya</span>
+                                <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
                         </div>
                     </article>
                 @endforeach
@@ -295,7 +273,7 @@
                     </p>
                     @if(request()->hasAny(['search', 'category']))
                         <a href="{{ route('public.news.index') }}" 
-                           class="inline-flex items-center gap-2 px-8 py-3 bg-orange-600 text-white rounded-xl font-semibold hover:bg-orange-700 transition-colors">
+                           class="inline-flex items-center gap-2 px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
                             </svg>
@@ -309,7 +287,7 @@
 </section>
 
 <!-- Call to Action Section -->
-<section class="py-20 bg-gradient-to-br from-orange-600 via-red-600 to-pink-700 relative overflow-hidden">
+<section class="py-20 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 relative overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-10">
         <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -339,7 +317,7 @@
         
         <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <a href="{{ route('ppdb.register') }}" 
-               class="group px-10 py-4 bg-white text-orange-600 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105 transition-all duration-300 flex items-center gap-3">
+               class="group px-10 py-4 bg-white text-blue-600 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105 transition-all duration-300 flex items-center gap-3">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                 </svg>

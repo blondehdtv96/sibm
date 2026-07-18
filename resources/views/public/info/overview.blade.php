@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white py-20">
+<section class="relative bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white py-20">
     <div class="absolute inset-0 bg-black/20"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav class="flex mb-8 text-sm" aria-label="Breadcrumb">
@@ -100,7 +100,7 @@
 </section>
 
 <!-- CTA Section -->
-<section class="py-16 bg-gradient-to-br from-blue-600 to-indigo-700">
+<section class="py-16 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 class="text-3xl font-bold text-white mb-4">Tertarik Bergabung?</h2>
         <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">

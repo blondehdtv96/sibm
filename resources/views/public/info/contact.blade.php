@@ -6,7 +6,7 @@
 <!-- Hero Section -->
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
     <!-- Gradient Background with Pattern -->
-    <div class="absolute inset-0 bg-gradient-to-br from-teal-600 via-cyan-600 to-blue-700"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700"></div>
     
     <!-- Geometric Pattern Overlay -->
     <div class="absolute inset-0 opacity-10">
@@ -23,8 +23,8 @@
     <!-- Animated Background Elements -->
     <div class="absolute inset-0 opacity-20">
         <div class="absolute top-20 left-10 w-72 h-72 bg-white rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-        <div class="absolute top-40 right-10 w-72 h-72 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-        <div class="absolute bottom-20 left-20 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
+        <div class="absolute top-40 right-10 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-20 left-20 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
     </div>
     
     <!-- Hero Content -->
@@ -94,7 +94,7 @@
         <!-- Section Header -->
         <div class="text-center mb-16">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Mari Terhubung</h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-teal-500 to-cyan-600 mx-auto rounded-full mb-6"></div>
+            <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto rounded-full mb-6"></div>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                 Kami siap membantu menjawab pertanyaan dan memberikan informasi yang Anda butuhkan
             </p>
@@ -109,7 +109,7 @@
                     <div class="space-y-6">
                         <!-- Address -->
                         <div class="flex items-start gap-4">
-                            <div class="w-14 h-14 bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+                            <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0">
                                 <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -131,7 +131,7 @@
                             <div>
                                 <h4 class="text-lg font-semibold text-gray-800 mb-2">Telepon</h4>
                                 <p class="text-gray-600">
-                                    <a href="tel:{{ setting('contact_phone', config('school.phone', '+62 21 1234 5678')) }}" class="text-teal-600 hover:text-teal-700 transition-colors">
+                                    <a href="tel:{{ setting('contact_phone', config('school.phone', '+62 21 1234 5678')) }}" class="text-blue-600 hover:text-blue-700 transition-colors">
                                         {{ setting('contact_phone', config('school.phone', '+62 21 1234 5678')) }}
                                     </a>
                                 </p>
@@ -148,7 +148,7 @@
                             <div>
                                 <h4 class="text-lg font-semibold text-gray-800 mb-2">Email</h4>
                                 <p class="text-gray-600">
-                                    <a href="mailto:{{ setting('contact_email', config('school.email', 'info@smkbinamandiri.sch.id')) }}" class="text-teal-600 hover:text-teal-700 transition-colors">
+                                    <a href="mailto:{{ setting('contact_email', config('school.email', 'info@smkbinamandiri.sch.id')) }}" class="text-blue-600 hover:text-blue-700 transition-colors">
                                         {{ setting('contact_email', config('school.email', 'info@smkbinamandiri.sch.id')) }}
                                     </a>
                                 </p>
@@ -165,7 +165,7 @@
                             <div>
                                 <h4 class="text-lg font-semibold text-gray-800 mb-2">Website</h4>
                                 <p class="text-gray-600">
-                                    <a href="{{ config('app.url') }}" class="text-teal-600 hover:text-teal-700 transition-colors">
+                                    <a href="{{ config('app.url') }}" class="text-blue-600 hover:text-blue-700 transition-colors">
                                         {{ str_replace(['https://', 'http://'], '', config('app.url')) }}
                                     </a>
                                 </p>
@@ -175,9 +175,9 @@
                 </div>
 
                 <!-- Office Hours -->
-                <div class="bg-gradient-to-br from-teal-50 to-cyan-50 rounded-3xl p-8 border border-teal-100">
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-8 border border-blue-100">
                     <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-3">
-                        <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                         Jam Operasional
@@ -236,7 +236,7 @@
                             name="name" 
                             value="{{ old('name') }}"
                             required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all @error('name') border-red-500 @enderror"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all @error('name') border-red-500 @enderror"
                             placeholder="Masukkan nama lengkap Anda"
                         >
                         @error('name')
@@ -252,7 +252,7 @@
                             name="email" 
                             value="{{ old('email') }}"
                             required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all @error('email') border-red-500 @enderror"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all @error('email') border-red-500 @enderror"
                             placeholder="nama@email.com"
                         >
                         @error('email')
@@ -267,7 +267,7 @@
                             id="phone" 
                             name="phone" 
                             value="{{ old('phone') }}"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all @error('phone') border-red-500 @enderror"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all @error('phone') border-red-500 @enderror"
                             placeholder="08xxxxxxxxxx"
                         >
                         @error('phone')
@@ -283,7 +283,7 @@
                             name="subject" 
                             value="{{ old('subject') }}"
                             required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all @error('subject') border-red-500 @enderror"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all @error('subject') border-red-500 @enderror"
                             placeholder="Topik pesan Anda"
                         >
                         @error('subject')
@@ -298,7 +298,7 @@
                             name="message" 
                             rows="6"
                             required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all resize-none @error('message') border-red-500 @enderror"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none @error('message') border-red-500 @enderror"
                             placeholder="Tulis pesan Anda di sini..."
                         >{{ old('message') }}</textarea>
                         @error('message')
@@ -308,7 +308,7 @@
 
                     <button 
                         type="submit" 
-                        class="w-full px-6 py-4 bg-gradient-to-r from-teal-500 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3"
+                        class="w-full px-6 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3"
                     >
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
@@ -327,7 +327,7 @@
         <!-- Section Header -->
         <div class="text-center mb-16">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Lokasi Kami</h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-teal-500 to-cyan-600 mx-auto rounded-full mb-6"></div>
+            <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto rounded-full mb-6"></div>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                 Temukan lokasi sekolah kami dan rencanakan kunjungan Anda
             </p>
@@ -349,7 +349,7 @@
                 <!-- Map Overlay Info -->
                 <div class="absolute top-6 left-6 bg-white/95 backdrop-blur-lg rounded-2xl p-4 shadow-lg border border-gray-200 max-w-sm">
                     <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -367,7 +367,7 @@
 </section>
 
 <!-- Call to Action Section -->
-<section class="py-20 bg-gradient-to-br from-teal-600 via-cyan-600 to-blue-700 relative overflow-hidden">
+<section class="py-20 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 relative overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-10">
         <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -397,7 +397,7 @@
         
         <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <a href="{{ route('ppdb.register') }}" 
-               class="group px-10 py-4 bg-white text-teal-600 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105 transition-all duration-300 flex items-center gap-3">
+               class="group px-10 py-4 bg-white text-blue-600 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105 transition-all duration-300 flex items-center gap-3">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                 </svg>

@@ -6,7 +6,7 @@
 <!-- Hero Section -->
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
     <!-- Gradient Background with Pattern -->
-    <div class="absolute inset-0 bg-gradient-to-br from-green-600 via-blue-600 to-purple-700"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700"></div>
     
     <!-- Geometric Pattern Overlay -->
     <div class="absolute inset-0 opacity-10">
@@ -23,7 +23,7 @@
     <!-- Animated Background Elements -->
     <div class="absolute inset-0 opacity-20">
         <div class="absolute top-20 left-10 w-72 h-72 bg-white rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-        <div class="absolute top-40 right-10 w-72 h-72 bg-green-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+        <div class="absolute top-40 right-10 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
         <div class="absolute bottom-20 left-20 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
     </div>
     
@@ -83,7 +83,7 @@
         <!-- Section Header -->
         <div class="text-center mb-12">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Cari Program Keahlian</h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-green-500 to-blue-600 mx-auto rounded-full mb-6"></div>
+            <div class="w-24 h-1 bg-gradient-to-r from-indigo-500 to-blue-600 mx-auto rounded-full mb-6"></div>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                 Temukan program keahlian yang sesuai dengan minat dan passion Anda
             </p>
@@ -136,7 +136,7 @@
                         Semua Program Keahlian
                     @endif
                 </h2>
-                <div class="w-24 h-1 bg-gradient-to-r from-green-500 to-blue-600 mx-auto rounded-full mb-6"></div>
+                <div class="w-24 h-1 bg-gradient-to-r from-indigo-500 to-blue-600 mx-auto rounded-full mb-6"></div>
                 <p class="text-lg text-gray-600">
                     Ditemukan {{ $competencies->count() }} program keahlian
                 </p>
@@ -164,7 +164,7 @@
                                 </div>
                             </div>
                         @else
-                            <div class="h-64 bg-gradient-to-br from-green-500 to-blue-600 flex items-center justify-center">
+                            <div class="h-64 bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center">
                                 <svg class="w-16 h-16 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                                 </svg>
@@ -184,7 +184,7 @@
                             </p>
 
                             <a href="{{ route('public.competencies.show', $competency) }}" 
-                               class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 group/btn">
+                               class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 group/btn">
                                 <span>Pelajari Lebih Lanjut</span>
                                 <svg class="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -233,7 +233,7 @@
 </section>
 
 <!-- Call to Action Section -->
-<section class="py-20 bg-gradient-to-br from-green-600 via-blue-600 to-purple-700 relative overflow-hidden">
+<section class="py-20 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 relative overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-10">
         <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">

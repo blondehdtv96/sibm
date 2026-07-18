@@ -34,7 +34,7 @@ class NewsController extends Controller
             });
         }
 
-        $news = $query->latest('published_at')->paginate(12);
+        $news = $query->latest('published_at')->paginate(16);
         $categories = NewsCategory::withCount('publishedNews')->get();
         $selectedCategory = $request->filled('category') 
             ? NewsCategory::where('slug', $request->category)->first() 
