@@ -9,8 +9,6 @@ use App\Models\Page;
 use App\Models\Competency;
 use App\Models\GalleryAlbum;
 use App\Models\GalleryItem;
-use App\Models\PpdbRegistration;
-use App\Models\PpdbSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -41,7 +39,6 @@ class DashboardController extends Controller
                 'gallery_albums' => GalleryAlbum::count(),
                 'gallery_items' => GalleryItem::count(),
             ],
-            'ppdb' => $this->getPpdbStatistics(),
             'visitors' => $this->getVisitorStatistics(),
         ];
 
@@ -51,55 +48,7 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        $recentRegistrations = PpdbRegistration::latest()
-            ->take(5)
-            ->get();
-
-        return view('admin.dashboard-modern', compact('stats', 'recentNews', 'recentRegistrations'));
-    }
-
-    /**
-     * Get PPDB registration statistics
-     */
-    private function getPpdbStatistics()
-    {
-        $activeSetting = PpdbSetting::where('status', 'active')
-            ->where('registration_start', '<=', now())
-            ->where('registration_end', '>=', now())
-            ->first();
-
-        $stats = [
-            'total' => PpdbRegistration::count(),
-            'pending' => PpdbRegistration::where('status', 'pending')->count(),
-            'verified' => PpdbRegistration::where('status', 'verified')->count(),
-            'rejected' => PpdbRegistration::where('status', 'rejected')->count(),
-            'is_active' => $activeSetting !== null,
-            'active_setting' => $activeSetting,
-        ];
-
-        // Get registrations by day for the last 30 days
-        $stats['daily_registrations'] = PpdbRegistration::select(
-                DB::raw('DATE(created_at) as date'),
-                DB::raw('COUNT(*) as count')
-            )
-            ->where('created_at', '>=', now()->subDays(30))
-            ->groupBy('date')
-            ->orderBy('date')
-            ->get()
-            ->pluck('count', 'date')
-            ->toArray();
-
-        // Get registrations by status over time
-        $stats['status_breakdown'] = PpdbRegistration::select(
-                'status',
-                DB::raw('COUNT(*) as count')
-            )
-            ->groupBy('status')
-            ->get()
-            ->pluck('count', 'status')
-            ->toArray();
-
-        return $stats;
+        return view('admin.dashboard-modern', compact('stats', 'recentNews'));
     }
 
     /**
@@ -170,9 +119,6 @@ class DashboardController extends Controller
         $data = [];
 
         switch ($type) {
-            case 'ppdb':
-                $data = $this->getPpdbStatistics();
-                break;
             case 'visitors':
                 $data = $this->getVisitorStatistics();
                 break;
@@ -195,7 +141,6 @@ class DashboardController extends Controller
                         'competencies' => Competency::count(),
                         'gallery_items' => GalleryItem::count(),
                     ],
-                    'ppdb' => $this->getPpdbStatistics(),
                     'visitors' => $this->getVisitorStatistics(),
                 ];
         }
@@ -221,9 +166,6 @@ class DashboardController extends Controller
             $file = fopen('php://output', 'w');
             
             switch ($type) {
-                case 'ppdb':
-                    $this->exportPpdbStatistics($file);
-                    break;
                 case 'visitors':
                     $this->exportVisitorStatistics($file);
                     break;
@@ -238,41 +180,6 @@ class DashboardController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
-    }
-
-    /**
-     * Export PPDB statistics to CSV
-     */
-    private function exportPpdbStatistics($file)
-    {
-        fputcsv($file, ['PPDB Registration Statistics', 'Generated: ' . now()->format('Y-m-d H:i:s')]);
-        fputcsv($file, []);
-        
-        // Summary
-        fputcsv($file, ['Summary']);
-        fputcsv($file, ['Status', 'Count']);
-        fputcsv($file, ['Total', PpdbRegistration::count()]);
-        fputcsv($file, ['Pending', PpdbRegistration::where('status', 'pending')->count()]);
-        fputcsv($file, ['Verified', PpdbRegistration::where('status', 'verified')->count()]);
-        fputcsv($file, ['Rejected', PpdbRegistration::where('status', 'rejected')->count()]);
-        fputcsv($file, []);
-        
-        // Daily registrations
-        fputcsv($file, ['Daily Registrations (Last 30 Days)']);
-        fputcsv($file, ['Date', 'Count']);
-        
-        $dailyStats = PpdbRegistration::select(
-                DB::raw('DATE(created_at) as date'),
-                DB::raw('COUNT(*) as count')
-            )
-            ->where('created_at', '>=', now()->subDays(30))
-            ->groupBy('date')
-            ->orderBy('date')
-            ->get();
-            
-        foreach ($dailyStats as $stat) {
-            fputcsv($file, [$stat->date, $stat->count]);
-        }
     }
 
     /**
@@ -394,14 +301,5 @@ class DashboardController extends Controller
         fputcsv($file, ['Competencies', Competency::count(), Competency::where('status', 'active')->count()]);
         fputcsv($file, ['Gallery Albums', GalleryAlbum::count(), '-']);
         fputcsv($file, ['Gallery Items', GalleryItem::count(), '-']);
-        fputcsv($file, []);
-        
-        // PPDB
-        fputcsv($file, ['PPDB Registrations']);
-        fputcsv($file, ['Status', 'Count']);
-        fputcsv($file, ['Total', PpdbRegistration::count()]);
-        fputcsv($file, ['Pending', PpdbRegistration::where('status', 'pending')->count()]);
-        fputcsv($file, ['Verified', PpdbRegistration::where('status', 'verified')->count()]);
-        fputcsv($file, ['Rejected', PpdbRegistration::where('status', 'rejected')->count()]);
     }
 }

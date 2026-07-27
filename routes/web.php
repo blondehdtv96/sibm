@@ -10,6 +10,7 @@ use App\Http\Controllers\Public\NewsController as PublicNewsController;
 use App\Http\Controllers\Public\CompetencyController as PublicCompetencyController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\InfoController;
+use App\Http\Controllers\Public\StaffProfileController;
 use App\Http\Controllers\Public\SearchController;
 
 /*
@@ -26,7 +27,7 @@ use App\Http\Controllers\Public\SearchController;
 // Storage file serving route (fallback if symlink doesn't work)
 Route::get('/storage/{path}', function ($path) {
     // Security: only allow specific directories
-    $allowedDirs = ['sliders', 'home_sliders', 'uploads', 'images', 'news', 'gallery', 'competencies', 'settings', 'logos', 'banners', 'industry-partners', 'principal', 'brochures'];
+    $allowedDirs = ['sliders', 'home_sliders', 'uploads', 'images', 'news', 'gallery', 'competencies', 'settings', 'logos', 'banners', 'industry-partners', 'staff-profiles', 'principal', 'brochures', 'announcements'];
     $firstDir = explode('/', $path)[0] ?? '';
     
     if (!in_array($firstDir, $allowedDirs)) {
@@ -70,6 +71,10 @@ Route::get('/news/{news:slug}', [PublicNewsController::class, 'show'])->name('pu
 // Public competency routes
 Route::get('/competencies', [PublicCompetencyController::class, 'index'])->name('public.competencies.index');
 Route::get('/competencies/{competency:slug}', [PublicCompetencyController::class, 'show'])->name('public.competencies.show');
+
+// Public staff profiles
+Route::get('/profil-guru-karyawan', [StaffProfileController::class, 'index'])->name('public.staff-profiles.index');
+Route::get('/profil-guru-karyawan/{staffProfile}', [StaffProfileController::class, 'show'])->name('public.staff-profiles.show');
 
 // Public gallery routes
 Route::get('/gallery', [\App\Http\Controllers\Public\GalleryController::class, 'index'])->name('public.gallery.index');
@@ -142,6 +147,15 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     Route::delete('competencies/{competency}/images/{image}', [\App\Http\Controllers\Admin\CompetencyImageController::class, 'destroy'])->name('competencies.images.destroy');
     Route::post('competencies/{competency}/images/reorder', [\App\Http\Controllers\Admin\CompetencyImageController::class, 'reorder'])->name('competencies.images.reorder');
     
+    // Staff profile management routes
+    Route::get('staff-profiles/trash', [\App\Http\Controllers\Admin\StaffProfileController::class, 'trash'])->name('staff-profiles.trash');
+    Route::get('staff-profiles/export', [\App\Http\Controllers\Admin\StaffProfileController::class, 'exportCsv'])->name('staff-profiles.export');
+    Route::post('staff-profiles/import', [\App\Http\Controllers\Admin\StaffProfileController::class, 'importCsv'])->name('staff-profiles.import');
+    Route::post('staff-profiles/{staffProfile}/restore', [\App\Http\Controllers\Admin\StaffProfileController::class, 'restore'])->name('staff-profiles.restore');
+    Route::delete('staff-profiles/{staffProfile}/force', [\App\Http\Controllers\Admin\StaffProfileController::class, 'forceDestroy'])->name('staff-profiles.force-destroy');
+    Route::delete('staff-profiles/{staffProfile}/images/{image}', [\App\Http\Controllers\Admin\StaffProfileController::class, 'deleteGalleryImage'])->name('staff-profiles.images.destroy');
+    Route::resource('staff-profiles', \App\Http\Controllers\Admin\StaffProfileController::class);
+
     // Gallery album management routes
     Route::resource('gallery-albums', \App\Http\Controllers\Admin\GalleryAlbumController::class);
     Route::post('gallery-albums/update-order', [\App\Http\Controllers\Admin\GalleryAlbumController::class, 'updateOrder'])->name('gallery-albums.update-order');
@@ -206,6 +220,7 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     Route::get('settings/contact-social', [\App\Http\Controllers\Admin\SettingController::class, 'contactSocial'])->name('settings.contact-social');
     Route::post('settings/update-contact', [\App\Http\Controllers\Admin\SettingController::class, 'updateContact'])->name('settings.update-contact');
     Route::post('settings/update-social-media', [\App\Http\Controllers\Admin\SettingController::class, 'updateSocialMedia'])->name('settings.update-social-media');
+    Route::post('settings/update-homepage-youtube-video', [\App\Http\Controllers\Admin\SettingController::class, 'updateHomepageYoutubeVideo'])->name('settings.update-homepage-youtube-video');
     
     // About Content Management routes
     Route::get('settings/about-content', [\App\Http\Controllers\Admin\SettingController::class, 'aboutContent'])->name('settings.about-content');
@@ -228,10 +243,13 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     // Industry Partners Management routes
     Route::resource('industry-partners', \App\Http\Controllers\Admin\IndustryPartnerController::class);
     
+    // Announcements Management routes
+    Route::resource('announcements', \App\Http\Controllers\Admin\AnnouncementController::class);
+
     Route::post('settings/update-logo', [\App\Http\Controllers\Admin\SettingController::class, 'updateLogo'])->name('settings.update-logo');
     Route::delete('settings/delete-logo', [\App\Http\Controllers\Admin\SettingController::class, 'deleteLogo'])->name('settings.delete-logo');
     Route::post('settings/clear-cache', [\App\Http\Controllers\Admin\SettingController::class, 'clearCache'])->name('settings.clear-cache');
-    
+
     // Backup & Restore routes
     Route::get('backup', [\App\Http\Controllers\Admin\BackupController::class, 'index'])->name('backup.index');
     Route::post('backup/create', [\App\Http\Controllers\Admin\BackupController::class, 'create'])->name('backup.create');
@@ -241,8 +259,10 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     Route::post('backup/upload', [\App\Http\Controllers\Admin\BackupController::class, 'upload'])->name('backup.upload');
 });
 
-// Chatbot routes (public)
-Route::post('/chatbot', [\App\Http\Controllers\ChatbotController::class, 'sendMessage'])->name('chatbot.send');
+// Chatbot routes (public) - throttled to protect the AI provider from abuse
+Route::post('/chatbot', [\App\Http\Controllers\ChatbotController::class, 'sendMessage'])
+    ->middleware('throttle:20,1')
+    ->name('chatbot.send');
 
 // SEO routes
 Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');

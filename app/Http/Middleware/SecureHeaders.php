@@ -17,12 +17,9 @@ class SecureHeaders
     {
         $response = $next($request);
         
-        // Only add security headers in production environment
-        if (app()->environment('production')) {
-            // Force HTTPS for all content (only in production)
+        // HTTPS-only headers must not upgrade assets on local HTTP/XAMPP requests.
+        if (app()->environment('production') && $request->isSecure()) {
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-            
-            // Upgrade insecure requests to HTTPS
             $response->headers->set('Content-Security-Policy', 'upgrade-insecure-requests');
         }
         

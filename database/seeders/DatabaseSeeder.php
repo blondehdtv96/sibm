@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             ContactSocialSeeder::class,
             MenuSeeder::class,
             HomeSliderSeeder::class,
+            StatisticSeeder::class,
         ]);
     }
 }

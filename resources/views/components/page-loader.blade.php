@@ -1,3 +1,5 @@
+@php($loadingLogoUrl = \App\Models\Setting::getLogo('site_logo'))
+
 <!-- Page Loader - Muncul saat refresh -->
 <div id="page-loader" class="fixed inset-0 z-[99999] bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800 flex items-center justify-center transition-opacity duration-300">
     <div class="text-center">
@@ -11,9 +13,20 @@
             
             <!-- Inner Logo -->
             <div class="absolute inset-0 flex items-center justify-center">
-                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                </svg>
+                @if($loadingLogoUrl)
+                    <img src="{{ $loadingLogoUrl }}" alt="Logo sekolah" class="page-loader-logo w-12 h-12 object-contain rounded-xl bg-white p-1 shadow-lg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="page-loader-fallback page-loader-logo w-12 h-12 rounded-xl bg-white/15 items-center justify-center" style="display: none;">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                @else
+                    <div class="page-loader-fallback page-loader-logo w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                @endif
             </div>
         </div>
         
@@ -119,6 +132,25 @@
 </script>
 
 <style>
+.page-loader-logo {
+    transform-origin: center;
+    animation: page-loader-logo-pulse 1.8s ease-in-out infinite;
+    will-change: transform;
+}
+
+@keyframes page-loader-logo-pulse {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.08) rotate(2deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page-loader-logo,
+    .animate-spin,
+    .animate-bounce {
+        animation: none;
+    }
+}
+
 @keyframes spin {
     to {
         transform: rotate(360deg);

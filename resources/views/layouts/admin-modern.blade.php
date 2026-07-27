@@ -102,6 +102,31 @@
             height: auto !important;
         }
     </style>
+
+    <style>
+        .site-logo-animated {
+            transform-origin: center;
+            animation: site-logo-float 4s ease-in-out infinite;
+            transition: transform 220ms ease, filter 220ms ease;
+            will-change: transform;
+        }
+        .site-logo-animated:hover {
+            animation: site-logo-wiggle 700ms ease-in-out;
+            filter: drop-shadow(0 4px 8px rgba(37, 99, 235, .3));
+        }
+        @keyframes site-logo-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-2px) rotate(1deg); }
+        }
+        @keyframes site-logo-wiggle {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            30% { transform: rotate(-5deg) scale(1.06); }
+            70% { transform: rotate(5deg) scale(1.06); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .site-logo-animated, .site-logo-animated:hover { animation: none; transition: none; }
+        }
+    </style>
     
     @stack('styles')
 </head>
@@ -115,11 +140,16 @@
             <!-- Logo (Fixed at top) -->
             <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200 flex-shrink-0">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-ios-blue rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                        </svg>
-                    </div>
+                    @php($adminLogoUrl = \App\Models\Setting::getLogo('site_logo'))
+                    @if($adminLogoUrl)
+                        <img src="{{ $adminLogoUrl }}" alt="{{ setting('site_name', 'Panel Admin') }}" class="w-8 h-8 object-contain rounded-lg site-logo-animated">
+                    @else
+                        <div class="w-8 h-8 bg-ios-blue rounded-lg flex items-center justify-center site-logo-animated">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                            </svg>
+                        </div>
+                    @endif
                     <span class="text-lg font-semibold text-gray-900">Panel Admin</span>
                 </a>
                 <button @click="sidebarOpen = false" class="lg:hidden text-gray-500 hover:text-gray-700">
@@ -167,6 +197,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
                             </svg>
                             Program Keahlian
+                        </a>
+                        <a href="{{ route('admin.staff-profiles.index') }}"
+                           class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.staff-profiles.*') ? 'bg-ios-blue text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H4v-2a4 4 0 014-4h1m7-6a4 4 0 11-8 0 4 4 0 018 0zm6 2a3 3 0 11-6 0m-12 0a3 3 0 116 0"/>
+                            </svg>
+                            Profil Guru & Karyawan
                         </a>
                         <a href="{{ route('admin.gallery-albums.index') }}" 
                            class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.gallery-albums.*') || request()->routeIs('admin.gallery-items.*') ? 'bg-ios-blue text-white' : 'text-gray-700 hover:bg-gray-100' }}">
@@ -250,6 +287,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                             </svg>
                             Partner Industri
+                        </a>
+                        <a href="{{ route('admin.announcements.index') }}"
+                           class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.announcements.*') ? 'bg-ios-blue text-white' : 'text-gray-700 hover:bg-gray-100' }}">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+                            </svg>
+                            Pengumuman
                         </a>
                         <a href="{{ route('admin.menus.index') }}" 
                            class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.menus.*') ? 'bg-ios-blue text-white' : 'text-gray-700 hover:bg-gray-100' }}">

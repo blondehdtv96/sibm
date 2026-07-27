@@ -14,10 +14,20 @@ class MenuComposer
     public function compose(View $view): void
     {
         try {
+            $withoutPpdbMenu = function ($query) {
+                $query->where(function ($query) {
+                    $query->whereNull('route_name')
+                        ->orWhere('route_name', '!=', 'ppdb.register');
+                })->whereRaw('LOWER(title) != ?', ['ppdb']);
+            };
+
             $menus = Menu::active()
                 ->parents()
-                ->with(['children' => function ($query) {
-                    $query->active()->orderBy('order');
+                ->where($withoutPpdbMenu)
+                ->with(['children' => function ($query) use ($withoutPpdbMenu) {
+                    $query->active()
+                        ->where($withoutPpdbMenu)
+                        ->orderBy('order');
                 }])
                 ->orderBy('order')
                 ->get();

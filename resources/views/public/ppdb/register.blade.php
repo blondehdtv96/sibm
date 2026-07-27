@@ -1,10 +1,15 @@
 @extends('layouts.public-tailwind')
 
-@section('title', 'Pendaftaran PPDB - SMK Bina Mandiri Bekasi')
+@php
+    $spmbYear = \Carbon\Carbon::parse($activeSetting->registration_start)->year;
+@endphp
+
+@section('title', 'Pendaftaran SPMB ' . $spmbYear . ' - SMK Bina Mandiri Kota Bekasi')
+@section('description', 'Formulir pendaftaran SPMB ' . $spmbYear . ' SMK Bina Mandiri Kota Bekasi. Lengkapi data calon siswa dan dokumen persyaratan dengan benar.')
 
 @section('content')
 <!-- Hero Section -->
-<section class="relative min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 overflow-hidden">
+<section class="ppdb-register-page relative min-h-screen overflow-hidden bg-slate-50">
     <!-- Background Elements -->
     <div class="absolute inset-0">
         <div class="absolute top-20 left-10 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl animate-pulse"></div>
@@ -27,7 +32,7 @@
                 <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
                     Daftar Sekarang
                     <span class="block text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-purple-300">
-                        PPDB 2026
+                        SPMB {{ $spmbYear }}
                     </span>
                 </h1>
                 
@@ -56,7 +61,7 @@
 
             @if(!empty($requirements))
             <!-- Requirements Section -->
-            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-white/20">
+            <div class="ppdb-requirements-card bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-8 border border-white/20">
                 <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-3">
                     <svg class="w-6 h-6 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -118,7 +123,7 @@
             @endif
 
             <!-- Registration Form -->
-            <div class="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
+            <div class="ppdb-form-card bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
                 <form action="{{ route('ppdb.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
                     @csrf
 
@@ -332,13 +337,13 @@
 </section>
 
 <!-- Call to Action Section -->
-<section class="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
+<section class="ppdb-help-section py-20 bg-gradient-to-r from-blue-600 to-purple-600">
     <div class="container mx-auto px-4 text-center">
         <h2 class="text-4xl font-bold text-white mb-6">
             Butuh Bantuan?
         </h2>
         <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Tim kami siap membantu Anda dalam proses pendaftaran PPDB
+            Tim kami siap membantu Anda dalam proses pendaftaran SPMB {{ $spmbYear }}
         </p>
         
         <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
@@ -402,3 +407,127 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endsection
+
+@push('styles')
+<style>
+    /* SPMB page: clean, readable and aligned with the homepage brand. */
+    .ppdb-register-page {
+        background: #f8fafc !important;
+        color: #0f172a;
+    }
+
+    .ppdb-register-page > .absolute.inset-0 {
+        opacity: .55;
+        pointer-events: none;
+    }
+
+    .ppdb-register-page .container {
+        max-width: 1120px;
+    }
+
+    .ppdb-register-page h1 {
+        color: #0B1F4B !important;
+        letter-spacing: -.035em;
+    }
+
+    .ppdb-register-page h1 span {
+        color: #3B82F6 !important;
+        background-image: none !important;
+    }
+
+    .ppdb-register-page .text-blue-100 {
+        color: #475569 !important;
+    }
+
+    .ppdb-register-page .inline-flex.items-center.gap-3 {
+        background: #eff6ff !important;
+        border: 1px solid #bfdbfe;
+        color: #1E3A8A !important;
+        box-shadow: 0 8px 24px rgba(30, 58, 138, .08);
+    }
+
+    .ppdb-requirements-card,
+    .ppdb-form-card {
+        background: #ffffff !important;
+        border-color: #e2e8f0 !important;
+        box-shadow: 0 20px 45px rgba(15, 23, 42, .08);
+        backdrop-filter: none;
+    }
+
+    .ppdb-requirements-card h3,
+    .ppdb-form-card h3 {
+        color: #0B1F4B !important;
+    }
+
+    .ppdb-requirements-card li,
+    .ppdb-form-card .text-blue-100,
+    .ppdb-form-card .text-blue-200 {
+        color: #475569 !important;
+    }
+
+    .ppdb-form-card {
+        padding: clamp(1.25rem, 4vw, 2rem) !important;
+    }
+
+    .ppdb-form-card label {
+        color: #334155 !important;
+    }
+
+    .ppdb-form-card input,
+    .ppdb-form-card textarea {
+        background: #f8fafc !important;
+        border-color: #cbd5e1 !important;
+        color: #0f172a !important;
+    }
+
+    .ppdb-form-card input::placeholder,
+    .ppdb-form-card textarea::placeholder {
+        color: #94a3b8 !important;
+    }
+
+    .ppdb-form-card input:focus,
+    .ppdb-form-card textarea:focus {
+        border-color: #3B82F6 !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, .15) !important;
+    }
+
+    .ppdb-form-card .border-white\/20,
+    .ppdb-form-card .border-t {
+        border-color: #e2e8f0 !important;
+    }
+
+    .ppdb-form-card button#add-document {
+        background: #eff6ff !important;
+        border-color: #bfdbfe !important;
+        color: #1E3A8A !important;
+    }
+
+    .ppdb-form-card button[type="submit"] {
+        background: #3B82F6 !important;
+        color: #ffffff !important;
+    }
+
+    .ppdb-form-card button[type="submit"]:hover {
+        background: #2563EB !important;
+    }
+
+    .ppdb-register-page a[href*="check-status"] {
+        color: #1D4ED8 !important;
+    }
+
+    .ppdb-help-section {
+        background: #0B1F4B !important;
+    }
+
+    @media (max-width: 640px) {
+        .ppdb-register-page .relative.z-10.container {
+            padding-top: 6rem;
+            padding-bottom: 3rem;
+        }
+
+        .ppdb-register-page h1 {
+            font-size: 2.5rem;
+        }
+    }
+</style>
+@endpush

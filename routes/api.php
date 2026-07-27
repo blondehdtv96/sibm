@@ -17,3 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/staff-profiles', [\App\Http\Controllers\Api\StaffProfileController::class, 'index'])->name('api.staff-profiles.index');
+Route::get('/staff-profiles/{staffProfile}', [\App\Http\Controllers\Api\StaffProfileController::class, 'show'])->name('api.staff-profiles.show');

@@ -61,6 +61,16 @@ class MenuSeeder extends Seeder
             'status' => 'active',
         ]);
 
+        // Profil Guru dan Karyawan
+        Menu::create([
+            'title' => 'Profil Guru & Tenaga Kependidikan',
+            'route_name' => 'public.staff-profiles.index',
+            'parent_id' => $aboutMenu->id,
+            'order' => 4,
+            'target' => '_self',
+            'status' => 'active',
+        ]);
+
         // Program Keahlian
         Menu::create([
             'title' => 'Program Keahlian',

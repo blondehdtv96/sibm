@@ -202,6 +202,7 @@ class SettingController extends Controller
         $socialYoutube = Setting::get('social_youtube', '');
         $socialTiktok = Setting::get('social_tiktok', '');
         $socialLinkedin = Setting::get('social_linkedin', '');
+        $homepageYoutubeVideo = Setting::get('homepage_youtube_video', 'https://www.youtube.com/watch?v=s5l8HAA2evI');
 
         return view('admin.settings.contact-social', compact(
             'contactAddress',
@@ -213,7 +214,8 @@ class SettingController extends Controller
             'socialTwitter',
             'socialYoutube',
             'socialTiktok',
-            'socialLinkedin'
+            'socialLinkedin',
+            'homepageYoutubeVideo'
         ));
     }
 
@@ -259,6 +261,31 @@ class SettingController extends Controller
         Setting::set('social_linkedin', $request->social_linkedin);
 
         return redirect()->back()->with('success', 'Link sosial media berhasil diperbarui!');
+    }
+
+    /**
+     * Update the YouTube video featured on the homepage
+     */
+    public function updateHomepageYoutubeVideo(Request $request)
+    {
+        $request->validate([
+            'homepage_youtube_video' => [
+                'nullable',
+                'url',
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    $host = strtolower((string) parse_url($value, PHP_URL_HOST));
+                    $host = preg_replace('/^www\./', '', $host);
+                    if (!in_array($host, ['youtube.com', 'youtu.be'], true)) {
+                        $fail('Link harus berupa URL YouTube yang valid.');
+                    }
+                },
+            ],
+        ]);
+
+        Setting::set('homepage_youtube_video', $request->homepage_youtube_video);
+
+        return redirect()->back()->with('success', 'Video YouTube homepage berhasil diperbarui!');
     }
 
     public function updateStatistics(Request $request)

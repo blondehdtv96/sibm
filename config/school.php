@@ -13,10 +13,25 @@ return [
 
     'name' => env('SCHOOL_NAME', 'SMK Bina Mandiri Kota Bekasi'),
     'tagline' => env('SCHOOL_TAGLINE', 'Unggul dalam Prestasi, Berkarakter dalam Budi Pekerti'),
-    'address' => env('SCHOOL_ADDRESS', 'Kota Bekasi, Jawa Barat'),
-    'phone' => env('SCHOOL_PHONE', '+62 21 88888888'),
-    'email' => env('SCHOOL_EMAIL', 'info@smkbinamandiri-bekasi.sch.id'),
-    'website' => env('SCHOOL_WEBSITE', 'https://smkbinamandiri-bekasi.sch.id'),
+    'address' => env('SCHOOL_ADDRESS', 'Jl. Bintara IX No.32, RT.001/RW.005, Kel. Bintara, Kec. Bekasi Barat, Kota Bekasi, Jawa Barat 17134'),
+    'phone' => env('SCHOOL_PHONE', '(021) 8860686'),
+    'email' => env('SCHOOL_EMAIL', 'smkbinamandiribks@gmail.com'),
+    'website' => env('SCHOOL_WEBSITE', 'https://smkbinamandiribekasi.sch.id'),
+    'whatsapp' => env('SCHOOL_WHATSAPP', '6281292760717'),
+    'founded_year' => 2000,
+    'facts' => [
+        'active_students' => '1400+',
+        'teachers' => '65',
+        'programs' => '3',
+    ],
+    'industry_partners' => [
+        'Yutaka Manufacturing',
+        'Indomarco Prismatama',
+        'Sun Star Prisma Motor',
+        'Gamecomm Indonesia',
+        'Samsung Tech Institute',
+        'Mitsubishi School Program',
+    ],
 
     /*
     |--------------------------------------------------------------------------

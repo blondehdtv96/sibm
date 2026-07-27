@@ -9,6 +9,7 @@ use App\Models\Competency;
 use App\Models\GalleryAlbum;
 use App\Models\Page;
 use App\Models\Menu;
+use App\Models\StaffProfile;
 
 class SitemapController extends Controller
 {
@@ -28,9 +29,16 @@ class SitemapController extends Controller
             // Static pages
             $sitemap .= $this->addUrl(route('info.about'), now()->subDays(7), 'weekly', '0.9');
             $sitemap .= $this->addUrl(route('info.contact'), now()->subDays(7), 'monthly', '0.8');
+            $sitemap .= $this->addUrl(route('public.staff-profiles.index'), now()->subDays(7), 'monthly', '0.8');
             $sitemap .= $this->addUrl(route('ppdb.register'), now()->subDays(1), 'daily', '0.9');
             $sitemap .= $this->addUrl(route('ppdb.check-status'), now()->subDays(1), 'daily', '0.7');
             
+            // Staff profiles
+            $staffProfiles = StaffProfile::active()->get();
+            foreach ($staffProfiles as $staffProfile) {
+                $sitemap .= $this->addUrl(route('public.staff-profiles.show', $staffProfile), $staffProfile->updated_at, 'monthly', '0.7');
+            }
+
             // News index
             $sitemap .= $this->addUrl(route('public.news.index'), now()->subHours(12), 'daily', '0.9');
             

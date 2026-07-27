@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Models\AuditLog;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Schema;
 
 class AuditLogService
 {
@@ -24,7 +26,7 @@ class AuditLogService
         array $oldValues = [],
         array $newValues = []
     ): AuditLog {
-        return AuditLog::create([
+        $attributes = [
             'user_id' => Auth::id(),
             'action' => $action,
             'model_type' => $model ? get_class($model) : null,
@@ -34,7 +36,23 @@ class AuditLogService
             'ip_address' => Request::ip(),
             'user_agent' => Request::userAgent(),
             'url' => Request::fullUrl(),
-        ]);
+        ];
+
+        // Audit logging must not block login or other application actions
+        // when a deployment is missing the audit_logs table.
+        if (!Schema::hasTable('audit_logs')) {
+            return new AuditLog($attributes);
+        }
+
+        try {
+            return AuditLog::create($attributes);
+        } catch (QueryException $exception) {
+            if ($exception->getCode() === '42S02' || str_contains($exception->getMessage(), 'audit_logs')) {
+                return new AuditLog($attributes);
+            }
+
+            throw $exception;
+        }
     }
 
     /**

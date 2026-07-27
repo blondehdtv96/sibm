@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
-    <!-- Force HTTPS for all requests -->
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <!-- HTTPS is enforced by ForceHttps middleware in production. Do not upgrade local HTTP assets. -->
 
-    <title>@yield('title', 'SMK Bina Mandiri Kota Bekasi - Sekolah Menengah Kejuruan Terbaik di Bekasi')</title>
-    <meta name="description" content="@yield('description', 'SMK Bina Mandiri Kota Bekasi adalah sekolah menengah kejuruan terbaik di Bekasi dengan program keahlian unggulan, fasilitas modern, dan tingkat kelulusan 95%. Daftar PPDB sekarang!')">
+    <title>@yield('title', 'SMK Bina Mandiri Kota Bekasi | SPMB 2026')</title>
+    <meta name="description" content="@yield('description', 'SMK Bina Mandiri Kota Bekasi menyelenggarakan pendidikan vokasi dengan 3 program keahlian, pembelajaran praktik, dan kemitraan industri. Informasi SPMB tersedia di website resmi sekolah.')">
     
     <!-- SEO Meta Tags -->
     <meta name="keywords" content="@yield('keywords', 'SMK Bina Mandiri, SMK Bekasi, sekolah kejuruan bekasi, PPDB SMK Bekasi, program keahlian, teknik komputer jaringan, teknik kendaraan ringan, teknik sepeda motor, SMK terbaik bekasi, pendaftaran siswa baru')">
@@ -25,8 +24,8 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="@yield('og_title', 'SMK Bina Mandiri Kota Bekasi - Sekolah Menengah Kejuruan Terbaik di Bekasi')">
-    <meta property="og:description" content="@yield('og_description', 'SMK Bina Mandiri Kota Bekasi adalah sekolah menengah kejuruan terbaik di Bekasi dengan program keahlian unggulan, fasilitas modern, dan tingkat kelulusan 95%. Daftar PPDB sekarang!')">
+    <meta property="og:title" content="@yield('og_title', 'SMK Bina Mandiri Kota Bekasi | SPMB 2026')">
+    <meta property="og:description" content="@yield('og_description', 'Pendidikan vokasi SMK Bina Mandiri Kota Bekasi dengan 3 program keahlian dan kemitraan industri.')">
     <meta property="og:image" content="@yield('og_image', asset('storage/' . setting('site_logo', 'images/logo-default.png')))">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -36,8 +35,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="{{ url()->current() }}">
-    <meta name="twitter:title" content="@yield('twitter_title', 'SMK Bina Mandiri Kota Bekasi - Sekolah Menengah Kejuruan Terbaik di Bekasi')">
-    <meta name="twitter:description" content="@yield('twitter_description', 'SMK Bina Mandiri Kota Bekasi adalah sekolah menengah kejuruan terbaik di Bekasi dengan program keahlian unggulan, fasilitas modern, dan tingkat kelulusan 95%.')">
+    <meta name="twitter:title" content="@yield('twitter_title', 'SMK Bina Mandiri Kota Bekasi | SPMB 2026')">
+    <meta name="twitter:description" content="@yield('twitter_description', 'Pendidikan vokasi SMK Bina Mandiri Kota Bekasi dengan 3 program keahlian dan kemitraan industri.')">
     <meta name="twitter:image" content="@yield('twitter_image', asset('storage/' . setting('site_logo', 'images/logo-default.png')))">
     
     <!-- Canonical URL -->
@@ -48,6 +47,17 @@
     <link rel="apple-touch-icon" href="{{ asset('storage/' . setting('site_logo', 'images/logo-default.png')) }}">
     
     <!-- Schema.org JSON-LD -->
+    @php
+        $schemaSocialLinks = collect([
+            setting('social_facebook'),
+            setting('social_instagram'),
+            setting('social_youtube'),
+            setting('social_tiktok'),
+            setting('social_linkedin'),
+        ])->filter(function ($url) {
+            return filter_var($url, FILTER_VALIDATE_URL) && !str_contains((string) $url, 'sekolahkami');
+        })->unique()->values()->all();
+    @endphp
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -56,29 +66,24 @@
         "alternateName": "SMK Bina Mandiri Bekasi",
         "url": "{{ url('/') }}",
         "logo": "{{ asset('storage/' . setting('site_logo', 'images/logo-default.png')) }}",
-        "description": "Sekolah Menengah Kejuruan terbaik di Bekasi dengan program keahlian unggulan dan fasilitas modern",
+        "description": "SMK Bina Mandiri Kota Bekasi menyelenggarakan pendidikan vokasi dengan tiga program keahlian dan kemitraan industri.",
         "address": {
             "@type": "PostalAddress",
-            "streetAddress": "{{ setting('contact_address', 'Jl. Raya Bekasi') }}",
+            "streetAddress": "{{ setting('contact_address', config('school.address')) }}",
             "addressLocality": "Bekasi",
             "addressRegion": "Jawa Barat",
-            "postalCode": "17000",
+            "postalCode": "17134",
             "addressCountry": "ID"
         },
         "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": "{{ setting('contact_phone', '+62-21-12345678') }}",
+            "telephone": "{{ setting('contact_phone', config('school.phone')) }}",
             "contactType": "customer service",
-            "email": "{{ setting('contact_email', 'info@smkbinamandiri.sch.id') }}"
+            "email": "{{ setting('contact_email', config('school.email')) }}"
         },
-        "sameAs": [
-            "{{ setting('social_facebook', '#') }}",
-            "{{ setting('social_instagram', '#') }}",
-            "{{ setting('social_youtube', '#') }}"
-        ],
-        "foundingDate": "2000",
-        "numberOfStudents": "1000",
-        "educationalCredentialAwarded": "Diploma SMK"
+        "sameAs": @json($schemaSocialLinks),
+        "foundingDate": "{{ config('school.founded_year', 2000) }}",
+        "numberOfStudents": 1400
     }
     </script>
     
@@ -90,26 +95,51 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-    
-    <!-- Tailwind CSS CDN (for quick setup) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
+    <!-- Local build assets: resolve from the current request path so XAMPP subfolders and domains work. -->
+    @php
+        $publicAssetBase = rtrim(request()->getBasePath(), '/');
+        $tailwindAssetPath = public_path('build/assets/tailwind.css');
+        $publicAssetVersion = is_file($tailwindAssetPath) ? filemtime($tailwindAssetPath) : time();
+    @endphp
+    <link rel="stylesheet" href="{{ $publicAssetBase }}/build/assets/tailwind.css?v={{ $publicAssetVersion }}">
+    <link rel="stylesheet" href="{{ $publicAssetBase }}/build/assets/app.css?v={{ $publicAssetVersion }}">
+    <script type="module" src="{{ $publicAssetBase }}/build/assets/app.js?v={{ $publicAssetVersion }}"></script>
     
     <!-- Alpine.js x-cloak CSS -->
     <style>
         [x-cloak] { display: none !important; }
+
+        /* Animated custom school logo */
+        .site-logo-animated {
+            transform-origin: center;
+            animation: site-logo-float 4s ease-in-out infinite;
+            transition: transform 220ms ease, filter 220ms ease;
+            will-change: transform;
+        }
+
+        .site-logo-animated:hover {
+            animation: site-logo-wiggle 700ms ease-in-out;
+            filter: drop-shadow(0 5px 10px rgba(37, 99, 235, .25));
+        }
+
+        @keyframes site-logo-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-2px) rotate(1deg); }
+        }
+
+        @keyframes site-logo-wiggle {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            30% { transform: rotate(-5deg) scale(1.06); }
+            70% { transform: rotate(5deg) scale(1.06); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .site-logo-animated,
+            .site-logo-animated:hover {
+                animation: none;
+                transition: none;
+            }
+        }
     </style>
     
     @stack('styles')
@@ -134,14 +164,14 @@
                     @endphp
                     
                     @if($logoUrl)
-                        <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="h-10 w-auto object-contain bg-white rounded-lg p-0.5 shadow-sm" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center" style="display: none;">
+                        <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="h-10 w-auto object-contain bg-white rounded-lg p-0.5 shadow-sm site-logo-animated" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center site-logo-animated" style="display: none;">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                             </svg>
                         </div>
                     @else
-                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0 site-logo-animated">
                             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                             </svg>
@@ -343,15 +373,21 @@
     <!-- Footer -->
     <footer class="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white">
         @php
-            $contactAddress = setting('contact_address');
-            $contactPhone = setting('contact_phone');
-            $contactEmail = setting('contact_email');
-            $socialFacebook = setting('social_facebook');
-            $socialInstagram = setting('social_instagram');
-            $socialYoutube = setting('social_youtube');
-            $socialTwitter = setting('social_twitter');
-            $socialTiktok = setting('social_tiktok');
-            $socialLinkedin = setting('social_linkedin');
+            $contactAddress = setting('contact_address', config('school.address'));
+            $contactPhone = setting('contact_phone', config('school.phone'));
+            $contactEmail = setting('contact_email', config('school.email'));
+            $normalizeSocial = function ($value, array $hosts): ?string {
+                $value = trim((string) $value);
+                $host = strtolower((string) parse_url($value, PHP_URL_HOST));
+                $host = preg_replace('/^www\\./', '', $host);
+                return filter_var($value, FILTER_VALIDATE_URL) && in_array($host, $hosts, true) && !str_contains($host, 'sekolahkami') ? $value : null;
+            };
+            $socialFacebook = $normalizeSocial(setting('social_facebook'), ['facebook.com']);
+            $socialInstagram = $normalizeSocial(setting('social_instagram'), ['instagram.com']);
+            $socialYoutube = $normalizeSocial(setting('social_youtube'), ['youtube.com', 'youtu.be']) ?: 'https://www.youtube.com/@smkbinamandiri268';
+            $socialTwitter = $normalizeSocial(setting('social_twitter'), ['twitter.com', 'x.com']);
+            $socialTiktok = $normalizeSocial(setting('social_tiktok'), ['tiktok.com']);
+            $socialLinkedin = $normalizeSocial(setting('social_linkedin'), ['linkedin.com']);
         @endphp
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
@@ -359,7 +395,7 @@
                 <div>
                     <div class="flex items-center gap-3 mb-6">
                         @if($logoUrl)
-                            <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="w-12 h-12 object-contain bg-white border-2 border-white rounded-lg p-1 shadow-md">
+                            <img src="{{ $logoUrl }}" alt="{{ $siteName }}" class="w-12 h-12 object-contain bg-white border-2 border-white rounded-lg p-1 shadow-md site-logo-animated">
                         @else
                             <div class="w-12 h-12 bg-white/10 backdrop-blur-lg rounded-xl flex items-center justify-center">
                                 <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -506,11 +542,7 @@
         };
     </script>
     
-    <!-- Alpine.js -->
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <!-- Alpine and Swiper are bundled by Vite in resources/js/app.js -->
     
     <!-- Alpine.js State Reset on Page Load -->
     <script>
@@ -596,9 +628,15 @@
     <!-- Chatbot Widget -->
     @include('components.chatbot')
     
-    <!-- WhatsApp Float Button - Pure HTML (Left Bottom) -->
+    <!-- WhatsApp Float Button - configured from official contact settings -->
+    @php
+        $whatsappEnabled = filter_var(setting('whatsapp_float_enabled', '1'), FILTER_VALIDATE_BOOLEAN);
+        $whatsappNumber = preg_replace('/\\D+/', '', (string) setting('contact_whatsapp', config('school.whatsapp')));
+        $whatsappMessage = setting('whatsapp_float_message', 'Halo, saya ingin bertanya tentang SMK Bina Mandiri Bekasi');
+    @endphp
+    @if($whatsappEnabled && $whatsappNumber)
     <div id="whatsapp-float-button" style="position: fixed; left: 24px; bottom: 24px; z-index: 9998;">
-        <a href="https://wa.me/6281292760717?text=Halo%2C%20saya%20ingin%20bertanya%20tentang%20SMK%20Bina%20Mandiri%20Bekasi" 
+        <a href="https://wa.me/{{ $whatsappNumber }}?text={{ rawurlencode($whatsappMessage) }}"
            target="_blank"
            rel="noopener noreferrer"
            style="position: relative; display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); border-radius: 50%; box-shadow: 0 10px 40px rgba(37, 211, 102, 0.4); transition: all 0.3s ease; text-decoration: none;"
@@ -618,6 +656,7 @@
             <span style="position: absolute; top: -4px; right: -4px; width: 20px; height: 20px; background: #FF3B30; color: white; font-size: 12px; font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white; box-shadow: 0 2px 8px rgba(255, 59, 48, 0.4);">!</span>
         </a>
     </div>
+    @endif
     
     <style>
         @keyframes wa-ping {

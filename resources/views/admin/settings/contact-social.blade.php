@@ -262,5 +262,44 @@
             </div>
         </form>
     </div>
+
+    <!-- Homepage YouTube Video Section -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex items-center">
+            <svg class="w-5 h-5 text-red-600 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            <h3 class="text-lg font-semibold text-gray-900">Video YouTube Homepage</h3>
+        </div>
+
+        <form action="{{ route('admin.settings.update-homepage-youtube-video') }}" method="POST" class="p-6">
+            @csrf
+            <div class="space-y-6">
+                <div>
+                    <label for="homepage_youtube_video" class="block text-sm font-medium text-gray-700 mb-2">
+                        Link Video YouTube (Video Profil Sekolah)
+                    </label>
+                    <input
+                        type="url"
+                        name="homepage_youtube_video"
+                        id="homepage_youtube_video"
+                        value="{{ old('homepage_youtube_video', $homepageYoutubeVideo) }}"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('homepage_youtube_video') border-red-500 @enderror"
+                        placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
+                    >
+                    <p class="mt-1 text-xs text-gray-500">Tempel link video YouTube (contoh: https://www.youtube.com/watch?v=VIDEO_ID atau https://youtu.be/VIDEO_ID). Video ini akan tampil di halaman utama.</p>
+                    @error('homepage_youtube_video')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                        Simpan Video YouTube
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 @endsection

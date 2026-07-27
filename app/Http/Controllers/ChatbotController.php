@@ -4,16 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Chat;
 use App\Models\ChatbotResponse;
+use App\Services\SchoolAssistantService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 /**
- * Controller untuk menangani chatbot
- * Menggunakan rule-based system dengan fallback ke OpenAI GPT (opsional)
+ * Controller untuk menangani chatbot.
+ *
+ * AI (via SchoolAssistantService) adalah otak utama chatbot dan menjawab
+ * setiap pertanyaan seputar sekolah menggunakan data resmi sebagai konteks.
+ * Balasan admin di database (ChatbotResponse) dan rule-based keyword tetap
+ * dipakai sebagai jaring pengaman ketika AI belum dikonfigurasi atau gagal.
  */
 class ChatbotController extends Controller
 {
+    public function __construct(private SchoolAssistantService $assistant)
+    {
+    }
+
     /**
      * Proses pesan dari user dan kirim balasan
      */
@@ -22,14 +31,13 @@ class ChatbotController extends Controller
         // Validasi input
         $request->validate([
             'message' => 'required|string|max:1000',
-            'session_id' => 'nullable|string',
+            'session_id' => 'nullable|string|max:64',
         ]);
 
-        $userMessage = $request->input('message');
-        $sessionId = $request->input('session_id') ?? Str::uuid();
+        $userMessage = trim($request->input('message'));
+        $sessionId = (string) ($request->input('session_id') ?? Str::uuid());
 
-        // Proses pesan dan dapatkan balasan
-        $botReply = $this->processMessage($userMessage);
+        $botReply = $this->processMessage($userMessage, $sessionId);
 
         // Simpan ke database
         Chat::create([
@@ -49,13 +57,49 @@ class ChatbotController extends Controller
     }
 
     /**
-     * Proses pesan menggunakan rule-based system
-     * Pertama cek database, lalu fallback ke hardcoded rules
+     * Proses pesan: AI (dibekali data resmi sekolah) sebagai otak utama,
+     * dengan fallback ke balasan admin/rule-based jika AI tidak tersedia.
      */
-    private function processMessage($message)
+    private function processMessage(string $message, string $sessionId): string
     {
-        $message = strtolower($message);
+        if ($this->assistant->isConfigured()) {
+            try {
+                return $this->assistant->reply($message, $this->buildHistory($sessionId));
+            } catch (\Throwable $e) {
+                Log::warning('Chatbot AI gagal, fallback ke rule-based: ' . $e->getMessage());
+            }
+        }
 
+        return $this->fallbackReply(strtolower($message));
+    }
+
+    /**
+     * Ambil beberapa pesan terakhir pada sesi ini sebagai konteks percakapan untuk AI.
+     *
+     * @return array<int, array{role: string, content: string}>
+     */
+    private function buildHistory(string $sessionId): array
+    {
+        $recentChats = Chat::bySession($sessionId)
+            ->latest('id')
+            ->limit(4)
+            ->get()
+            ->reverse();
+
+        $history = [];
+        foreach ($recentChats as $chat) {
+            $history[] = ['role' => 'user', 'content' => $chat->user_message];
+            $history[] = ['role' => 'assistant', 'content' => $chat->bot_reply];
+        }
+
+        return $history;
+    }
+
+    /**
+     * Balasan cadangan berbasis rule/database ketika AI tidak dikonfigurasi atau gagal.
+     */
+    private function fallbackReply(string $message): string
+    {
         // Cek database responses terlebih dahulu
         $dbResponse = $this->checkDatabaseResponses($message);
         if ($dbResponse) {
@@ -231,15 +275,6 @@ class ChatbotController extends Controller
             return "Sampai jumpa! 👋 Semoga informasi yang saya berikan bermanfaat. Jangan lupa kunjungi website kami untuk info lebih lengkap. Selamat beraktivitas! 😊🏫";
         }
 
-        // Jika tidak ada rule yang cocok, coba OpenAI (jika tersedia)
-        if (config('services.openai.api_key')) {
-            try {
-                return $this->getOpenAIResponse($message);
-            } catch (\Exception $e) {
-                // Fallback ke pesan default jika OpenAI gagal
-            }
-        }
-
         // Default response jika tidak ada rule yang cocok
         return "Maaf, saya belum punya informasi tentang itu. 😅\n\n" .
                "Saya bisa membantu Anda dengan informasi tentang:\n" .
@@ -292,43 +327,5 @@ class ChatbotController extends Controller
             }
         }
         return false;
-    }
-
-    /**
-     * Integrasi dengan OpenAI GPT (opsional)
-     * Memerlukan API key di .env: OPENAI_API_KEY=your-key
-     */
-    private function getOpenAIResponse($message)
-    {
-        $apiKey = config('services.openai.api_key');
-        
-        if (!$apiKey) {
-            throw new \Exception('OpenAI API key not configured');
-        }
-
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apiKey,
-            'Content-Type' => 'application/json',
-        ])->timeout(30)->post('https://api.openai.com/v1/chat/completions', [
-            'model' => 'gpt-3.5-turbo',
-            'messages' => [
-                [
-                    'role' => 'system',
-                    'content' => 'Kamu adalah asisten virtual SMK Bina Mandiri Bekasi. Jawab pertanyaan dengan ramah, informatif, dan gunakan emoji. Fokus pada informasi sekolah, jurusan (TKJ, TSM, TKR), PPDB, dan fasilitas.'
-                ],
-                [
-                    'role' => 'user',
-                    'content' => $message
-                ]
-            ],
-            'max_tokens' => 500,
-            'temperature' => 0.7,
-        ]);
-
-        if ($response->successful()) {
-            return $response->json()['choices'][0]['message']['content'];
-        }
-
-        throw new \Exception('OpenAI API request failed');
     }
 }

@@ -77,7 +77,7 @@
             <a href="{{ route('public.news.index') }}" class="view-all">Lihat Semua →</a>
         </div>
         <div class="card-grid">
-            @foreach($latestNews->take(3) as $news)
+            @foreach($latestNews as $news)
             <a href="{{ route('public.news.show', $news->slug) }}" class="card">
                 @if($news->featured_image)
                 <div class="card-image">

@@ -36,8 +36,8 @@
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <h3 class="font-semibold text-base md:text-lg truncate">Asisten Virtual</h3>
-                    <p class="text-xs text-blue-100 truncate">SMK Bina Mandiri Bekasi</p>
+                    <h3 class="font-semibold text-base md:text-lg truncate">Asisten Virtual AI</h3>
+                    <p class="text-xs text-blue-100 truncate flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block"></span> SMK Bina Mandiri Bekasi</p>
                 </div>
             </div>
             <button @click="toggleChat()" class="text-white hover:bg-white/20 rounded-lg p-2 transition-colors flex-shrink-0">
@@ -163,7 +163,17 @@ function chatbot() {
         toggleChat() {
             this.isOpen = !this.isOpen;
             this.hasNewMessage = false;
-            
+
+            // Sembunyikan tombol WhatsApp float saat chat dibuka agar tidak
+            // menutupi/menghalangi kolom input chatbot (terutama di mobile
+            // dimana jendela chat full-screen).
+            const waButton = document.getElementById('whatsapp-float-button');
+            if (waButton) {
+                // Gunakan setProperty dengan priority "important" karena CSS
+                // di layout memaksa display:block!important pada tombol ini.
+                waButton.style.setProperty('display', this.isOpen ? 'none' : 'block', 'important');
+            }
+
             if (this.isOpen) {
                 this.$nextTick(() => {
                     this.scrollToBottom();
@@ -188,12 +198,13 @@ function chatbot() {
             this.isTyping = true;
 
             try {
-                // Kirim ke server - Force HTTPS URL
-                const chatbotUrl = '{{ route("chatbot.send") }}';
-                const httpsUrl = chatbotUrl.replace('http://', 'https://');
-                console.log('Chatbot URL:', chatbotUrl);
-                console.log('HTTPS URL:', httpsUrl);
-                const response = await fetch(httpsUrl, {
+                // Gunakan path relatif (bukan route() absolut) agar request selalu
+                // same-origin dengan halaman yang dibuka, apa pun host/port yang
+                // dipakai browser (localhost, 127.0.0.1, domain produksi, dst).
+                // route() absolut bisa berbeda dari APP_URL dan memicu CORS/cookie
+                // session gagal terkirim sehingga chatbot selalu jatuh ke catch().
+                const chatbotUrl = '{{ url("/chatbot") }}'.replace(/^https?:\/\/[^/]+/, '');
+                const response = await fetch(chatbotUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -204,6 +215,16 @@ function chatbot() {
                         session_id: this.sessionId
                     })
                 });
+
+                if (!response.ok) {
+                    if (response.status === 419) {
+                        throw new Error('Sesi Anda sudah kedaluwarsa. Silakan muat ulang halaman.');
+                    }
+                    if (response.status === 429) {
+                        throw new Error('Terlalu banyak pesan dalam waktu singkat. Silakan tunggu sebentar.');
+                    }
+                    throw new Error('Server merespons dengan status ' + response.status);
+                }
 
                 const data = await response.json();
 
@@ -226,10 +247,10 @@ function chatbot() {
                 }
 
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Chatbot error:', error);
                 this.messages.push({
                     type: 'bot',
-                    text: 'Maaf, terjadi kesalahan. Silakan coba lagi. 😅',
+                    text: (error && error.message) ? error.message + ' 😅' : 'Maaf, terjadi kesalahan. Silakan coba lagi. 😅',
                     timestamp: new Date()
                 });
             } finally {

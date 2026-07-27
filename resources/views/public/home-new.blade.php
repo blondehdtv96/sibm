@@ -113,6 +113,94 @@
 </section>
 @endif
 
+<!-- Announcements Section -->
+@if(isset($announcements) && $announcements->count() > 0)
+<section class="py-14 sm:py-16 lg:py-24 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10 sm:mb-14">
+            <span class="inline-block px-4 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs sm:text-sm font-semibold mb-4 tracking-wide uppercase">
+                Informasi Penting
+            </span>
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                Pengumuman
+            </h2>
+            <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                Informasi dan pengumuman terbaru dari SMK Bina Mandiri Bekasi
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 {{ $announcements->count() > 1 ? 'sm:grid-cols-2 lg:grid-cols-3' : 'max-w-3xl mx-auto' }} gap-5 sm:gap-6 lg:gap-8">
+            @foreach($announcements as $announcementItem)
+            <div class="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl border border-gray-100 transition-all duration-300 hover:-translate-y-1">
+                @if($announcementItem->link_url)
+                <a href="{{ $announcementItem->link_url }}" target="_blank" rel="noopener noreferrer" class="block">
+                    <div class="bg-gray-50 max-h-[420px] sm:max-h-[520px] flex items-center justify-center p-2 overflow-hidden">
+                        <img src="{{ asset('storage/' . $announcementItem->image) }}"
+                             alt="{{ $announcementItem->title }}"
+                             class="w-full max-h-[404px] sm:max-h-[504px] h-auto object-contain rounded-xl group-hover:scale-[1.02] transition-transform duration-300"
+                             loading="lazy">
+                    </div>
+                    @if($announcementItem->title)
+                    <div class="p-4 sm:p-5">
+                        <h3 class="font-bold text-base sm:text-lg text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">{{ $announcementItem->title }}</h3>
+                    </div>
+                    @endif
+                </a>
+                @else
+                <button type="button"
+                        onclick="openAnnouncement('{{ asset('storage/' . $announcementItem->image) }}', @js($announcementItem->title))"
+                        class="block w-full text-left">
+                    <div class="bg-gray-50 max-h-[420px] sm:max-h-[520px] flex items-center justify-center p-2 overflow-hidden">
+                        <img src="{{ asset('storage/' . $announcementItem->image) }}"
+                             alt="{{ $announcementItem->title }}"
+                             class="w-full max-h-[404px] sm:max-h-[504px] h-auto object-contain rounded-xl group-hover:scale-[1.02] transition-transform duration-300"
+                             loading="lazy">
+                    </div>
+                    @if($announcementItem->title)
+                    <div class="p-4 sm:p-5">
+                        <h3 class="font-bold text-base sm:text-lg text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">{{ $announcementItem->title }}</h3>
+                    </div>
+                    @endif
+                </button>
+                @endif
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+<!-- Announcement Lightbox -->
+<div id="announcementModal" class="hidden fixed inset-0 bg-black/80 z-[9999] flex items-center justify-center p-4" onclick="closeAnnouncement()">
+    <button type="button" onclick="closeAnnouncement()" class="absolute top-4 right-4 text-white hover:bg-white/20 p-2 rounded-full transition-colors">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+    </button>
+    <div class="max-w-4xl w-full max-h-[90vh] flex flex-col items-center" onclick="event.stopPropagation()">
+        <img id="announcementModalImg" src="" alt="" class="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl">
+        <p id="announcementModalTitle" class="text-white text-center font-semibold mt-4 text-lg"></p>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+function openAnnouncement(src, title) {
+    document.getElementById('announcementModalImg').src = src;
+    document.getElementById('announcementModalTitle').textContent = title || '';
+    document.getElementById('announcementModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+function closeAnnouncement() {
+    document.getElementById('announcementModal').classList.add('hidden');
+    document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeAnnouncement();
+});
+</script>
+@endpush
+@endif
+
 <!-- Welcome Section -->
 <section class="py-14 sm:py-16 lg:py-24 bg-gray-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -338,7 +426,7 @@
         </div>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
-            @foreach($latestNews->take(3) as $news)
+            @foreach($latestNews as $news)
             <a href="{{ route('public.news.show', $news->slug) }}" 
                class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl border border-gray-100 transition-all duration-300 hover:-translate-y-1 flex flex-col">
                 @if($news->featured_image)

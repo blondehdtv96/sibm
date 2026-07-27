@@ -12,37 +12,21 @@ class StatisticSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create default statistics
-        Statistic::create([
-            'label' => 'Siswa Aktif',
-            'value' => 450,
-            'suffix' => '+',
-            'order' => 1,
-            'status' => 'active',
-        ]);
+        Statistic::whereIn('label', ['Program Tersedia', 'Tahun Berdiri'])
+            ->update(['status' => 'inactive']);
 
-        Statistic::create([
-            'label' => 'Guru Berpengalaman',
-            'value' => 35,
-            'suffix' => '',
-            'order' => 2,
-            'status' => 'active',
-        ]);
+        $statistics = [
+            ['label' => 'Siswa Aktif', 'value' => 1400, 'suffix' => '+', 'order' => 1],
+            ['label' => 'Guru Berpengalaman', 'value' => 65, 'suffix' => '', 'order' => 2],
+            ['label' => 'Program Keahlian', 'value' => 3, 'suffix' => '', 'order' => 3],
+            ['label' => 'Berdiri Sejak', 'value' => 2000, 'suffix' => '', 'order' => 4],
+        ];
 
-        Statistic::create([
-            'label' => 'Program Tersedia',
-            'value' => 12,
-            'suffix' => '',
-            'order' => 3,
-            'status' => 'active',
-        ]);
-
-        Statistic::create([
-            'label' => 'Tahun Berdiri',
-            'value' => 2010,
-            'suffix' => '',
-            'order' => 4,
-            'status' => 'active',
-        ]);
+        foreach ($statistics as $statistic) {
+            Statistic::updateOrCreate(
+                ['label' => $statistic['label']],
+                $statistic + ['status' => 'active']
+            );
+        }
     }
 }

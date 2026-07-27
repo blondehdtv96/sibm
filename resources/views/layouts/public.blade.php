@@ -23,11 +23,33 @@
     <!-- iOS 16 Design System -->
     <link href="{{ asset('css/ios16.css') }}" rel="stylesheet">
     
-    <!-- Additional Styles -->
+    <style>
+        .site-logo-animated {
+            transform-origin: center;
+            animation: site-logo-float 4s ease-in-out infinite;
+            transition: transform 220ms ease, filter 220ms ease;
+            will-change: transform;
+        }
+        .site-logo-animated:hover {
+            animation: site-logo-wiggle 700ms ease-in-out;
+            filter: drop-shadow(0 5px 10px rgba(37, 99, 235, .25));
+        }
+        .school-logo-image { width: 40px; height: 40px; object-fit: contain; border-radius: 8px; background: #fff; padding: 2px; }
+        @keyframes site-logo-float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-2px) rotate(1deg); } }
+        @keyframes site-logo-wiggle { 0%, 100% { transform: rotate(0deg) scale(1); } 30% { transform: rotate(-5deg) scale(1.06); } 70% { transform: rotate(5deg) scale(1.06); } }
+        @media (prefers-reduced-motion: reduce) { .site-logo-animated, .site-logo-animated:hover { animation: none; transition: none; } }
+    </style>
+
     @stack('styles')
 </head>
 
 <body class="ios-bg-secondary public-layout">
+@php
+    $siteLogoUrl = \App\Models\Setting::getLogo('site_logo');
+    $siteName = setting('site_name', config('school.name', 'SMK Bina Mandiri Bekasi'));
+    $siteTagline = setting('site_tagline', config('school.tagline', 'Excellence in Education'));
+@endphp
+
     <!-- Top Navigation -->
     <nav class="public-navbar" x-data="{ mobileMenuOpen: false }">
         <div class="ios-container">
@@ -35,17 +57,29 @@
                 <!-- Logo/Brand -->
                 <div class="navbar-brand">
                     <a href="{{ route('home') }}" class="ios-flex ios-items-center ios-gap-sm">
-                        <div class="school-logo">
-                            <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect width="32" height="32" rx="8" fill="var(--ios-blue)"/>
-                                <path d="M8 12L16 8L24 12V20C24 22.2091 22.2091 24 20 24H12C9.79086 24 8 22.2091 8 20V12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M12 16H20" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M12 20H20" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </div>
+                        @if($siteLogoUrl)
+                            <img src="{{ $siteLogoUrl }}" alt="{{ $siteName }}" class="school-logo-image site-logo-animated" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div class="school-logo site-logo-animated" style="display: none;">
+                                <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="32" height="32" rx="8" fill="var(--ios-blue)"/>
+                                    <path d="M8 12L16 8L24 12V20C24 22.2091 22.2091 24 20 24H12C9.79086 24 8 22.2091 8 20V12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M12 16H20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M12 20H20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        @else
+                            <div class="school-logo site-logo-animated">
+                                <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="32" height="32" rx="8" fill="var(--ios-blue)"/>
+                                    <path d="M8 12L16 8L24 12V20C24 22.2091 22.2091 24 20 24H12C9.79086 24 8 22.2091 8 20V12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M12 16H20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M12 20H20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        @endif
                         <div class="brand-text">
-                            <div class="school-name">{{ config('school.name', 'School Name') }}</div>
-                            <div class="school-tagline">{{ config('school.tagline', 'Excellence in Education') }}</div>
+                            <div class="school-name">{{ $siteName }}</div>
+                            <div class="school-tagline">{{ $siteTagline }}</div>
                         </div>
                     </a>
                 </div>
@@ -78,10 +112,6 @@
                         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                         </svg>
-                    </a>
-                    
-                    <a href="{{ route('ppdb.register') }}" class="ios-button-primary ios-button-sm ios-hidden-mobile">
-                        Register Now
                     </a>
                     
                     @guest
@@ -130,10 +160,6 @@
                 </div>
                 
                 <div class="mobile-nav-actions">
-                    <a href="{{ route('ppdb.register') }}" class="ios-button-primary ios-w-full">
-                        Register Now
-                    </a>
-                    
                     @guest
                     <a href="{{ route('login') }}" class="ios-button-outline ios-w-full">
                         Login
@@ -192,14 +218,18 @@
                 <!-- School Info -->
                 <div class="footer-section">
                     <div class="footer-logo">
-                        <div class="school-logo">
-                            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect width="32" height="32" rx="8" fill="var(--ios-blue)"/>
-                                <path d="M8 12L16 8L24 12V20C24 22.2091 22.2091 24 20 24H12C9.79086 24 8 22.2091 8 20V12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M12 16H20" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M12 20H20" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </div>
+                        @if($siteLogoUrl)
+                            <img src="{{ $siteLogoUrl }}" alt="{{ $siteName }}" class="school-logo-image site-logo-animated" style="width: 32px; height: 32px;">
+                        @else
+                            <div class="school-logo site-logo-animated">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="32" height="32" rx="8" fill="var(--ios-blue)"/>
+                                    <path d="M8 12L16 8L24 12V20C24 22.2091 22.2091 24 20 24H12C9.79086 24 8 22.2091 8 20V12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M12 16H20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M12 20H20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        @endif
                         <div>
                             <h3 class="ios-headline">{{ config('school.name', 'School Name') }}</h3>
                             <p class="ios-text-secondary">{{ config('school.tagline', 'Excellence in Education') }}</p>

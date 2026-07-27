@@ -1,0 +1,1 @@
+{"version":2,"defects":{"Tests\\Feature\\SecurityTest::test_audit_log_created_on_login":8,"Tests\\Feature\\SecurityTest::test_audit_log_created_on_failed_login":8},"times":{"Tests\\Feature\\SecurityTest::test_audit_log_created_on_login":0.116,"Tests\\Feature\\SecurityTest::test_audit_log_created_on_failed_login":0.211}}
