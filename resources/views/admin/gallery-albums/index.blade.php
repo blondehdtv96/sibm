@@ -28,7 +28,7 @@
                             <!-- Cover Image -->
                             <div class="relative aspect-video bg-gradient-to-br from-blue-500 to-purple-600">
                                 @if($album->cover_image_url)
-                                    <img src="{{ $album->cover_image_url }}" alt="{{ $album->name }}" class="w-full h-full object-cover">
+                                    <img src="{{ $album->cover_image_url }}" alt="{{ $album->name }}" class="w-full h-full object-cover" loading="lazy">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center text-white">
                                         <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -118,10 +118,10 @@ class GalleryAlbum extends Model
             return asset('storage/' . $this->cover_image);
         }
         
-        // If no cover image, use first item's image
+        // If no cover image, use first item's thumbnail (lighter than the full image)
         $firstItem = $this->items()->first();
         if ($firstItem) {
-            return $firstItem->image_url;
+            return $firstItem->thumbnail_url;
         }
         
         return null;

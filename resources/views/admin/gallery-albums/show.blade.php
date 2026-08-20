@@ -46,7 +46,7 @@
                             <!-- Item Thumbnail -->
                             <div class="aspect-square bg-gray-100 overflow-hidden">
                                 @if($item->type === 'image')
-                                    <img src="{{ $item->image_url }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                    <img src="{{ $item->thumbnail_url }}" alt="{{ $item->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-500 to-blue-600 text-white">
                                         <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">

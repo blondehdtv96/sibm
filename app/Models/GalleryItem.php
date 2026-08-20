@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class GalleryItem extends Model
 {
@@ -81,12 +82,18 @@ class GalleryItem extends Model
      */
     public function getThumbnailUrlAttribute(): ?string
     {
-        if ($this->image_path) {
-            $pathInfo = pathinfo($this->image_path);
-            $thumbnailPath = $pathInfo['dirname'] . '/thumbnails/' . $pathInfo['filename'] . '_thumb.' . $pathInfo['extension'];
+        if (!$this->image_path) {
+            return null;
+        }
+
+        $pathInfo = pathinfo($this->image_path);
+        $thumbnailPath = $pathInfo['dirname'] . '/thumbnails/' . $pathInfo['filename'] . '_thumb.' . $pathInfo['extension'];
+
+        if (Storage::disk('public')->exists($thumbnailPath)) {
             return asset('storage/' . $thumbnailPath);
         }
-        return null;
+
+        return $this->image_url;
     }
 
     /**

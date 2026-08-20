@@ -67,7 +67,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
                         <p class="text-gray-600 mb-2"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                        <p class="text-sm text-gray-500">PNG, JPG, GIF up to 5MB each</p>
+                        <p class="text-sm text-gray-500">PNG, JPG, GIF up to 15MB each</p>
                     </div>
                 </div>
                 @error('images')
@@ -252,13 +252,75 @@ uploadArea.addEventListener('drop', (e) => {
     }
 });
 
-// Form submission with progress
-document.getElementById('uploadForm').addEventListener('submit', function(e) {
-    if (selectedFiles.length > 0) {
-        document.getElementById('uploadProgress').style.display = 'block';
-        document.getElementById('totalFiles').textContent = selectedFiles.length;
-        document.getElementById('submitBtn').disabled = true;
+// Form submission: upload files one by one via AJAX so large batches show
+// real progress instead of one long, silent request.
+const uploadAjaxUrl = @json(route('admin.gallery-items.upload-ajax'));
+const albumShowUrlTemplate = @json(route('admin.gallery-albums.show', ['gallery_album' => 'ALBUM_SLUG']));
+const albumSlugsById = @json($albums->pluck('slug', 'id'));
+
+document.getElementById('uploadForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    if (selectedFiles.length === 0) {
+        return;
     }
+
+    const albumIdInput = document.querySelector('[name="album_id"]');
+    const albumId = albumIdInput ? albumIdInput.value : '';
+
+    if (!albumId) {
+        alert('Please select an album.');
+        return;
+    }
+
+    const progress = document.getElementById('uploadProgress');
+    const progressFill = document.getElementById('progressFill');
+    const currentFileEl = document.getElementById('currentFile');
+    const totalFilesEl = document.getElementById('totalFiles');
+    const submitBtn = document.getElementById('submitBtn');
+    const csrfToken = document.querySelector('input[name="_token"]').value;
+
+    progress.style.display = 'block';
+    totalFilesEl.textContent = selectedFiles.length;
+    submitBtn.disabled = true;
+
+    let successCount = 0;
+    let failCount = 0;
+
+    for (let i = 0; i < selectedFiles.length; i++) {
+        const titleInput = document.querySelector(`[name="titles[${i}]"]`);
+
+        const formData = new FormData();
+        formData.append('_token', csrfToken);
+        formData.append('album_id', albumId);
+        formData.append('image', selectedFiles[i]);
+        formData.append('title', titleInput ? titleInput.value : '');
+
+        try {
+            const response = await fetch(uploadAjaxUrl, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData,
+            });
+            const data = await response.json();
+            data.success ? successCount++ : failCount++;
+        } catch (err) {
+            failCount++;
+        }
+
+        currentFileEl.textContent = i + 1;
+        progressFill.style.width = Math.round(((i + 1) / selectedFiles.length) * 100) + '%';
+    }
+
+    submitBtn.disabled = false;
+
+    if (failCount > 0) {
+        alert(`${successCount} image(s) uploaded, ${failCount} failed. Check the failed files and try again if needed.`);
+    }
+
+    const albumSlug = albumSlugsById[albumId] || albumId;
+    window.location.href = albumShowUrlTemplate.replace('ALBUM_SLUG', albumSlug)
+        + '?uploaded=' + successCount;
 });
 </script>
 @endpush

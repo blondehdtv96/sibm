@@ -88,7 +88,7 @@
             @error('image')
                 <div class="invalid-feedback d-block">{{ $message }}</div>
             @enderror
-            <small class="form-text">Upload a new image to replace the current one. Max 5MB.</small>
+            <small class="form-text">Upload a new image to replace the current one. Max 15MB.</small>
         </div>
 
         <div class="form-group">

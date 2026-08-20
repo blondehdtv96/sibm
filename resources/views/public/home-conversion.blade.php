@@ -120,7 +120,7 @@
             <h2 id="facts-title" class="sr-only">Fakta SMK Bina Mandiri Kota Bekasi</h2>
             <div class="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 shadow-xl md:grid-cols-4">
                 <div class="bg-white p-5 text-center sm:p-7"><strong class="block text-3xl font-black text-[#1E3A8A] sm:text-4xl">{{ $schoolFacts['active_students'] ?? '1400+' }}</strong><span class="mt-1 block text-xs font-semibold text-slate-500 sm:text-sm">Siswa Aktif</span></div>
-                <div class="bg-white p-5 text-center sm:p-7"><strong class="block text-3xl font-black text-[#1E3A8A] sm:text-4xl">{{ $schoolFacts['teachers'] ?? '65' }}</strong><span class="mt-1 block text-xs font-semibold text-slate-500 sm:text-sm">Guru Berpengalaman</span></div>
+                <div class="bg-white p-5 text-center sm:p-7"><strong class="block text-3xl font-black text-[#1E3A8A] sm:text-4xl">{{ $schoolFacts['teachers'] ?? '85' }}</strong><span class="mt-1 block text-xs font-semibold text-slate-500 sm:text-sm">Guru Berpengalaman</span></div>
                 <div class="bg-white p-5 text-center sm:p-7"><strong class="block text-3xl font-black text-[#1E3A8A] sm:text-4xl">{{ $schoolFacts['programs'] ?? '3' }}</strong><span class="mt-1 block text-xs font-semibold text-slate-500 sm:text-sm">Program Keahlian</span></div>
                 <div class="bg-white p-5 text-center sm:p-7"><strong class="block text-3xl font-black text-[#1E3A8A] sm:text-4xl">{{ $foundedYear }}</strong><span class="mt-1 block text-xs font-semibold text-slate-500 sm:text-sm">Berdiri Sejak</span></div>
             </div>

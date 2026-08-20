@@ -33,10 +33,12 @@ class GalleryItemController extends Controller
      */
     public function store(Request $request)
     {
+        set_time_limit(300);
+
         $validated = $request->validate([
             'album_id' => 'required|exists:gallery_albums,id',
             'images' => 'required|array|min:1',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:15360', // 15MB max
             'titles' => 'nullable|array',
             'titles.*' => 'nullable|string|max:255',
         ]);
@@ -91,7 +93,7 @@ class GalleryItemController extends Controller
         $validated = $request->validate([
             'album_id' => 'required|exists:gallery_albums,id',
             'title' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:15360',
             'sort_order' => 'nullable|integer|min:0',
         ]);
 
@@ -155,25 +157,22 @@ class GalleryItemController extends Controller
             
             // Generate thumbnail
             $thumbnailPath = $thumbnailDir . '/' . $pathInfo['filename'] . '_thumb.' . $pathInfo['extension'];
-            
+
+            // Decode the file once and clone it for the thumbnail, instead of
+            // re-reading and re-decoding the same file from disk twice.
             $img = Image::make($fullPath);
-            
-            // Resize to thumbnail size (400x400 max, maintain aspect ratio)
-            $img->resize(400, 400, function ($constraint) {
+
+            $thumbnail = clone $img;
+            $thumbnail->resize(400, 400, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
-            });
-            
-            // Optimize quality
-            $img->save($thumbnailPath, 85);
-            
-            // Also optimize the original image
-            $originalImg = Image::make($fullPath);
-            $originalImg->resize(1920, 1920, function ($constraint) {
+            })->save($thumbnailPath, 85);
+
+            // Optimize the original image in place
+            $img->resize(1920, 1920, function ($constraint) {
                 $constraint->aspectRatio();
                 $constraint->upsize();
-            });
-            $originalImg->save($fullPath, 90);
+            })->save($fullPath, 90);
             
         } catch (\Exception $e) {
             \Log::error('Failed to generate thumbnail: ' . $e->getMessage());
@@ -201,7 +200,7 @@ class GalleryItemController extends Controller
     {
         $validated = $request->validate([
             'album_id' => 'required|exists:gallery_albums,id',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:15360',
             'title' => 'nullable|string|max:255',
         ]);
 
