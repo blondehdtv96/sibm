@@ -216,8 +216,8 @@ class StaffProfileController extends Controller
             'achievements' => ['nullable', 'string', 'max:5000'], 'motto' => ['nullable', 'string', 'max:1000'],
             'facebook' => ['nullable', 'url', 'max:255'], 'instagram' => ['nullable', 'url', 'max:255'],
             'linkedin' => ['nullable', 'url', 'max:255'], 'youtube' => ['nullable', 'url', 'max:255'],
-            'website' => ['nullable', 'url', 'max:255'], 'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:10240'],
-            'gallery_images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:10240'],
+            'website' => ['nullable', 'url', 'max:255'], 'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240'],
+            'gallery_images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:10240'],
             'gallery_captions.*' => ['nullable', 'string', 'max:255'], 'sort_order' => ['nullable', 'integer', 'min:0'],
             'status' => ['required', 'in:active,inactive'], 'is_featured' => ['nullable', 'boolean'],
         ]);

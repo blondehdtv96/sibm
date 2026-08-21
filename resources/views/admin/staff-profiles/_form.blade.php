@@ -4,6 +4,17 @@
     @csrf
     @if($isEdit) @method('PUT') @endif
 
+    @if($errors->any())
+        <div class="rounded-xl border border-red-200 bg-red-50 p-4">
+            <p class="font-semibold text-red-700">Gagal menyimpan. Periksa kembali data berikut:</p>
+            <ul class="mt-2 list-disc list-inside text-sm text-red-600">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div class="xl:col-span-2 space-y-6">
             <section class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
@@ -58,7 +69,7 @@
             <section class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
                 <h3 class="text-lg font-bold text-gray-900 mb-2">Galeri Kegiatan</h3>
                 <p class="text-sm text-gray-500 mb-4">Upload beberapa foto kegiatan, seminar, workshop, atau pelatihan.</p>
-                <input type="file" name="gallery_images[]" multiple accept="image/jpeg,image/png,image/jpg,image/webp" class="w-full px-3 py-3 border border-dashed border-gray-300 rounded-xl">
+                <input type="file" name="gallery_images[]" multiple accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" class="w-full px-3 py-3 border border-dashed border-gray-300 rounded-xl">
                 <p class="mt-2 text-xs text-gray-500">Maksimal 10 MB per foto.</p>
                 @if($isEdit && $staffProfile->images->count() > 0)
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-5">
@@ -74,8 +85,8 @@
             <section class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
                 <h3 class="text-lg font-bold text-gray-900 mb-5">Foto Profil</h3>
                 @if($isEdit && $staffProfile->photo)<img src="{{ $staffProfile->photo_url }}" alt="{{ $staffProfile->display_name }}" class="w-40 h-40 rounded-2xl object-cover mx-auto mb-4">@endif
-                <input type="file" name="photo" accept="image/jpeg,image/png,image/jpg,image/webp" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-                <p class="mt-2 text-xs text-gray-500">JPG, PNG, WEBP. Maksimal 10 MB.</p>
+                <input type="file" name="photo" accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                <p class="mt-2 text-xs text-gray-500">JPG, PNG, GIF, WEBP. Maksimal 10 MB.</p>
                 @error('photo')<p class="field-error">{{ $message }}</p>@enderror
             </section>
             <section class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-5">
