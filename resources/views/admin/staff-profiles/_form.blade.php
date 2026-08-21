@@ -84,8 +84,8 @@
         <aside class="space-y-6">
             <section class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
                 <h3 class="text-lg font-bold text-gray-900 mb-5">Foto Profil</h3>
-                @if($isEdit && $staffProfile->photo)<img src="{{ $staffProfile->photo_url }}" alt="{{ $staffProfile->display_name }}" class="w-40 h-40 rounded-2xl object-cover mx-auto mb-4">@endif
-                <input type="file" name="photo" accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                <img id="photoPreviewImg" src="{{ $isEdit && $staffProfile->photo ? $staffProfile->photo_url : '' }}" alt="Preview foto" class="w-40 h-40 rounded-2xl object-cover mx-auto mb-4 {{ $isEdit && $staffProfile->photo ? '' : 'hidden' }}">
+                <input type="file" name="photo" accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" class="w-full px-3 py-2 border border-gray-300 rounded-lg" onchange="previewStaffPhoto(event)">
                 <p class="mt-2 text-xs text-gray-500">JPG, PNG, GIF, WEBP. Maksimal 10 MB.</p>
                 @error('photo')<p class="field-error">{{ $message }}</p>@enderror
             </section>
@@ -112,3 +112,23 @@
 .field-label{display:block;font-size:.875rem;font-weight:600;color:#374151;margin-bottom:.5rem}.field-input{width:100%;padding:.65rem .85rem;border:1px solid #d1d5db;border-radius:.65rem;background:#fff}.field-input:focus{outline:0;border-color:#1e3a8a;box-shadow:0 0 0 3px rgba(30,58,138,.12)}.field-error{margin-top:.25rem;font-size:.75rem;color:#dc2626}
 </style>
 @endonce
+
+<script>
+function previewStaffPhoto(event) {
+    const file = event.target.files[0];
+    const img = document.getElementById('photoPreviewImg');
+    if (!file || !img) return;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        img.src = e.target.result;
+        img.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
+@if($errors->has('photo'))
+    window.addEventListener('DOMContentLoaded', function () {
+        alert('Foto gagal diupdate: ' + {!! json_encode($errors->first('photo')) !!});
+    });
+@endif
+</script>
