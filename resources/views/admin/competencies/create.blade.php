@@ -133,7 +133,7 @@
                     @error('image')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                    <p class="mt-1 text-xs text-gray-500">Max 2MB (JPEG, PNG, JPG, GIF)</p>
+                    <p class="mt-1 text-xs text-gray-500">Max 20MB (JPEG, PNG, JPG, GIF)</p>
                 </div>
 
                 <div id="image-preview" class="mt-4" style="display: none;">
@@ -174,7 +174,7 @@
                         @error('head_of_program_photo')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
-                        <p class="mt-1 text-xs text-gray-500">Max 2MB (JPEG, PNG, JPG)</p>
+                        <p class="mt-1 text-xs text-gray-500">Max 20MB (JPEG, PNG, JPG)</p>
                     </div>
 
                     <div id="head-photo-preview" class="mt-4" style="display: none;">

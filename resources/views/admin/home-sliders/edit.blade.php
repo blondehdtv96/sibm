@@ -48,7 +48,7 @@
                         <span class="font-medium">ℹ️ Info:</span> Kosongkan jika tidak ingin mengganti gambar
                     </p>
                     <p class="text-xs text-gray-600">
-                        <span class="font-medium">✅ Rekomendasi:</span> 1920x1080px (16:9), landscape, JPG/PNG, max 5MB
+                        <span class="font-medium">✅ Rekomendasi:</span> 1920x1080px (16:9), landscape, JPG/PNG, max 10MB
                     </p>
                     <p class="text-xs text-gray-500">
                         <span class="font-medium">💡 Tips:</span> Gambar akan ditampilkan penuh tanpa terpotong

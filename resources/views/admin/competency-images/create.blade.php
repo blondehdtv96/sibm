@@ -49,7 +49,7 @@
                     onchange="previewImages(event)"
                     required
                 >
-                <p class="mt-1 text-xs text-gray-500">Pilih satu atau lebih gambar (JPG, PNG, max 5MB per file)</p>
+                <p class="mt-1 text-xs text-gray-500">Pilih satu atau lebih gambar (JPG, PNG, max 10MB per file)</p>
                 @error('images.*')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror

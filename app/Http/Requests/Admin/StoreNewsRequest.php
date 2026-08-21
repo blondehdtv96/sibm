@@ -38,7 +38,7 @@ class StoreNewsRequest extends FormRequest
                 'nullable',
                 new SecureFileUpload(
                     allowedMimeTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
-                    maxSize: 2048,
+                    maxSize: 10240,
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'webp']
                 )
             ],

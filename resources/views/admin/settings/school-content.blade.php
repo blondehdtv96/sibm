@@ -130,7 +130,7 @@
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent @error('principal_photo') border-red-500 @enderror"
                         onchange="previewPhoto(event)"
                     >
-                    <p class="mt-1 text-xs text-gray-500">Ukuran rekomendasi: 400x400px (JPG, PNG, max 2MB)</p>
+                    <p class="mt-1 text-xs text-gray-500">Ukuran rekomendasi: 400x400px (JPG, PNG, max 20MB)</p>
                     @error('principal_photo')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -368,7 +368,7 @@
                         accept="image/*"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     >
-                    <p class="text-sm text-gray-500 mt-1">Format: JPG, PNG, atau PDF. Maksimal 5MB</p>
+                    <p class="text-sm text-gray-500 mt-1">Format: JPG, PNG, atau PDF. Maksimal 10MB</p>
                 </div>
 
                 <!-- Title -->

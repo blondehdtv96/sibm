@@ -24,7 +24,7 @@ class HomeSliderController extends Controller
     {
         $validated = $request->validate([
             'images' => 'required',
-            'images.*' => 'image|mimes:jpeg,png,jpg|max:5120',
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:10240',
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string',
             'button_text' => 'nullable|string|max:100',
@@ -71,7 +71,7 @@ class HomeSliderController extends Controller
     public function update(Request $request, HomeSlider $homeSlider)
     {
         $validated = $request->validate([
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string',
             'button_text' => 'nullable|string|max:100',

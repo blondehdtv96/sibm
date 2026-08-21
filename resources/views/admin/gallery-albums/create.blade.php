@@ -77,7 +77,7 @@
                 @error('cover_image')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
-                <p class="mt-1 text-xs text-gray-500">Optional. Recommended size: 1200x800px. Max 2MB. Formats: JPG, PNG, GIF</p>
+                <p class="mt-1 text-xs text-gray-500">Optional. Recommended size: 1200x800px. Max 20MB. Formats: JPG, PNG, GIF</p>
             </div>
 
             <div>

@@ -95,7 +95,7 @@
             @error('cover_image')
                 <div class="invalid-feedback d-block">{{ $message }}</div>
             @enderror
-            <small class="form-text">Upload a new image to replace the current one. Recommended size: 1200x800px. Max 2MB.</small>
+            <small class="form-text">Upload a new image to replace the current one. Recommended size: 1200x800px. Max 20MB.</small>
         </div>
 
         <div class="form-group">

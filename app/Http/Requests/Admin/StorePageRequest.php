@@ -39,7 +39,7 @@ class StorePageRequest extends FormRequest
                 'nullable',
                 new SecureFileUpload(
                     allowedMimeTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
-                    maxSize: 2048,
+                    maxSize: 10240,
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'webp']
                 )
             ],
@@ -61,7 +61,7 @@ class StorePageRequest extends FormRequest
             'meta_description.max' => 'The meta description may not be greater than 160 characters.',
             'banner_image.image' => 'The banner image must be an image file.',
             'banner_image.mimes' => 'The banner image must be a file of type: jpeg, png, jpg, gif, webp.',
-            'banner_image.max' => 'The banner image may not be greater than 2MB.',
+            'banner_image.max' => 'The banner image may not be greater than 10MB.',
             'status.required' => 'Please select a status for the page.',
             'status.in' => 'The selected status is invalid.',
         ];

@@ -24,7 +24,7 @@ class CompetencyImageController extends Controller
     public function store(Request $request, Competency $competency)
     {
         $validated = $request->validate([
-            'images.*' => 'required|image|mimes:jpeg,png,jpg|max:5120',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg|max:10240',
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'status' => 'required|in:active,inactive',
@@ -60,7 +60,7 @@ class CompetencyImageController extends Controller
     public function update(Request $request, Competency $competency, CompetencyImage $image)
     {
         $validated = $request->validate([
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'order' => 'required|integer|min:0',

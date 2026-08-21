@@ -142,7 +142,7 @@
                 @error('featured_image')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
-                <p class="mt-1 text-sm text-gray-500">Max 2MB (JPEG, PNG, JPG, GIF)</p>
+                <p class="mt-1 text-sm text-gray-500">Max 20MB (JPEG, PNG, JPG, GIF)</p>
 
                 <div id="image-preview" class="mt-4" style="display: none;">
                     <img id="preview" src="" alt="Preview" class="w-full max-w-md rounded-lg border border-gray-200">
@@ -169,7 +169,7 @@
                     @error('images')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                    <p class="mt-1 text-xs text-gray-500">Max 2MB per image (JPEG, PNG, JPG, GIF). Multiple selection allowed.</p>
+                    <p class="mt-1 text-xs text-gray-500">Max 20MB per image (JPEG, PNG, JPG, GIF). Multiple selection allowed.</p>
                 </div>
 
                 <!-- New Gallery Preview -->

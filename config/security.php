@@ -13,7 +13,7 @@ return [
 
     'file_upload' => [
         // Maximum file size in kilobytes
-        'max_size' => env('MAX_FILE_SIZE', 2048),
+        'max_size' => env('MAX_FILE_SIZE', 10240),
 
         // Allowed image MIME types
         'allowed_image_types' => [

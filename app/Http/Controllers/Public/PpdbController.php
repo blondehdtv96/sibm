@@ -66,7 +66,7 @@ class PpdbController extends Controller
             'address' => 'required|string',
             'parent_name' => 'required|string|max:255',
             'parent_phone' => 'required|string|max:20',
-            'documents.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'documents.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
         ]);
 
         if ($validator->fails()) {

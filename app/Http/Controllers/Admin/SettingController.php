@@ -314,7 +314,7 @@ class SettingController extends Controller
     public function updatePpdbBrochure(Request $request)
     {
         $validated = $request->validate([
-            'ppdb_brochure' => 'nullable|image|mimes:jpeg,png,jpg,pdf|max:5120',
+            'ppdb_brochure' => 'nullable|image|mimes:jpeg,png,jpg,pdf|max:10240',
             'ppdb_brochure_title' => 'nullable|string|max:255',
             'ppdb_brochure_description' => 'nullable|string|max:500',
         ]);

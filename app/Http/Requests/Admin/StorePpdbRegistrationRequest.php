@@ -33,7 +33,7 @@ class StorePpdbRegistrationRequest extends FormRequest
                 'nullable',
                 new SecureFileUpload(
                     allowedMimeTypes: ['image/jpeg', 'image/png', 'application/pdf'],
-                    maxSize: 2048,
+                    maxSize: 10240,
                     allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf']
                 )
             ],
@@ -55,7 +55,7 @@ class StorePpdbRegistrationRequest extends FormRequest
             'address.required' => 'Address is required.',
             'parent_name.required' => 'Parent/Guardian name is required.',
             'parent_phone.required' => 'Parent/Guardian phone is required.',
-            'documents.*.max' => 'Each document must not be larger than 2MB.',
+            'documents.*.max' => 'Each document must not be larger than 10MB.',
         ];
     }
 

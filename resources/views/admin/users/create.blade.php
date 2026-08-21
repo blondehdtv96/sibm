@@ -45,7 +45,7 @@
                                 class="ios-input"
                                 @change="previewImage = $event.target.files[0] ? URL.createObjectURL($event.target.files[0]) : null"
                             >
-                            <p class="ios-text-secondary ios-text-sm ios-mt-xs">JPG, PNG or GIF. Max 2MB.</p>
+                            <p class="ios-text-secondary ios-text-sm ios-mt-xs">JPG, PNG or GIF. Max 20MB.</p>
                         </div>
                     </div>
                     @error('profile_image')

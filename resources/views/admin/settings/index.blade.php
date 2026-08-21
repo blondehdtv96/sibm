@@ -327,10 +327,10 @@ function logoPreview() {
                 return;
             }
             
-            // Validate file size (max 2MB)
-            const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+            // Validate file size (max 20MB)
+            const maxSize = 20 * 1024 * 1024; // 20MB in bytes
             if (file.size > maxSize) {
-                alert('Ukuran file terlalu besar. Maksimal 2MB.');
+                alert('Ukuran file terlalu besar. Maksimal 20MB.');
                 event.target.value = '';
                 this.clearPreview();
                 return;
