@@ -30,12 +30,14 @@ class StaffProfileController extends Controller
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->status))
             ->withCount('images')->ordered()->paginate(15)->withQueryString();
 
-        return view('admin.staff-profiles.index', [
-            'staffProfiles' => $staffProfiles,
-            'categories' => self::CATEGORIES,
-            'employmentStatuses' => self::EMPLOYMENT_STATUSES,
-            'isTrash' => $request->boolean('trash'),
-        ]);
+        return response()
+            ->view('admin.staff-profiles.index', [
+                'staffProfiles' => $staffProfiles,
+                'categories' => self::CATEGORIES,
+                'employmentStatuses' => self::EMPLOYMENT_STATUSES,
+                'isTrash' => $request->boolean('trash'),
+            ])
+            ->header('Cache-Control', 'no-store, must-revalidate');
     }
 
     public function create()
@@ -62,7 +64,9 @@ class StaffProfileController extends Controller
     public function show(StaffProfile $staffProfile)
     {
         $staffProfile->load('images');
-        return view('admin.staff-profiles.show', compact('staffProfile'));
+        return response()
+            ->view('admin.staff-profiles.show', compact('staffProfile'))
+            ->header('Cache-Control', 'no-store, must-revalidate');
     }
 
     public function edit(StaffProfile $staffProfile)

@@ -29,12 +29,14 @@ class StaffProfileController extends Controller
             's3' => (clone $active)->where('education', 'like', '%S3%')->count(),
         ];
 
-        return view('public.staff-profiles.index', [
-            'staffProfiles' => $profiles,
-            'stats' => $stats,
-            'categories' => ['Guru', 'Tenaga Kependidikan', 'Kepala Sekolah', 'Wakil Kepala Sekolah', 'Kaprog', 'Guru Produktif', 'Guru Normatif', 'Guru Adaptif', 'Staff TU'],
-            'employmentStatuses' => ['ASN', 'Honorer', 'Kontrak', 'Tetap', 'Kepala Sekolah', 'Waka', 'Kaprog'],
-        ]);
+        return response()
+            ->view('public.staff-profiles.index', [
+                'staffProfiles' => $profiles,
+                'stats' => $stats,
+                'categories' => ['Guru', 'Tenaga Kependidikan', 'Kepala Sekolah', 'Wakil Kepala Sekolah', 'Kaprog', 'Guru Produktif', 'Guru Normatif', 'Guru Adaptif', 'Staff TU'],
+                'employmentStatuses' => ['ASN', 'Honorer', 'Kontrak', 'Tetap', 'Kepala Sekolah', 'Waka', 'Kaprog'],
+            ])
+            ->header('Cache-Control', 'no-store, must-revalidate');
     }
 
     public function show(StaffProfile $staffProfile)
@@ -42,6 +44,9 @@ class StaffProfileController extends Controller
         abort_unless($staffProfile->status === 'active', 404);
         $staffProfile->load('activeImages');
         $related = StaffProfile::active()->ordered()->where('id', '!=', $staffProfile->id)->take(4)->get();
-        return view('public.staff-profiles.show', compact('staffProfile', 'related'));
+
+        return response()
+            ->view('public.staff-profiles.show', compact('staffProfile', 'related'))
+            ->header('Cache-Control', 'no-store, must-revalidate');
     }
 }
