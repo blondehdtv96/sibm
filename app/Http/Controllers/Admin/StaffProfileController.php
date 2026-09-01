@@ -52,11 +52,15 @@ class StaffProfileController extends Controller
         $validated['sort_order'] = $validated['sort_order'] ?? ((int) StaffProfile::withTrashed()->max('sort_order') + 1);
         $validated['is_featured'] = $request->boolean('is_featured');
 
-        DB::transaction(function () use ($request, &$validated) {
-            if ($request->hasFile('photo')) $validated['photo'] = $this->storeImage($request->file('photo'));
-            $profile = StaffProfile::create($validated);
-            $this->storeGalleryImages($request, $profile);
-        });
+        try {
+            DB::transaction(function () use ($request, &$validated) {
+                if ($request->hasFile('photo')) $validated['photo'] = $this->storeImage($request->file('photo'));
+                $profile = StaffProfile::create($validated);
+                $this->storeGalleryImages($request, $profile);
+            });
+        } catch (\RuntimeException $e) {
+            return back()->withInput()->withErrors(['photo' => $e->getMessage()]);
+        }
 
         return redirect()->route('admin.staff-profiles.index')->with('success', 'Profil berhasil ditambahkan.');
     }
@@ -77,24 +81,57 @@ class StaffProfileController extends Controller
 
     public function update(Request $request, StaffProfile $staffProfile)
     {
+        $uploadedPhoto = $request->file('photo');
+
+        if ($uploadedPhoto && !$uploadedPhoto->isValid()) {
+            return back()->withInput()->withErrors([
+                'photo' => 'Upload foto gagal diterima server. Pilih ulang file foto lalu coba kembali.',
+            ]);
+        }
+
         $validated = $this->validateProfile($request, $staffProfile);
         $validated['slug'] = StaffProfile::generateUniqueSlug($validated['name'], $staffProfile->id);
         $validated['sort_order'] = $validated['sort_order'] ?? $staffProfile->sort_order;
         $validated['is_featured'] = $request->boolean('is_featured');
+        $oldPhoto = $staffProfile->photo;
         $newPhoto = null;
 
-        DB::transaction(function () use ($request, $staffProfile, &$validated, &$newPhoto) {
-            if ($request->hasFile('photo')) {
-                $newPhoto = $this->storeImage($request->file('photo'));
-                $validated['photo'] = $newPhoto;
-            }
-            $oldPhoto = $staffProfile->photo;
-            $staffProfile->update($validated);
-            $this->storeGalleryImages($request, $staffProfile);
-            if ($newPhoto && $oldPhoto) Storage::disk('public')->delete($oldPhoto);
-        });
+        try {
+            DB::transaction(function () use ($request, $uploadedPhoto, $staffProfile, &$validated, &$newPhoto) {
+                if ($uploadedPhoto) {
+                    $newPhoto = $this->storeImage($uploadedPhoto);
+                    $validated['photo'] = $newPhoto;
+                }
 
-        return redirect()->route('admin.staff-profiles.index')->with('success', 'Profil berhasil diperbarui.');
+                $staffProfile->fill($validated);
+                $staffProfile->saveOrFail();
+                $this->storeGalleryImages($request, $staffProfile);
+
+                if ($newPhoto) {
+                    $staffProfile->refresh();
+
+                    if ($staffProfile->photo !== $newPhoto) {
+                        throw new \RuntimeException('Foto baru gagal dicatat pada profil guru.');
+                    }
+                }
+            });
+        } catch (\RuntimeException $e) {
+            if ($newPhoto) {
+                Storage::disk('public')->delete($newPhoto);
+            }
+
+            return back()->withInput()->withErrors(['photo' => $e->getMessage()]);
+        }
+
+        if ($newPhoto && $oldPhoto && $oldPhoto !== $newPhoto) {
+            Storage::disk('public')->delete($oldPhoto);
+        }
+
+        $message = $newPhoto
+            ? 'Profil dan foto guru berhasil diperbarui.'
+            : 'Profil berhasil diperbarui.';
+
+        return redirect()->route('admin.staff-profiles.index')->with('success', $message);
     }
 
     public function destroy(StaffProfile $staffProfile)
@@ -229,7 +266,13 @@ class StaffProfileController extends Controller
 
     private function storeImage($file): string
     {
-        return $file->store('staff-profiles', 'public');
+        $path = $file->store('staff-profiles', 'public');
+
+        if (!$path || !Storage::disk('public')->exists($path)) {
+            throw new \RuntimeException('Gagal menyimpan foto ke server. Periksa hak akses (permission) folder storage/app/public di server.');
+        }
+
+        return $path;
     }
 
     private function storeGalleryImages(Request $request, StaffProfile $profile): void

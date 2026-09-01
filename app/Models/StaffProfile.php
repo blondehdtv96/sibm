@@ -73,7 +73,13 @@ class StaffProfile extends Model
 
     public function getPhotoUrlAttribute(): ?string
     {
-        return $this->photo ? asset('storage/' . $this->photo) : null;
+        if (!$this->photo) {
+            return null;
+        }
+
+        // Each uploaded photo gets a unique storage path. Adding its fingerprint
+        // also prevents browsers/proxies from continuing to show the old image.
+        return asset('storage/' . $this->photo) . '?v=' . substr(sha1($this->photo), 0, 12);
     }
 
     public function getRouteKeyName(): string
