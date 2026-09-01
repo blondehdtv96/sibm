@@ -65,55 +65,36 @@
 
 @section('content')
 <div class="bg-slate-50 text-slate-900 homepage-conversion">
-    <!-- 1. Hero: conversion-first, one H1 only -->
-    <section class="relative overflow-hidden bg-[#0B1F4B] text-white" aria-labelledby="homepage-title">
-        @if($sliders->count() > 0)
-            <div class="swiper homepage-hero-swiper">
-                <div class="swiper-wrapper">
+    <!-- 1. Responsive image-only home slider -->
+    @if($sliders->count() > 0)
+        <section class="relative overflow-hidden bg-white" aria-labelledby="homepage-title">
+            <h1 id="homepage-title" class="sr-only">SMK Bina Mandiri Kota Bekasi</h1>
+            <div class="swiper homepage-hero-swiper w-full">
+                <div class="swiper-wrapper items-start">
                     @foreach($sliders as $index => $slider)
-                        <div class="swiper-slide relative min-h-[620px] md:min-h-[700px] flex items-center">
+                        <div class="swiper-slide bg-white">
                             @if($slider->image_path)
-                                <img src="{{ asset('storage/' . $slider->image_path) }}" alt="{{ $slider->title ?: 'Kegiatan SMK Bina Mandiri Kota Bekasi' }}" class="absolute inset-0 w-full h-full object-cover" loading="{{ $index === 0 ? 'eager' : 'lazy' }}" @if($index === 0) fetchpriority="high" @endif>
+                                <img
+                                    src="{{ $slider->image_url }}"
+                                    alt="{{ $slider->title ?: 'Kegiatan SMK Bina Mandiri Kota Bekasi' }}"
+                                    class="block h-auto w-full object-contain"
+                                    width="1920"
+                                    height="1080"
+                                    loading="{{ $index === 0 ? 'eager' : 'lazy' }}"
+                                    @if($index === 0) fetchpriority="high" @endif
+                                >
                             @endif
-                            <div class="absolute inset-0 bg-gradient-to-r from-[#061536]/95 via-[#0B1F4B]/75 to-[#0B1F4B]/30"></div>
-                            <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-24">
-                                <div class="max-w-3xl">
-                                    @if($index === 0)
-                                        <p class="mb-4 text-sm font-bold uppercase tracking-[.22em] text-amber-300">SMK Bina Mandiri Kota Bekasi</p>
-                                        <h1 id="homepage-title" class="text-4xl sm:text-5xl lg:text-7xl font-black leading-[1.05] tracking-tight">Bangun Masa Depanmu dengan Keahlian yang Siap Dipakai</h1>
-                                        <p class="mt-6 max-w-2xl text-lg sm:text-xl text-blue-100 leading-relaxed">Unggul dalam Prestasi, Berkarakter dalam Budi Pekerti. Kenali pembelajaran praktik, program keahlian, dan kemitraan industri kami.</p>
-                                    @else
-                                        <p class="mb-4 text-sm font-bold uppercase tracking-[.22em] text-amber-300">Pembelajaran Vokasi</p>
-                                        <h2 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight">{{ $slider->title ?: 'Belajar dari praktik, tumbuh bersama industri' }}</h2>
-                                        @if($slider->subtitle)<p class="mt-6 max-w-2xl text-lg text-blue-100 leading-relaxed">{{ $slider->subtitle }}</p>@endif
-                                    @endif
-                                    <div class="mt-8 flex flex-col sm:flex-row gap-3">
-                                        <a href="{{ route('ppdb.register') }}" class="inline-flex items-center justify-center rounded-xl bg-[#3B82F6] px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-950/30 transition hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-300">Daftar SPMB 2026 <span class="ml-2" aria-hidden="true">→</span></a>
-                                        <a href="{{ route('public.competencies.index') }}" class="inline-flex items-center justify-center rounded-xl border border-white/70 bg-white/10 px-6 py-3.5 text-base font-bold text-white backdrop-blur-sm transition hover:bg-white/20 focus:outline-none focus:ring-4 focus:ring-white/50">Lihat Program Keahlian</a>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     @endforeach
                 </div>
                 @if($sliders->count() > 1)
-                    <button type="button" class="homepage-hero-prev absolute left-4 top-1/2 z-20 hidden -translate-y-1/2 rounded-full bg-white/15 p-3 text-white backdrop-blur hover:bg-white/25 md:block" aria-label="Slide sebelumnya">←</button>
-                    <button type="button" class="homepage-hero-next absolute right-4 top-1/2 z-20 hidden -translate-y-1/2 rounded-full bg-white/15 p-3 text-white backdrop-blur hover:bg-white/25 md:block" aria-label="Slide berikutnya">→</button>
-                    <div class="homepage-hero-pagination absolute bottom-8 left-1/2 z-20 -translate-x-1/2"></div>
+                    <button type="button" class="homepage-hero-prev absolute left-2 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-slate-950/45 text-white shadow-lg backdrop-blur-sm transition hover:bg-slate-950/65 sm:flex lg:left-5 lg:h-12 lg:w-12" aria-label="Slide sebelumnya">←</button>
+                    <button type="button" class="homepage-hero-next absolute right-2 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-slate-950/45 text-white shadow-lg backdrop-blur-sm transition hover:bg-slate-950/65 sm:flex lg:right-5 lg:h-12 lg:w-12" aria-label="Slide berikutnya">→</button>
+                    <div class="homepage-hero-pagination absolute bottom-3 left-1/2 z-20 -translate-x-1/2 sm:bottom-5"></div>
                 @endif
             </div>
-        @else
-            <div class="relative min-h-[620px] flex items-center">
-                <div class="absolute inset-0 bg-gradient-to-br from-[#0B1F4B] via-blue-800 to-[#3B82F6]"></div>
-                <div class="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-28">
-                    <p class="mb-4 text-sm font-bold uppercase tracking-[.22em] text-amber-300">SMK Bina Mandiri Kota Bekasi</p>
-                    <h1 id="homepage-title" class="max-w-4xl text-4xl sm:text-5xl lg:text-7xl font-black leading-tight">Bangun Masa Depanmu dengan Keahlian yang Siap Dipakai</h1>
-                    <p class="mt-6 max-w-2xl text-lg text-blue-100">Unggul dalam Prestasi, Berkarakter dalam Budi Pekerti.</p>
-                    <div class="mt-8 flex flex-col sm:flex-row gap-3"><a href="{{ route('ppdb.register') }}" class="rounded-xl bg-white px-6 py-3.5 text-center font-bold text-[#1E3A8A]">Daftar SPMB 2026</a><a href="{{ route('public.competencies.index') }}" class="rounded-xl border border-white px-6 py-3.5 text-center font-bold text-white">Lihat Program Keahlian</a></div>
-                </div>
-            </div>
-        @endif
-    </section>
+        </section>
+    @endif
     <!-- 2. Verified school facts -->
     <section class="relative z-20 -mt-10 pb-4" aria-labelledby="facts-title">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -332,71 +313,43 @@
 
 @push('styles')
 <style>
-    .homepage-conversion .swiper-pagination-bullet { background: rgba(255,255,255,.7); opacity: 1; }
-    .homepage-conversion .swiper-pagination-bullet-active { background: #FBBF24; }
+    .homepage-conversion .homepage-hero-swiper,
+    .homepage-conversion .homepage-hero-swiper .swiper-slide {
+        background: #fff;
+    }
 
-    /* Motion ringan untuk hero: tetap mempertahankan warna, ukuran, dan layout asli. */
     .homepage-conversion .homepage-hero-swiper .swiper-slide > img {
-        transform: scale(1.03);
-        transform-origin: center center;
-        transition: transform 700ms ease-out;
-        will-change: transform;
+        display: block;
+        width: 100%;
+        height: auto;
     }
 
-    .homepage-conversion .homepage-hero-swiper .swiper-slide-active > img {
-        animation: homepageHeroImageZoom 12s ease-in-out infinite alternate;
+    .homepage-conversion .homepage-hero-pagination {
+        width: auto;
     }
 
-    .homepage-conversion .homepage-hero-swiper .swiper-slide-active > .relative.z-10 > div {
-        animation: homepageHeroFloat 5s ease-in-out 900ms infinite;
-    }
-
-    .homepage-conversion .homepage-hero-swiper .swiper-slide-active a span[aria-hidden="true"] {
-        display: inline-block;
-        animation: homepageHeroArrow 1.8s ease-in-out infinite;
-    }
-
-    .homepage-conversion .homepage-hero-swiper .swiper-slide:not(.swiper-slide-active) > .relative.z-10 {
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-    }
-
-    .homepage-conversion .homepage-hero-swiper .swiper-slide-active > .relative.z-10 {
+    .homepage-conversion .swiper-pagination-bullet {
+        width: 9px;
+        height: 9px;
+        border: 1px solid rgba(15, 23, 42, .45);
+        background: rgba(255, 255, 255, .9);
+        box-shadow: 0 1px 4px rgba(15, 23, 42, .3);
         opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
     }
 
-    .homepage-conversion .homepage-hero-swiper .swiper-slide-active > .relative.z-10 > div > * {
-        opacity: 0;
-        animation: homepageHeroContentIn 700ms cubic-bezier(.22, 1, .36, 1) forwards;
-        will-change: opacity, transform;
+    .homepage-conversion .swiper-pagination-bullet-active {
+        background: #FBBF24;
     }
 
-    .homepage-conversion .homepage-hero-swiper .swiper-slide-active > .relative.z-10 > div > :nth-child(1) { animation-delay: 80ms; }
-    .homepage-conversion .homepage-hero-swiper .swiper-slide-active > .relative.z-10 > div > :nth-child(2) { animation-delay: 170ms; }
-    .homepage-conversion .homepage-hero-swiper .swiper-slide-active > .relative.z-10 > div > :nth-child(3) { animation-delay: 260ms; }
-    .homepage-conversion .homepage-hero-swiper .swiper-slide-active > .relative.z-10 > div > :nth-child(4) { animation-delay: 350ms; }
+    @media (max-width: 639px) {
+        .homepage-conversion .homepage-hero-pagination {
+            bottom: .5rem !important;
+        }
 
-    @keyframes homepageHeroImageZoom {
-        from { transform: scale(1.03); }
-        to { transform: scale(1.09); }
-    }
-
-    @keyframes homepageHeroFloat {
-        0%, 100% { transform: translate3d(0, 0, 0); }
-        50% { transform: translate3d(0, -5px, 0); }
-    }
-
-    @keyframes homepageHeroArrow {
-        0%, 100% { transform: translateX(0); }
-        50% { transform: translateX(4px); }
-    }
-
-    @keyframes homepageHeroContentIn {
-        from { opacity: 0; transform: translate3d(0, 18px, 0); }
-        to { opacity: 1; transform: translate3d(0, 0, 0); }
+        .homepage-conversion .swiper-pagination-bullet {
+            width: 7px;
+            height: 7px;
+        }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -408,15 +361,6 @@
             animation-duration: .01ms !important;
             animation-delay: 0ms !important;
         }
-
-        .homepage-conversion .homepage-hero-swiper .swiper-slide > img,
-        .homepage-conversion .homepage-hero-swiper .swiper-slide-active > img,
-        .homepage-conversion .homepage-hero-swiper .swiper-slide-active > .relative.z-10 > div > * {
-            opacity: 1 !important;
-            transform: none !important;
-            animation: none !important;
-            transition: none !important;
-        }
     }
 </style>
 @endpush
@@ -426,8 +370,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     var hero = document.querySelector('.homepage-hero-swiper');
     if (!hero || typeof Swiper === 'undefined') return;
-    new Swiper(hero, {
+    var slider = new Swiper(hero, {
         loop: true,
+        autoHeight: true,
         effect: 'fade',
         fadeEffect: { crossFade: true },
         speed: 700,
@@ -435,7 +380,17 @@ document.addEventListener('DOMContentLoaded', function () {
         pagination: { el: '.homepage-hero-pagination', clickable: true },
         navigation: { nextEl: '.homepage-hero-next', prevEl: '.homepage-hero-prev' },
         keyboard: { enabled: true },
-        a11y: { enabled: true }
+        a11y: { enabled: true },
+        observer: true,
+        observeParents: true
+    });
+
+    hero.querySelectorAll('img').forEach(function (image) {
+        if (!image.complete) {
+            image.addEventListener('load', function () {
+                slider.updateAutoHeight(0);
+            }, { once: true });
+        }
     });
 });
 </script>
