@@ -65,8 +65,24 @@
 
 @section('content')
 <div class="bg-slate-50 text-slate-900 homepage-conversion">
-    <!-- 1. Responsive image-only home slider -->
-    @if($sliders->count() > 0)
+    <!-- 1. YouTube video hero; image slider remains as a fallback -->
+    @if($youtubeVideoId)
+        <section class="relative overflow-hidden bg-slate-950" aria-labelledby="homepage-title">
+            <h1 id="homepage-title" class="sr-only">SMK Bina Mandiri Kota Bekasi</h1>
+            <div class="relative mx-auto aspect-video w-full max-w-[1920px] overflow-hidden bg-slate-950">
+                <iframe
+                    class="pointer-events-none absolute inset-0 block h-full w-full border-0"
+                    src="https://www.youtube-nocookie.com/embed/{{ $youtubeVideoId }}?autoplay=1&mute=1&loop=1&playlist={{ $youtubeVideoId }}&controls=0&rel=0&modestbranding=1&playsinline=1&disablekb=1"
+                    title="Video Profil SMK Bina Mandiri Kota Bekasi"
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    loading="eager"
+                    tabindex="-1"
+                ></iframe>
+                <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-slate-950/10" aria-hidden="true"></div>
+            </div>
+        </section>
+    @elseif($sliders->count() > 0)
         <section class="relative overflow-hidden bg-white" aria-labelledby="homepage-title">
             <h1 id="homepage-title" class="sr-only">SMK Bina Mandiri Kota Bekasi</h1>
             <div class="swiper homepage-hero-swiper w-full">
@@ -96,7 +112,7 @@
         </section>
     @endif
     <!-- 2. Verified school facts -->
-    <section class="relative z-20 -mt-10 pb-4" aria-labelledby="facts-title">
+    <section class="relative z-20 mt-4 pb-4 sm:-mt-10" aria-labelledby="facts-title">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 id="facts-title" class="sr-only">Fakta SMK Bina Mandiri Kota Bekasi</h2>
             <div class="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 shadow-xl md:grid-cols-4">
@@ -245,31 +261,7 @@
             </div></div>
         </section>
     @endif
-    <!-- 7a. YouTube video: school profile, managed via admin Contact & Social settings -->
-    @if($youtubeVideoId)
-        <section id="video-profil" class="bg-white py-16 sm:py-20" aria-labelledby="video-title">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <p class="text-sm font-bold uppercase tracking-[.2em] text-[#3B82F6]">Video Profil</p>
-                    <h2 id="video-title" class="mt-3 text-3xl font-black text-[#0B1F4B] sm:text-4xl">Kenali SMK Bina Mandiri Kota Bekasi</h2>
-                    <p class="mt-3 text-slate-600">Saksikan kegiatan pembelajaran, fasilitas, dan prestasi siswa-siswi kami.</p>
-                </div>
-                <div class="mt-10 overflow-hidden rounded-2xl border border-slate-200 shadow-xl">
-                    <div class="relative aspect-video">
-                        <iframe
-                            class="absolute inset-0 h-full w-full"
-                            src="https://www.youtube.com/embed/{{ $youtubeVideoId }}"
-                            title="Video Profil SMK Bina Mandiri Kota Bekasi"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                            loading="lazy"
-                        ></iframe>
-                    </div>
-                </div>
-            </div>
-        </section>
-    @endif
+    <!-- YouTube profile video is displayed as the homepage hero above. -->
 
     <!-- 7b. Instagram: official channel promo, links out to the live profile -->
     @if($instagramUrl)
