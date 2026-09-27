@@ -61,8 +61,21 @@
                     </svg>
                 </div>
                 <div class="bg-white rounded-2xl rounded-tl-none p-2.5 md:p-3 shadow-sm max-w-[75%] md:max-w-[80%]">
-                    <p class="text-xs md:text-sm text-gray-800">Halo! 😊 Selamat datang di SMK Bina Mandiri Bekasi. Ada yang bisa saya bantu?</p>
+                    <p class="text-xs md:text-sm text-gray-800">Halo! 😊 Saya asisten AI SMK Bina Mandiri Bekasi. Tanyakan apa saja seputar sekolah &mdash; jurusan, SPMB, guru, berita, galeri, atau kontak &mdash; saya jawab langsung dari isi website.</p>
                 </div>
+            </div>
+
+            <!-- Saran Pertanyaan (hanya tampil sebelum ada percakapan) -->
+            <div x-show="messages.length === 0" class="flex flex-wrap gap-2 pl-9 md:pl-10">
+                <template x-for="suggestion in suggestions" :key="suggestion">
+                    <button
+                        type="button"
+                        @click="askSuggestion(suggestion)"
+                        :disabled="isTyping"
+                        class="text-[11px] md:text-xs bg-white border border-blue-200 text-blue-700 rounded-full px-3 py-1.5 hover:bg-blue-50 transition-colors disabled:opacity-50"
+                        x-text="suggestion"
+                    ></button>
+                </template>
             </div>
 
             <!-- Messages Loop -->
@@ -147,6 +160,12 @@ function chatbot() {
         userInput: '',
         messages: [],
         sessionId: null,
+        suggestions: [
+            'Apa saja jurusan di sekolah ini?',
+            'Bagaimana cara daftar SPMB?',
+            'Berita terbaru sekolah apa?',
+            'Alamat dan kontak sekolah',
+        ],
 
         init() {
             // Generate session ID baru setiap kali (tidak disimpan)
@@ -268,15 +287,51 @@ function chatbot() {
             });
         },
 
+        escapeHtml(text) {
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        },
+
         formatMessage(text) {
-            // Format text dengan bold untuk **text**
-            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            
-            // Format emoji
-            text = text.replace(/:\)/g, '😊');
-            text = text.replace(/:\(/g, '😢');
-            
-            return text;
+            // Escape dulu: balasan AI tidak boleh dirender sebagai HTML mentah.
+            let safe = this.escapeHtml(text);
+
+            const linkClass = 'text-blue-600 underline break-all';
+            const anchor = (url, label) => '<a href="' + url + '" target="_blank" rel="noopener noreferrer" class="' + linkClass + '">' + label + '</a>';
+
+            // Link markdown [teks](url) disimpan sementara agar tidak diproses dua kali.
+            const stored = [];
+            safe = safe.replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g, function (match, label, url) {
+                stored.push(anchor(url, label));
+                return '%%LINK' + (stored.length - 1) + '%%';
+            });
+
+            // Jadikan URL polos bisa diklik (tanda baca penutup tidak ikut ke dalam link).
+            safe = safe.replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)\]])/g, (url) => anchor(url, url));
+
+            safe = safe.replace(/%%LINK(\d+)%%/g, (match, index) => stored[index]);
+
+            // Markdown sederhana: **tebal** dan *miring*
+            safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            safe = safe.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+
+            // Bullet list markdown agar lebih rapi dibaca
+            safe = safe.replace(/^[-*]\s+/gm, '• ');
+
+            // Emoticon
+            safe = safe.replace(/:\)/g, '😊');
+            safe = safe.replace(/:\(/g, '😢');
+
+            return safe;
+        },
+
+        askSuggestion(question) {
+            this.userInput = question;
+            this.sendMessage();
         }
     }
 }

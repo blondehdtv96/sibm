@@ -16,6 +16,9 @@ class Kernel extends ConsoleKernel
         
         // Clean old audit logs daily
         $schedule->command('audit:clean')->daily();
+
+        // Hapus riwayat chatbot yang sudah lewat masa simpan (default 7 hari)
+        $schedule->command('chat:prune')->dailyAt('01:00');
     }
 
     /**

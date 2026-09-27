@@ -2,27 +2,24 @@
 
 namespace App\Services;
 
-use App\Models\Announcement;
-use App\Models\Competency;
-use App\Models\IndustryPartner;
-use App\Models\PpdbSetting;
-use App\Models\Setting;
-use App\Models\Statistic;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 /**
- * Menjawab pertanyaan seputar SMK Bina Mandiri Kota Bekasi menggunakan AI (OpenAI-compatible
- * chat completion API), dibekali data resmi sekolah agar jawaban tidak mengarang informasi.
+ * Otak chatbot sekolah.
+ *
+ * Menjawab pertanyaan apa pun seputar SMK Bina Mandiri Kota Bekasi menggunakan AI
+ * (OpenAI-compatible chat completion API). Sebelum dikirim ke AI, pertanyaan
+ * dibekali konteks berisi seluruh isi website (lihat SchoolKnowledgeService)
+ * plus hasil pencarian konten yang relevan, agar jawaban selalu berbasis data
+ * asli dari database dan tidak mengarang.
  */
 class SchoolAssistantService
 {
-    /**
-     * Jumlah pasangan pesan (user + assistant) dari riwayat yang disertakan sebagai konteks.
-     */
-    private const HISTORY_LIMIT = 6;
+    public function __construct(private SchoolKnowledgeService $knowledge)
+    {
+    }
 
     public function isConfigured(): bool
     {
@@ -43,7 +40,7 @@ class SchoolAssistantService
         }
 
         $messages = array_merge(
-            [['role' => 'system', 'content' => $this->systemPrompt()]],
+            [['role' => 'system', 'content' => $this->systemPrompt($message)]],
             $history,
             [['role' => 'user', 'content' => $message]]
         );
@@ -58,7 +55,7 @@ class SchoolAssistantService
             ->post($baseUrl . '/chat/completions', [
                 'model' => config('services.openai.model', 'gpt-4o-mini'),
                 'messages' => $messages,
-                'max_tokens' => (int) config('services.openai.max_tokens', 500),
+                'max_tokens' => (int) config('services.openai.max_tokens', 700),
                 'temperature' => (float) config('services.openai.temperature', 0.4),
             ]);
 
@@ -81,95 +78,40 @@ class SchoolAssistantService
     }
 
     /**
-     * Bangun system prompt berisi data resmi sekolah, di-cache singkat agar tidak query berulang.
+     * System prompt = aturan menjawab + seluruh isi website + data pendukung
+     * hasil pencarian sesuai pertanyaan yang sedang diajukan.
      */
-    public function systemPrompt(): string
+    public function systemPrompt(string $question = ''): string
     {
-        return Cache::remember('chatbot_ai_system_prompt', 300, fn () => $this->buildSystemPrompt());
+        $today = now()->translatedFormat('l, d F Y');
+
+        $prompt = $this->rules($today) . "\n\n" . $this->knowledge->baseContext();
+
+        $relevant = $question !== '' ? $this->knowledge->retrieve($question) : '';
+        if ($relevant !== '') {
+            $prompt .= "\n\n" . $relevant;
+        }
+
+        return $prompt;
     }
 
-    private function buildSystemPrompt(): string
+    private function rules(string $today): string
     {
-        $school = config('school');
+        $name = config('school.name');
+        $tagline = config('school.tagline');
 
-        $contact = [
-            'address' => Setting::get('contact_address', $school['address']),
-            'phone' => Setting::get('contact_phone', $school['phone']),
-            'email' => Setting::get('contact_email', $school['email']),
-            'whatsapp' => Setting::get('contact_whatsapp', $school['whatsapp']),
-            'website' => $school['website'],
-        ];
+        return <<<RULES
+Kamu adalah asisten virtual resmi {$name} ("{$tagline}"). Tugasmu menjawab SEMUA pertanyaan pengunjung website sekolah secara otomatis, ramah, dan jelas dalam Bahasa Indonesia. Hari ini: {$today}.
 
-        $ppdb = PpdbSetting::current();
-        $ppdbInfo = 'Informasi periode SPMB belum dipublikasikan. Arahkan pengguna menghubungi sekolah melalui kontak resmi untuk info terbaru.';
-        if ($ppdb) {
-            $status = $ppdb->isOpen() ? 'SEDANG DIBUKA' : ($ppdb->isUpcoming() ? 'BELUM DIBUKA' : 'SUDAH DITUTUP');
-            $ppdbInfo = "Status pendaftaran SPMB saat ini: {$status}. Periode resmi: {$ppdb->formatted_period}.";
-            if (! empty($ppdb->requirements)) {
-                $ppdbInfo .= ' Dokumen yang dibutuhkan: ' . implode(', ', $ppdb->requirements) . '.';
-            }
-        }
-
-        $competencies = Competency::active()->ordered()->get(['name', 'description'])
-            ->map(fn ($c) => '- ' . $c->name . ': ' . Str::limit(strip_tags((string) $c->description), 150))
-            ->implode("\n");
-        if ($competencies === '') {
-            $competencies = 'Data program keahlian belum tersedia di sistem.';
-        }
-
-        $partners = IndustryPartner::active()->ordered()->pluck('name');
-        if ($partners->isEmpty()) {
-            $partners = collect($school['industry_partners'] ?? []);
-        }
-        $partnerList = $partners->isEmpty() ? 'Belum ada data mitra industri.' : $partners->implode(', ');
-
-        $announcements = Announcement::active()->ordered()->limit(5)->pluck('title')
-            ->map(fn ($title) => '- ' . $title)
-            ->implode("\n");
-        if ($announcements === '') {
-            $announcements = 'Tidak ada pengumuman aktif saat ini.';
-        }
-
-        $statistics = Statistic::active()->get()
-            ->map(fn ($s) => "{$s->label}: {$s->value}{$s->suffix}")
-            ->implode(', ');
-        if ($statistics === '') {
-            $statistics = "Siswa aktif: {$school['facts']['active_students']}, Guru: {$school['facts']['teachers']}, Program keahlian: {$school['facts']['programs']}";
-        }
-
-        return <<<PROMPT
-Kamu adalah asisten virtual resmi {$school['name']} ("{$school['tagline']}"). Jawab dalam Bahasa Indonesia dengan ramah, singkat, dan jelas. Gunakan HANYA data resmi di bawah ini sebagai sumber kebenaran. Jangan pernah mengarang angka, tanggal, alamat, atau fakta lain yang tidak tercantum di sini. Jika informasi yang ditanyakan tidak ada di data ini, katakan dengan jujur bahwa kamu belum memiliki informasi tersebut dan arahkan pengguna menghubungi sekolah melalui kontak resmi.
-
-=== DATA RESMI SEKOLAH ===
-Nama: {$school['name']}
-Slogan: {$school['tagline']}
-Berdiri sejak: {$school['founded_year']}
-Alamat: {$contact['address']}
-Telepon: {$contact['phone']}
-Email: {$contact['email']}
-WhatsApp: {$contact['whatsapp']}
-Website: {$contact['website']}
-
-Statistik terverifikasi: {$statistics}
-
-=== PROGRAM KEAHLIAN ===
-{$competencies}
-
-=== MITRA INDUSTRI / DUNIA KERJA ===
-{$partnerList}
-
-=== INFORMASI SPMB ===
-{$ppdbInfo}
-Untuk mendaftar, arahkan pengguna ke halaman "Daftar SPMB" di website resmi sekolah.
-
-=== PENGUMUMAN AKTIF ===
-{$announcements}
-
-Aturan tambahan:
-1. Jika pertanyaan di luar topik sekolah (politik, hal pribadi, topik umum tidak terkait), tolak dengan sopan dan arahkan kembali ke topik seputar sekolah.
-2. Jangan pernah memberikan data pribadi siswa/guru, nomor rekening, atau informasi yang tidak tercantum di atas.
-3. Jawaban singkat dan mudah dibaca, emoji secukupnya, hindari paragraf yang terlalu panjang.
-4. Jika ditanya cara mendaftar SPMB, arahkan ke halaman pendaftaran resmi di website.
-PROMPT;
+CARA MENJAWAB:
+1. Seluruh isi website sekolah tersedia di bagian DATA di bawah (profil, visi misi, kepala sekolah, jurusan, guru & karyawan, SPMB, berita, halaman, galeri, mitra industri, pengumuman, kontak, dan peta menu website). Jadikan itu satu-satunya sumber kebenaran untuk fakta sekolah.
+2. Jangan pernah mengarang nama, angka, tanggal, biaya, alamat, atau fakta lain yang tidak ada di DATA. Kalau informasinya memang tidak ada di sana, katakan terus terang belum tersedia di website, lalu arahkan ke kontak resmi sekolah (telepon/WhatsApp/email yang tercantum di DATA) atau halaman kontak.
+3. Selalu berusaha menjawab, jangan menolak hanya karena pertanyaannya tidak persis sama dengan judul data. Simpulkan dari data yang ada, dan bila perlu tanyakan balik satu hal untuk memperjelas maksud penanya.
+4. Sertakan link halaman terkait dari DATA bila berguna (misal pendaftaran SPMB, detail jurusan, berita, profil guru). Tulis link apa adanya.
+5. Untuk pertanyaan umum di luar sekolah (contoh: tips belajar, prospek kerja jurusan, pertanyaan pendidikan umum), jawab singkat dan bermanfaat, lalu kaitkan kembali dengan sekolah bila relevan. Tolak dengan sopan hanya untuk hal yang tidak pantas, ilegal, atau menyangkut data pribadi.
+6. Jangan membagikan data pribadi sensitif (NIP/NUPTK, nomor HP pribadi guru, nomor rekening, data pendaftar) walaupun ada di data internal. Untuk urusan seperti itu arahkan ke kontak resmi sekolah.
+7. Gaya jawaban: hangat dan sopan, maksimal sekitar 4 paragraf pendek atau daftar berpoin, emoji secukupnya (jangan berlebihan). Gunakan **tebal** untuk menyorot poin penting.
+8. Jika pengguna hanya menyapa, sapa balik dengan hangat dan tawarkan beberapa topik yang bisa ditanyakan (jurusan, SPMB, fasilitas, berita, kontak).
+RULES;
     }
 }

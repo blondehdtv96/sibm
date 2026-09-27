@@ -9,6 +9,14 @@
         <div>
             <h2 class="text-2xl font-bold text-gray-900">Riwayat Chat Chatbot</h2>
             <p class="text-sm text-gray-500 mt-1">Pantau percakapan chatbot dengan pengunjung</p>
+            @if($retentionDays > 0)
+                <p class="text-sm text-amber-700 mt-1 flex items-center gap-1">
+                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Riwayat disimpan {{ $retentionDays }} hari, setelah itu terhapus otomatis. Export CSV dulu bila perlu diarsipkan.
+                </p>
+            @endif
         </div>
         
         <div class="flex items-center gap-3">

@@ -4,18 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Chat;
 use App\Models\ChatbotResponse;
+use App\Models\Competency;
+use App\Models\PpdbSetting;
+use App\Models\Setting;
 use App\Services\SchoolAssistantService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 /**
- * Controller untuk menangani chatbot.
+ * Controller chatbot publik.
  *
- * AI (via SchoolAssistantService) adalah otak utama chatbot dan menjawab
- * setiap pertanyaan seputar sekolah menggunakan data resmi sebagai konteks.
- * Balasan admin di database (ChatbotResponse) dan rule-based keyword tetap
- * dipakai sebagai jaring pengaman ketika AI belum dikonfigurasi atau gagal.
+ * AI (SchoolAssistantService) adalah otak utama: setiap pertanyaan dijawab
+ * otomatis oleh AI yang sudah dibekali seluruh isi website sebagai konteks.
+ * Jika AI belum dikonfigurasi atau gagal dihubungi, controller jatuh ke
+ * balasan cadangan yang tetap memakai data asli dari database/pengaturan
+ * sekolah (bukan data karangan).
  */
 class ChatbotController extends Controller
 {
@@ -24,11 +29,10 @@ class ChatbotController extends Controller
     }
 
     /**
-     * Proses pesan dari user dan kirim balasan
+     * Proses pesan dari user dan kirim balasan.
      */
     public function sendMessage(Request $request)
     {
-        // Validasi input
         $request->validate([
             'message' => 'required|string|max:1000',
             'session_id' => 'nullable|string|max:64',
@@ -37,9 +41,8 @@ class ChatbotController extends Controller
         $userMessage = trim($request->input('message'));
         $sessionId = (string) ($request->input('session_id') ?? Str::uuid());
 
-        $botReply = $this->processMessage($userMessage, $sessionId);
+        [$botReply, $source] = $this->processMessage($userMessage, $sessionId);
 
-        // Simpan ke database
         Chat::create([
             'session_id' => $sessionId,
             'user_message' => $userMessage,
@@ -48,29 +51,62 @@ class ChatbotController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
 
-        // Return response JSON
+        $this->purgeExpiredChats();
+
         return response()->json([
             'success' => true,
             'message' => $botReply,
             'session_id' => $sessionId,
+            'source' => $source,
         ]);
     }
 
     /**
-     * Proses pesan: AI (dibekali data resmi sekolah) sebagai otak utama,
-     * dengan fallback ke balasan admin/rule-based jika AI tidak tersedia.
+     * Bersihkan riwayat chat yang sudah lewat masa simpan (default 7 hari).
+     *
+     * Dijalankan paling banyak sekali sehari dari sisi web sebagai cadangan,
+     * supaya riwayat tetap terhapus walau scheduler (cron) belum diaktifkan.
+     * Penjadwalan utamanya tetap lewat command `chat:prune`.
      */
-    private function processMessage(string $message, string $sessionId): string
+    private function purgeExpiredChats(): void
+    {
+        if (Chat::retentionDays() <= 0) {
+            return;
+        }
+
+        try {
+            // Cache::add hanya berhasil bila kunci belum ada, jadi pembersihan
+            // tidak berjalan berulang-ulang pada setiap pesan masuk.
+            if (! Cache::add('chatbot_last_purge_at', now()->toDateTimeString(), now()->addDay())) {
+                return;
+            }
+
+            $deleted = Chat::purgeExpired();
+
+            if ($deleted > 0) {
+                Log::info("Riwayat chatbot kedaluwarsa dihapus otomatis: {$deleted} baris.");
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Gagal menghapus riwayat chat kedaluwarsa: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * AI menjawab lebih dulu; fallback dipakai hanya bila AI tidak tersedia.
+     *
+     * @return array{0: string, 1: string} Balasan dan asal balasan (ai|fallback).
+     */
+    private function processMessage(string $message, string $sessionId): array
     {
         if ($this->assistant->isConfigured()) {
             try {
-                return $this->assistant->reply($message, $this->buildHistory($sessionId));
+                return [$this->assistant->reply($message, $this->buildHistory($sessionId)), 'ai'];
             } catch (\Throwable $e) {
-                Log::warning('Chatbot AI gagal, fallback ke rule-based: ' . $e->getMessage());
+                Log::warning('Chatbot AI gagal, fallback ke balasan cadangan: ' . $e->getMessage());
             }
         }
 
-        return $this->fallbackReply(strtolower($message));
+        return [$this->fallbackReply($message), 'fallback'];
     }
 
     /**
@@ -80,11 +116,15 @@ class ChatbotController extends Controller
      */
     private function buildHistory(string $sessionId): array
     {
-        $recentChats = Chat::bySession($sessionId)
-            ->latest('id')
-            ->limit(4)
-            ->get()
-            ->reverse();
+        try {
+            $recentChats = Chat::bySession($sessionId)
+                ->latest('id')
+                ->limit(5)
+                ->get()
+                ->reverse();
+        } catch (\Throwable $e) {
+            return [];
+        }
 
         $history = [];
         foreach ($recentChats as $chat) {
@@ -96,212 +136,126 @@ class ChatbotController extends Controller
     }
 
     /**
-     * Balasan cadangan berbasis rule/database ketika AI tidak dikonfigurasi atau gagal.
+     * Balasan cadangan saat AI tidak dapat dipakai.
+     * Seluruh isinya diambil dari database/pengaturan agar tetap akurat.
      */
     private function fallbackReply(string $message): string
     {
-        // Cek database responses terlebih dahulu
-        $dbResponse = $this->checkDatabaseResponses($message);
-        if ($dbResponse) {
+        $message = Str::lower($message);
+
+        if ($dbResponse = $this->checkDatabaseResponses($message)) {
             return $dbResponse;
         }
 
-        // Rule 1: Salam dan perkenalan
-        if ($this->containsKeywords($message, ['halo', 'hai', 'hello', 'hi', 'assalamualaikum'])) {
-            return "Halo! 😊 Selamat datang di SMK Bina Mandiri Bekasi. Saya asisten virtual yang siap membantu Anda. Ada yang bisa saya bantu?";
+        if ($this->containsKeywords($message, ['halo', 'hai', 'hello', 'hi ', 'assalamualaikum', 'pagi', 'siang', 'sore', 'malam'])) {
+            return 'Halo! 😊 Selamat datang di ' . $this->schoolName() . ". Ada yang bisa saya bantu? Anda bisa bertanya soal program keahlian, pendaftaran SPMB, berita sekolah, atau kontak sekolah.";
         }
 
-        // Rule 2: Profil sekolah
-        if ($this->containsKeywords($message, ['profil', 'tentang sekolah', 'tentang smk', 'sekolah'])) {
-            return "🏫 **SMK Bina Mandiri Bekasi** adalah sekolah menengah kejuruan yang berfokus pada pengembangan keterampilan praktis dan profesional.\n\n" .
-                   "📍 **Alamat:** Jl. Bintara IX No.7 4, RT.001/RW.005, Bintara, Kec. Bekasi Bar., Kota Bks, Jawa Barat 17134\n" .
-                   "📞 **Telepon:** (021) 1234-5678\n" .
-                   "📧 **Email:** info@smkbinamandiri.sch.id\n\n" .
-                   "Kami berkomitmen mencetak lulusan yang siap kerja dan berdaya saing tinggi! 💪";
+        if ($this->containsKeywords($message, ['terima kasih', 'makasih', 'thanks', 'thank you'])) {
+            return 'Sama-sama! 😊 Kalau ada pertanyaan lain seputar ' . $this->schoolName() . ', silakan tanya lagi ya.';
         }
 
-        // Rule 3: Visi Misi
-        if ($this->containsKeywords($message, ['visi', 'misi', 'visi misi'])) {
-            return "🎯 **Visi:**\n" .
-                   "Mewujudkan kemampuan literasi dan numerasi peserta didik melalui peningkatan kualitas pembelajaran, kompetensi GTK dan praktik pembelajaran interaktif sehingga mampu menghasilkan lulusan yang berkarakter, terserap di dunia kerja, berwirausaha dan melanjutkan pendidikan ke jenjang selanjutnya.\n\n" .
-                   "📋 **Misi:**\n" .
-                   "1. Meningkatkan kompetensi literasi dan numerasi peserta didik\n" .
-                   "2. Meningkatkan kesadaran GTK dalam menjalankan tugas pokok dan fungsinya\n" .
-                   "3. Meningkatkan pengelolaan kurikulum sekolah\n" .
-                   "4. Membentuk karakter siswa yang berakhlak mulia";
+        if ($this->containsKeywords($message, ['jurusan', 'program keahlian', 'kompetensi keahlian'])) {
+            return $this->competencyInfo();
         }
 
-        // Rule 4: Jurusan/Program Keahlian
-        if ($this->containsKeywords($message, ['jurusan', 'program keahlian', 'kompetensi', 'tkj', 'tsm', 'tkr'])) {
-            return "📚 **Program Keahlian di SMK Bina Mandiri Bekasi:**\n\n" .
-                   "1. **Teknik Komputer & Jaringan (TKJ)** 💻\n" .
-                   "   - Belajar networking, programming, dan sistem komputer\n" .
-                   "   - Prospek: Network Administrator, IT Support, Web Developer\n\n" .
-                   "2. **Teknik Sepeda Motor (TSM)** 🏍️\n" .
-                   "   - Belajar perawatan, perbaikan, dan modifikasi sepeda motor\n" .
-                   "   - Prospek: Mekanik Motor, Teknisi Bengkel, Wirausaha Otomotif\n\n" .
-                   "3. **Teknik Kendaraan Ringan (TKR)** 🚗\n" .
-                   "   - Belajar perawatan, perbaikan, dan teknologi kendaraan ringan\n" .
-                   "   - Prospek: Mekanik Mobil, Teknisi Otomotif, Service Advisor\n\n" .
-                   "Mau tahu lebih detail tentang jurusan tertentu? Tanya saja! 😊";
+        if ($this->containsKeywords($message, ['ppdb', 'spmb', 'pendaftaran', 'daftar', 'syarat'])) {
+            return $this->ppdbInfo();
         }
 
-        // Rule 5: PPDB (Pendaftaran Peserta Didik Baru)
-        if ($this->containsKeywords($message, ['ppdb', 'pendaftaran', 'daftar', 'cara daftar', 'syarat'])) {
-            return "📝 **Informasi PPDB SMK Bina Mandiri Bekasi:**\n\n" .
-                   "📅 **Jadwal Pendaftaran:**\n" .
-                   "Gelombang 1: Januari - Maret 2026\n" .
-                   "Gelombang 2: April - Juni 2026\n\n" .
-                   "📋 **Syarat Pendaftaran:**\n" .
-                   "✅ Ijazah/SKHUN SMP/MTs\n" .
-                   "✅ Kartu Keluarga\n" .
-                   "✅ Akta Kelahiran\n" .
-                   "✅ Pas Foto 3x4 (3 lembar)\n" .
-                   "✅ Fotocopy Rapor Semester 1-5\n\n" .
-                   "💻 **Cara Daftar:**\n" .
-                   "Kunjungi website kami dan klik menu 'PPDB' atau datang langsung ke sekolah!\n\n" .
-                   "💰 **Biaya:** Gratis biaya pendaftaran! 🎉";
+        if ($this->containsKeywords($message, ['alamat', 'lokasi', 'kontak', 'telepon', 'email', 'whatsapp', 'dimana'])) {
+            return $this->contactInfo();
         }
 
-        // Rule 6: Fasilitas
-        if ($this->containsKeywords($message, ['fasilitas', 'sarana', 'prasarana', 'lab', 'perpustakaan'])) {
-            return "🏢 **Fasilitas SMK Bina Mandiri Bekasi:**\n\n" .
-                   "✅ Ruang kelas ber-AC\n" .
-                   "✅ Laboratorium Komputer\n" .
-                   "✅ Bengkel Sepeda Motor (TSM)\n" .
-                   "✅ Bengkel Kendaraan Ringan (TKR)\n" .
-                   "✅ Perpustakaan Digital\n" .
-                   "✅ Masjid\n" .
-                   "✅ Kantin\n" .
-                   "✅ Lapangan Olahraga\n" .
-                   "✅ Free WiFi\n" .
-                   "✅ Parkir Luas\n\n" .
-                   "Semua fasilitas dirancang untuk mendukung pembelajaran optimal! 🎓";
+        return "Maaf, asisten AI sedang tidak dapat dihubungi sehingga saya belum bisa menjawab pertanyaan itu. 🙏\n\n"
+            . "Sementara ini Anda bisa bertanya soal **program keahlian**, **pendaftaran SPMB**, atau **kontak sekolah**.\n\n"
+            . $this->contactInfo();
+    }
+
+    private function schoolName(): string
+    {
+        return (string) $this->setting('site_name', config('school.name'));
+    }
+
+    private function competencyInfo(): string
+    {
+        try {
+            $competencies = Competency::active()->ordered()->get(['name', 'slug']);
+        } catch (\Throwable $e) {
+            $competencies = collect();
         }
 
-        // Rule 7: Alamat & Kontak
-        if ($this->containsKeywords($message, ['alamat', 'lokasi', 'dimana', 'kontak', 'telepon', 'email'])) {
-            return "📍 **Alamat & Kontak SMK Bina Mandiri Bekasi:**\n\n" .
-                   "🏫 Jl. Pendidikan No. 123, Bekasi Timur\n" .
-                   "   Kota Bekasi, Jawa Barat 17113\n\n" .
-                   "📞 Telepon: (021) 1234-5678\n" .
-                   "📱 WhatsApp: 0812-3456-7890\n" .
-                   "📧 Email: info@smkbinamandiri.sch.id\n" .
-                   "🌐 Website: www.smkbinamandiri.sch.id\n\n" .
-                   "📍 Google Maps: [Klik di sini untuk petunjuk arah]\n\n" .
-                   "Kami buka Senin-Jumat: 07.00-16.00 WIB 🕐";
+        if ($competencies->isEmpty()) {
+            return 'Data program keahlian sedang tidak dapat dimuat. Silakan lihat langsung di ' . route('public.competencies.index') . ' 🙏';
         }
 
-        // Rule 8: Jadwal Pelajaran
-        if ($this->containsKeywords($message, ['jadwal', 'jam pelajaran', 'jam sekolah', 'masuk'])) {
-            return "⏰ **Jadwal Kegiatan Belajar:**\n\n" .
-                   "📅 Senin - Jumat:\n" .
-                   "   07.00 - 07.15: Upacara/Apel\n" .
-                   "   07.15 - 15.30: Kegiatan Belajar Mengajar\n\n" .
-                   "📅 Sabtu:\n" .
-                   "   07.00 - 12.00: Kegiatan Ekstrakurikuler\n\n" .
-                   "🕌 Istirahat:\n" .
-                   "   10.00 - 10.15 (Istirahat 1)\n" .
-                   "   12.00 - 12.30 (Istirahat 2 & Sholat Dzuhur)\n\n" .
-                   "Setiap jam pelajaran berdurasi 45 menit 📚";
+        return "📚 **Program Keahlian di " . $this->schoolName() . ":**\n\n"
+            . $competencies->map(fn ($item) => '• ' . $item->name)->implode("\n")
+            . "\n\nDetail tiap jurusan: " . route('public.competencies.index');
+    }
+
+    private function ppdbInfo(): string
+    {
+        try {
+            $ppdb = PpdbSetting::current();
+        } catch (\Throwable $e) {
+            $ppdb = null;
         }
 
-        // Rule 9: Guru & Staff
-        if ($this->containsKeywords($message, ['guru', 'pengajar', 'staff', 'tenaga pendidik'])) {
-            return "👨‍🏫 **Tenaga Pendidik & Kependidikan:**\n\n" .
-                   "SMK Bina Mandiri Bekasi memiliki:\n" .
-                   "✅ 45 Guru Profesional\n" .
-                   "✅ 15 Staff Administrasi\n" .
-                   "✅ Guru bersertifikat dan berpengalaman\n" .
-                   "✅ Instruktur dari industri\n\n" .
-                   "Semua guru kami berkomitmen memberikan pendidikan terbaik untuk siswa! 🎓\n\n" .
-                   "Ingin tahu lebih detail? Kunjungi halaman 'Tentang Kami' di website kami!";
+        $text = "📝 **Pendaftaran Peserta Didik Baru (SPMB)**\n\n";
+
+        if ($ppdb) {
+            $status = $ppdb->isOpen() ? 'sedang dibuka ✅' : ($ppdb->isUpcoming() ? 'belum dibuka ⏳' : 'sudah ditutup ❌');
+            $text .= "Status saat ini: **{$status}**\nPeriode: {$ppdb->formatted_period}\n";
+
+            if (! empty($ppdb->requirements)) {
+                $text .= "\nPersyaratan:\n" . collect($ppdb->requirements)->map(fn ($item) => '✅ ' . $item)->implode("\n") . "\n";
+            }
+        } else {
+            $text .= "Jadwal pendaftaran terbaru belum dipublikasikan di website.\n";
         }
 
-        // Rule 10: Ekstrakurikuler & OSIS
-        if ($this->containsKeywords($message, ['ekskul', 'ekstrakurikuler', 'osis', 'kegiatan', 'organisasi'])) {
-            return "🎯 **Ekstrakurikuler & Organisasi:**\n\n" .
-                   "**Ekstrakurikuler:**\n" .
-                   "⚽ Futsal\n" .
-                   "🏀 Basket\n" .
-                   "🎭 Teater\n" .
-                   "🎵 Musik/Band\n" .
-                   "📸 Fotografi\n" .
-                   "💻 Coding Club\n" .
-                   "🎨 Seni Rupa\n" .
-                   "📰 Jurnalistik\n\n" .
-                   "**Organisasi:**\n" .
-                   "🏛️ OSIS (Organisasi Siswa Intra Sekolah)\n" .
-                   "🕌 Rohis (Rohani Islam)\n" .
-                   "🏕️ Pramuka\n" .
-                   "❤️ PMR (Palang Merah Remaja)\n\n" .
-                   "Semua kegiatan dilaksanakan setiap Sabtu! 🎉";
+        return $text . "\nDaftar online: " . route('ppdb.register')
+            . "\nCek status pendaftaran: " . route('ppdb.check-status');
+    }
+
+    private function contactInfo(): string
+    {
+        $school = config('school');
+
+        return "📍 **Kontak " . $this->schoolName() . "**\n\n"
+            . '🏫 ' . $this->setting('contact_address', $school['address']) . "\n"
+            . '📞 ' . $this->setting('contact_phone', $school['phone']) . "\n"
+            . '📱 WhatsApp: ' . $this->setting('contact_whatsapp', $school['whatsapp']) . "\n"
+            . '📧 ' . $this->setting('contact_email', $school['email']) . "\n"
+            . '🌐 ' . route('info.contact');
+    }
+
+    private function setting(string $key, $default = '')
+    {
+        try {
+            $value = Setting::get($key, $default);
+        } catch (\Throwable $e) {
+            return $default;
         }
 
-        // Rule 11: Biaya Sekolah
-        if ($this->containsKeywords($message, ['biaya', 'spp', 'uang sekolah', 'bayar', 'pembayaran'])) {
-            return "💰 **Informasi Biaya Pendidikan:**\n\n" .
-                   "Untuk informasi detail mengenai biaya pendidikan, silakan:\n" .
-                   "1. Hubungi bagian administrasi: (021) 1234-5678\n" .
-                   "2. Datang langsung ke sekolah\n" .
-                   "3. WhatsApp: 0812-3456-7890\n\n" .
-                   "📋 Kami menyediakan berbagai program bantuan:\n" .
-                   "✅ Beasiswa Prestasi\n" .
-                   "✅ Beasiswa Tidak Mampu\n" .
-                   "✅ Cicilan Pembayaran\n\n" .
-                   "Jangan khawatir, kami siap membantu! 😊";
-        }
-
-        // Rule 12: Prestasi
-        if ($this->containsKeywords($message, ['prestasi', 'penghargaan', 'juara', 'lomba'])) {
-            return "🏆 **Prestasi SMK Bina Mandiri Bekasi:**\n\n" .
-                   "Kami bangga dengan prestasi siswa-siswi kami:\n" .
-                   "🥇 Juara 1 LKS Tingkat Provinsi (TKJ)\n" .
-                   "🥈 Juara 2 Lomba Skill Otomotif Nasional\n" .
-                   "🥉 Juara 3 Kompetisi Mekanik Motor\n" .
-                   "🏅 Best Practice Award dari Kemendikbud\n" .
-                   "⭐ Sekolah Adiwiyata Tingkat Kota\n\n" .
-                   "Prestasi adalah bukti kualitas pendidikan kami! 💪\n\n" .
-                   "Lihat prestasi lengkap di website kami!";
-        }
-
-        // Rule 13: Terima kasih
-        if ($this->containsKeywords($message, ['terima kasih', 'thanks', 'makasih', 'thank you'])) {
-            return "Sama-sama! 😊 Senang bisa membantu Anda. Jika ada pertanyaan lain tentang SMK Bina Mandiri Bekasi, jangan ragu untuk bertanya ya! 🏫✨";
-        }
-
-        // Rule 14: Selamat tinggal
-        if ($this->containsKeywords($message, ['bye', 'dadah', 'sampai jumpa', 'selamat tinggal'])) {
-            return "Sampai jumpa! 👋 Semoga informasi yang saya berikan bermanfaat. Jangan lupa kunjungi website kami untuk info lebih lengkap. Selamat beraktivitas! 😊🏫";
-        }
-
-        // Default response jika tidak ada rule yang cocok
-        return "Maaf, saya belum punya informasi tentang itu. 😅\n\n" .
-               "Saya bisa membantu Anda dengan informasi tentang:\n" .
-               "📚 Profil sekolah\n" .
-               "🎓 Jurusan (TKJ, TSM, TKR)\n" .
-               "📝 PPDB (Pendaftaran)\n" .
-               "🏢 Fasilitas\n" .
-               "📍 Alamat & Kontak\n" .
-               "⏰ Jadwal Pelajaran\n" .
-               "🎯 Ekstrakurikuler\n\n" .
-               "Silakan tanya hal-hal di atas ya! 😊";
+        return blank($value) ? $default : $value;
     }
 
     /**
-     * Cek balasan dari database
+     * Cek balasan yang dikelola admin di database.
      */
-    private function checkDatabaseResponses($message)
+    private function checkDatabaseResponses(string $message): ?string
     {
-        // Ambil semua response yang aktif, diurutkan berdasarkan prioritas
-        $responses = ChatbotResponse::active()
-            ->byPriority()
-            ->get();
+        try {
+            $responses = ChatbotResponse::active()->byPriority()->get();
+        } catch (\Throwable $e) {
+            return null;
+        }
 
         foreach ($responses as $response) {
-            // Keywords sudah dalam bentuk array karena cast di model
             $keywords = is_array($response->keywords) ? $response->keywords : [$response->keywords];
-            
+
             if ($this->containsKeywords($message, $keywords)) {
                 return $response->response;
             }
@@ -311,21 +265,20 @@ class ChatbotController extends Controller
     }
 
     /**
-     * Helper function untuk cek keywords
+     * Helper untuk mengecek keberadaan kata kunci di dalam pesan.
+     *
+     * @param  array<int, string>|string  $keywords
      */
-    private function containsKeywords($message, $keywords)
+    private function containsKeywords(string $message, $keywords): bool
     {
-        // Pastikan keywords adalah array
-        if (!is_array($keywords)) {
-            $keywords = [$keywords];
-        }
+        foreach ((array) $keywords as $keyword) {
+            $keyword = trim((string) $keyword);
 
-        foreach ($keywords as $keyword) {
-            // Cek apakah keyword ada dalam message (case insensitive)
-            if (stripos($message, trim($keyword)) !== false) {
+            if ($keyword !== '' && stripos($message, $keyword) !== false) {
                 return true;
             }
         }
+
         return false;
     }
 }

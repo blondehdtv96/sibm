@@ -35,6 +35,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Chatbot Configuration
+    |--------------------------------------------------------------------------
+    |
+    | retention_days: berapa lama riwayat percakapan chatbot disimpan.
+    | Lewat dari itu, riwayat dihapus otomatis (lihat command chat:prune).
+    | Isi 0 untuk menyimpan selamanya (tidak disarankan).
+    |
+    */
+
+    'chatbot' => [
+        'retention_days' => (int) env('CHAT_RETENTION_DAYS', 7),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | PPDB Configuration
     |--------------------------------------------------------------------------
     */

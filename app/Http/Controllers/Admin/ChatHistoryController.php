@@ -47,7 +47,9 @@ class ChatHistoryController extends Controller
             'this_month' => Chat::whereMonth('created_at', now()->month)->count(),
         ];
 
-        return view('admin.chat-history.index', compact('chats', 'stats'));
+        $retentionDays = Chat::retentionDays();
+
+        return view('admin.chat-history.index', compact('chats', 'stats', 'retentionDays'));
     }
 
     /**
