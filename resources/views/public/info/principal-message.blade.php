@@ -1,155 +1,246 @@
 @extends('layouts.public-tailwind')
 
-@section('title', 'Sambutan Kepala Sekolah - ' . config('app.name'))
+@php
+    $schoolName = config('school.name');
+    $photoUrl = $principalPhoto ? asset('storage/' . $principalPhoto) : null;
+
+    // Pesan disimpan sebagai teks biasa dari textarea admin: pecah per baris
+    // kosong menjadi paragraf agar enak dibaca, bukan satu blok panjang.
+    $messageParagraphs = collect(preg_split('/\R{2,}/', trim((string) $principalMessage)))
+        ->map(fn ($paragraph) => trim($paragraph))
+        ->filter()
+        ->values();
+
+    $visionText = trim((string) setting('about_vision', ''));
+    $missionText = trim((string) setting('about_mission', ''));
+@endphp
+
+@section('title', 'Sambutan Kepala Sekolah - ' . $schoolName)
+@section('description', 'Sambutan ' . $principalName . ', Kepala Sekolah ' . $schoolName . '.')
+@section('og_title', 'Sambutan Kepala Sekolah - ' . $schoolName)
+@section('og_description', 'Pesan dan harapan dari Kepala Sekolah ' . $schoolName . '.')
+@if($photoUrl)
+    @section('og_image', $photoUrl)
+@endif
+
+@push('styles')
+    @if($photoUrl)
+        {{-- Unduh foto kepala sekolah paling awal, sebelum CSS & JS lain selesai diproses. --}}
+        <link rel="preload" as="image" href="{{ $photoUrl }}" fetchpriority="high">
+    @endif
+@endpush
 
 @section('content')
-<!-- Hero Section -->
-<section class="relative bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white py-20">
-    <div class="absolute inset-0 bg-black/20"></div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <nav class="flex mb-8 text-sm" aria-label="Breadcrumb">
-            <ol class="inline-flex items-center space-x-2">
-                <li class="inline-flex items-center">
-                    <a href="{{ route('home') }}" class="text-white/80 hover:text-white transition">
-                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
-                        </svg>
-                        Beranda
-                    </a>
-                </li>
-                <li>
-                    <div class="flex items-center">
-                        <svg class="w-5 h-5 text-white/60" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                        </svg>
-                        <span class="ml-2 text-white font-medium">Sambutan Kepala Sekolah</span>
-                    </div>
-                </li>
-            </ol>
+<!-- Header Halaman -->
+<section class="bg-[#0B1F4B] text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 pt-24 sm:pb-16 sm:pt-32">
+        <nav class="flex flex-wrap items-center gap-2 text-sm text-blue-200" aria-label="Breadcrumb">
+            <a href="{{ route('home') }}" class="transition hover:text-white">Beranda</a>
+            <span aria-hidden="true">/</span>
+            <a href="{{ route('info.about') }}" class="transition hover:text-white">Tentang</a>
+            <span aria-hidden="true">/</span>
+            <span class="font-semibold text-white">Sambutan Kepala Sekolah</span>
         </nav>
-        
-        <div class="text-center">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">Sambutan Kepala Sekolah</h1>
-            <p class="text-xl text-white/90 max-w-3xl mx-auto">
-                Pesan dan harapan dari pimpinan sekolah
+
+        <div class="mt-6 max-w-3xl">
+            <p class="text-sm font-bold uppercase tracking-[.2em] text-[#60A5FA]">Profil Sekolah</p>
+            <h1 class="mt-3 text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">Sambutan Kepala Sekolah</h1>
+            <p class="mt-4 text-base leading-relaxed text-blue-100 sm:text-lg">
+                Pesan dan harapan dari pimpinan {{ $schoolName }}.
             </p>
         </div>
     </div>
 </section>
 
-<!-- Principal Profile Section -->
-<section class="py-16 bg-white">
+<!-- Profil & Sambutan -->
+<section class="bg-slate-50 py-12 sm:py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Sidebar with Photo -->
-            <div class="lg:col-span-1">
-                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 sticky top-24">
-                    @if($principalPhoto)
-                        <div class="mb-6">
-                            <img src="{{ asset('storage/' . $principalPhoto) }}" 
-                                 alt="{{ $principalName }}" 
-                                 class="w-48 h-48 rounded-full mx-auto object-cover border-4 border-white shadow-lg">
-                        </div>
-                    @else
-                        <div class="mb-6">
-                            <div class="w-48 h-48 rounded-full mx-auto bg-blue-200 flex items-center justify-center border-4 border-white shadow-lg">
-                                <svg class="w-24 h-24 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
+            <!-- Kartu foto kepala sekolah -->
+            <div class="lg:col-span-5">
+                <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg lg:sticky lg:top-28">
+                    <div class="relative aspect-[3/4] w-full overflow-hidden bg-slate-100"
+                         @if($principalPhotoPreview)
+                             style="background-image:url('{{ $principalPhotoPreview }}');background-size:cover;background-position:center;"
+                         @endif>
+                        @if($principalPhotoPreview)
+                            {{-- Lapisan buram dari pratinjau: menutup kekasaran piksel sebelum foto asli muncul --}}
+                            <div class="absolute inset-0 backdrop-blur-xl"></div>
+                        @endif
+
+                        @if($photoUrl)
+                            <img src="{{ $photoUrl }}"
+                                 alt="{{ $principalName }}, Kepala Sekolah {{ $schoolName }}"
+                                 class="relative h-full w-full object-cover object-top"
+                                 loading="eager"
+                                 decoding="sync"
+                                 fetchpriority="high"
+                                 @if($principalPhotoSize)
+                                     width="{{ $principalPhotoSize['width'] }}"
+                                     height="{{ $principalPhotoSize['height'] }}"
+                                 @endif
+                                 onerror="this.style.display='none'; this.nextElementSibling?.classList.remove('hidden');">
+
+                            <div class="absolute inset-0 hidden items-center justify-center bg-gradient-to-br from-blue-100 to-slate-100">
+                                <svg class="h-24 w-24 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                 </svg>
                             </div>
-                        </div>
-                    @endif
-                    
-                    <div class="text-center mb-6">
-                        <h3 class="text-xl font-bold text-gray-900 mb-1">{{ $principalName }}</h3>
-                        <p class="text-blue-600 font-medium">Kepala Sekolah</p>
+                        @else
+                            <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-100 to-slate-100">
+                                <svg class="h-24 w-24 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                            </div>
+                        @endif
                     </div>
-                    
-                    <div class="border-t border-blue-200 pt-6">
-                        <h4 class="text-sm font-semibold text-gray-700 mb-3">Informasi Lainnya</h4>
-                        <div class="space-y-2">
-                            <a href="{{ route('info.about') }}" class="flex items-center p-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-white rounded-lg transition">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                                </svg>
-                                Profil Sekolah
+
+                    <div class="p-6 sm:p-7">
+                        <p class="text-xs font-bold uppercase tracking-[.2em] text-[#3B82F6]">Kepala Sekolah</p>
+                        <h2 class="mt-2 text-xl font-black leading-snug text-[#0B1F4B] sm:text-2xl">{{ $principalName }}</h2>
+                        <p class="mt-2 text-sm leading-relaxed text-slate-600">{{ $schoolName }}</p>
+
+                        <div class="mt-6 space-y-2 border-t border-slate-200 pt-5">
+                            <a href="{{ route('info.about') }}" class="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:text-[#1D4ED8]">
+                                Profil Sekolah <span aria-hidden="true">&#8594;</span>
                             </a>
-                            <a href="{{ route('info.overview') }}" class="flex items-center p-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-white rounded-lg transition">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                </svg>
-                                Selayang Pandang
+                            <a href="{{ route('info.overview') }}" class="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:text-[#1D4ED8]">
+                                Selayang Pandang <span aria-hidden="true">&#8594;</span>
                             </a>
-                            <a href="{{ route('info.contact') }}" class="flex items-center p-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-white rounded-lg transition">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                </svg>
-                                Hubungi Kami
+                            <a href="{{ route('public.staff-profiles.index') }}" class="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:text-[#1D4ED8]">
+                                Guru &amp; Karyawan <span aria-hidden="true">&#8594;</span>
+                            </a>
+                            <a href="{{ route('info.contact') }}" class="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:text-[#1D4ED8]">
+                                Hubungi Sekolah <span aria-hidden="true">&#8594;</span>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Main Content -->
-            <div class="lg:col-span-2">
-                <!-- Quote Section -->
-                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 mb-8 border-l-4 border-blue-500">
-                    <svg class="w-10 h-10 text-indigo-400 mb-4" fill="currentColor" viewBox="0 0 24 24">
+            <!-- Kartu sambutan -->
+            <div class="lg:col-span-7">
+                <article class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg sm:p-10 lg:p-12">
+                    <svg class="h-10 w-10 text-blue-200" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
                     </svg>
-                    <div class="prose prose-lg max-w-none">
-                        @if($principalMessage)
-                            {!! nl2br(e($principalMessage)) !!}
-                        @else
-                            <p class="text-gray-600 italic">Sambutan kepala sekolah belum tersedia. Silakan hubungi administrator untuk menambahkan konten.</p>
+
+                    @if($messageParagraphs->isNotEmpty())
+                        <div class="principal-message mt-6">
+                            @foreach($messageParagraphs as $paragraph)
+                                <p>{!! nl2br(e($paragraph)) !!}</p>
+                            @endforeach
+                        </div>
+
+                        <footer class="mt-10 border-t border-slate-200 pt-6">
+                            <p class="text-sm text-slate-500">Hormat kami,</p>
+                            <p class="mt-1 text-lg font-black text-[#0B1F4B]">{{ $principalName }}</p>
+                            <p class="text-sm font-semibold text-[#3B82F6]">Kepala Sekolah {{ $schoolName }}</p>
+                        </footer>
+                    @else
+                        <div class="mt-6 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center">
+                            <p class="text-sm leading-relaxed text-slate-600">
+                                Sambutan kepala sekolah belum tersedia. Isi melalui menu <strong>Pengaturan &rarr; Konten Sekolah</strong> di panel admin.
+                            </p>
+                        </div>
+                    @endif
+                </article>
+
+                @if($visionText !== '' || $missionText !== '')
+                    <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+                        @if($visionText !== '')
+                            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-[#1E3A8A]">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="mt-5 text-lg font-black text-[#0B1F4B]">Visi Sekolah</h3>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-600">{{ Str::limit(strip_tags($visionText), 320) }}</p>
+                            </div>
+                        @endif
+
+                        @if($missionText !== '')
+                            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-[#1E3A8A]">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
+                                <h3 class="mt-5 text-lg font-black text-[#0B1F4B]">Misi Sekolah</h3>
+                                <p class="mt-2 text-sm leading-relaxed text-slate-600">{{ Str::limit(strip_tags($missionText), 320) }}</p>
+                            </div>
                         @endif
                     </div>
-                </div>
-
-                <!-- Vision & Mission Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white rounded-xl p-6 border-2 border-blue-100 hover:border-indigo-300 transition">
-                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-2">Visi Sekolah</h3>
-                        <p class="text-gray-600 text-sm">Menjadi lembaga pendidikan yang unggul, berkarakter, dan berdaya saing global</p>
+                @else
+                    <div class="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                        <h3 class="text-lg font-black text-[#0B1F4B]">Visi &amp; Misi Sekolah</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                            Visi dan misi lengkap {{ $schoolName }} dapat dibaca pada halaman profil sekolah.
+                        </p>
+                        <a href="{{ route('info.about') }}" class="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#1D4ED8] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#1E40AF]">
+                            Buka Profil Sekolah <span aria-hidden="true">&#8594;</span>
+                        </a>
                     </div>
-                    
-                    <div class="bg-white rounded-xl p-6 border-2 border-indigo-100 hover:border-indigo-300 transition">
-                        <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-2">Misi Sekolah</h3>
-                        <p class="text-gray-600 text-sm">Menyelenggarakan pendidikan berkualitas dengan mengembangkan potensi siswa secara optimal</p>
-                    </div>
-                </div>
+                @endif
             </div>
         </div>
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="py-16 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl font-bold text-white mb-4">Bergabunglah Bersama Kami</h2>
-        <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Mari bersama-sama mewujudkan pendidikan berkualitas untuk masa depan yang lebih baik
-        </p>
-        <div class="flex justify-center">
-            <a href="{{ route('info.contact') }}" class="inline-flex items-center justify-center px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition shadow-lg hover:shadow-xl">
-                Hubungi Kami
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                </svg>
-            </a>
+<!-- Ajakan -->
+<section class="bg-white py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col items-start gap-6 rounded-2xl border border-slate-200 bg-slate-50 p-8 sm:flex-row sm:items-center sm:justify-between">
+            <div class="max-w-2xl">
+                <h2 class="text-xl font-black text-[#0B1F4B] sm:text-2xl">Ingin mengenal sekolah kami lebih dekat?</h2>
+                <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                    Pelajari program keahlian yang tersedia, atau hubungi kami untuk informasi pendaftaran dan kunjungan sekolah.
+                </p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <a href="{{ route('public.competencies.index') }}" class="rounded-xl bg-[#1D4ED8] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#1E40AF]">
+                    Program Keahlian
+                </a>
+                <a href="{{ route('info.contact') }}" class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-bold text-[#0B1F4B] transition hover:border-[#3B82F6] hover:text-[#1D4ED8]">
+                    Hubungi Kami
+                </a>
+            </div>
         </div>
     </div>
 </section>
 @endsection
+
+@push('styles')
+<style>
+    .principal-message {
+        font-size: 1.0625rem;
+        line-height: 1.9;
+        color: #334155;
+        max-width: 70ch;
+    }
+
+    .principal-message p + p {
+        margin-top: 1.35rem;
+    }
+
+    /* Kalimat pembuka sedikit ditebalkan sebagai pengantar sambutan */
+    .principal-message p:first-of-type {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #0B1F4B;
+    }
+
+    @media (max-width: 640px) {
+        .principal-message {
+            font-size: 1rem;
+            line-height: 1.85;
+        }
+
+        .principal-message p:first-of-type {
+            font-size: 1.0625rem;
+        }
+    }
+</style>
+@endpush
