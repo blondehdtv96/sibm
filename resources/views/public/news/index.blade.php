@@ -1,498 +1,363 @@
 @extends('layouts.public-tailwind')
 
-@section('title', 'Berita & Pengumuman - ' . config('school.name'))
+@section('title', ($selectedCategory ? $selectedCategory->name . ' - ' : '') . 'Berita & Kegiatan - ' . config('school.name'))
+@section('description', 'Berita, kegiatan, dan prestasi terbaru ' . config('school.name') . '. Ikuti perkembangan sekolah langsung dari sumber resminya.')
+@section('og_type', 'website')
+@section('og_title', 'Berita & Kegiatan - ' . config('school.name'))
+@section('og_description', 'Kabar terbaru seputar kegiatan, prestasi, dan pengumuman ' . config('school.name') . '.')
 
 @section('content')
-<!-- Hero Section -->
-<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
-    <!-- Gradient Background with Pattern -->
-    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700"></div>
-    
-    <!-- Geometric Pattern Overlay -->
-    <div class="absolute inset-0 opacity-10">
-        <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <pattern id="news-grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                    <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/>
-                </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#news-grid)" />
-        </svg>
-    </div>
-    
-    <!-- Animated Background Elements -->
-    <div class="absolute inset-0 opacity-20">
-        <div class="absolute top-20 left-10 w-72 h-72 bg-white rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-        <div class="absolute top-40 right-10 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-        <div class="absolute bottom-20 left-20 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
-    </div>
-    
-    <!-- Hero Content -->
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <!-- News Icon -->
-        <div class="mb-8 flex justify-center">
-            <div class="w-24 h-24 bg-white/20 backdrop-blur-lg rounded-3xl flex items-center justify-center border border-white/30 shadow-2xl">
-                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
-                </svg>
+@php
+    // Ringkas teks berita: buang tag HTML dan entitas seperti &nbsp; agar
+    // kutipan di kartu selalu rapi walau kontennya dibuat lewat editor.
+    $ringkas = function ($text, $limit = 140) {
+        $clean = html_entity_decode(strip_tags((string) $text), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $clean = trim(preg_replace('/\s+/u', ' ', str_replace("\xC2\xA0", ' ', $clean)) ?? '');
+
+        return $clean === '' ? '' : Str::limit($clean, $limit);
+    };
+@endphp
+
+<!-- Header Halaman -->
+<section class="bg-[#0B1F4B] text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 pt-24 sm:pb-16 sm:pt-32">
+        <nav class="flex flex-wrap items-center gap-2 text-sm text-blue-200" aria-label="Breadcrumb">
+            <a href="{{ route('home') }}" class="transition hover:text-white">Beranda</a>
+            <span aria-hidden="true">/</span>
+            <span class="font-semibold text-white">Berita</span>
+            @if($selectedCategory)
+                <span aria-hidden="true">/</span>
+                <span class="font-semibold text-white">{{ $selectedCategory->name }}</span>
+            @endif
+        </nav>
+
+        <div class="mt-6 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div class="max-w-2xl">
+                <p class="text-sm font-bold uppercase tracking-[.2em] text-[#60A5FA]">Informasi Sekolah</p>
+                <h1 class="mt-3 text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">
+                    @if(request('search'))
+                        Hasil pencarian &ldquo;{{ request('search') }}&rdquo;
+                    @elseif($selectedCategory)
+                        {{ $selectedCategory->name }}
+                    @else
+                        Berita &amp; Kegiatan
+                    @endif
+                </h1>
+                <p class="mt-4 text-base leading-relaxed text-blue-100 sm:text-lg">
+                    @if($selectedCategory && $selectedCategory->description)
+                        {{ $selectedCategory->description }}
+                    @else
+                        Kabar kegiatan belajar, prestasi siswa, dan pengumuman resmi {{ config('school.name') }}.
+                    @endif
+                </p>
             </div>
+
+            <dl class="grid w-full max-w-md grid-cols-3 gap-px overflow-hidden rounded-2xl border border-white/15 bg-white/15 text-center">
+                <div class="bg-[#0B1F4B] px-3 py-4">
+                    <dt class="text-xs font-semibold uppercase tracking-wide text-blue-200">Artikel</dt>
+                    <dd class="mt-1 text-2xl font-black">{{ $news->total() }}</dd>
+                </div>
+                <div class="bg-[#0B1F4B] px-3 py-4">
+                    <dt class="text-xs font-semibold uppercase tracking-wide text-blue-200">Kategori</dt>
+                    <dd class="mt-1 text-2xl font-black">{{ $categories->where('published_news_count', '>', 0)->count() }}</dd>
+                </div>
+                <div class="bg-[#0B1F4B] px-3 py-4">
+                    <dt class="text-xs font-semibold uppercase tracking-wide text-blue-200">Terbaru</dt>
+                    <dd class="mt-1 text-sm font-bold leading-tight">
+                        {{ $latestPublishedAt ? $latestPublishedAt->translatedFormat('d M Y') : '-' }}
+                    </dd>
+                </div>
+            </dl>
         </div>
-        
-        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-white mb-6 leading-tight tracking-tight">
-            Berita & Pengumuman
-        </h1>
-        <p class="text-xl sm:text-2xl md:text-3xl text-white/95 mb-4 max-w-4xl mx-auto leading-relaxed font-light">
-            Tetap Update dengan Berita dan Acara Terbaru dari Sekolah Kami
-        </p>
-        <p class="text-lg text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Dapatkan informasi terkini tentang kegiatan sekolah, prestasi siswa, dan pengumuman penting lainnya
-        </p>
-        
-        <!-- Quick Stats -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-4xl mx-auto">
-            <div class="text-center">
-                <div class="text-3xl md:text-4xl font-bold text-white mb-2">{{ $news->total() }}+</div>
-                <div class="text-white/80 text-sm md:text-base">Total Berita</div>
-            </div>
-            <div class="text-center">
-                <div class="text-3xl md:text-4xl font-bold text-white mb-2">{{ $categories->count() }}+</div>
-                <div class="text-white/80 text-sm md:text-base">Kategori</div>
-            </div>
-            <div class="text-center">
-                <div class="text-3xl md:text-4xl font-bold text-white mb-2">100+</div>
-                <div class="text-white/80 text-sm md:text-base">Prestasi</div>
-            </div>
-            <div class="text-center">
-                <div class="text-3xl md:text-4xl font-bold text-white mb-2">50+</div>
-                <div class="text-white/80 text-sm md:text-base">Acara per Tahun</div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Scroll Indicator -->
-    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-        </svg>
     </div>
 </section>
 
-<!-- Search and Filter Section -->
-<section class="py-16 bg-gradient-to-b from-gray-50 to-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Section Header -->
-        <div class="text-center mb-12">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Cari Berita</h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto rounded-full mb-6"></div>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                Temukan berita dan informasi yang Anda cari dengan mudah
-            </p>
-        </div>
-        
-        <!-- Search Form -->
-        <div class="max-w-2xl mx-auto mb-12">
-            <form method="GET" action="{{ route('public.news.index') }}" class="relative">
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                    </div>
-                    <input 
-                        type="text" 
-                        name="search" 
-                        value="{{ request('search') }}"
-                        placeholder="Cari berita..." 
-                        class="w-full pl-12 pr-32 py-4 text-lg border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-lg"
-                    >
-                    <div class="absolute inset-y-0 right-0 flex items-center gap-2 pr-2">
-                        @if(request()->hasAny(['search', 'category']))
-                            <a href="{{ route('public.news.index') }}" 
-                               class="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors rounded-lg">
-                                Clear
+@if($headlines->isNotEmpty())
+    <!-- Sorotan: slider berita utama -->
+    <section class="bg-white py-10 sm:py-14" aria-labelledby="headline-title">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-end justify-between gap-4">
+                <div>
+                    <p class="text-sm font-bold uppercase tracking-[.2em] text-[#3B82F6]">Sorotan</p>
+                    <h2 id="headline-title" class="mt-2 text-2xl font-black text-[#0B1F4B] sm:text-3xl">Berita utama</h2>
+                </div>
+                <div class="hidden items-center gap-2 sm:flex">
+                    <button type="button" class="headline-prev flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-lg text-[#0B1F4B] shadow-sm transition hover:bg-slate-50" aria-label="Sorotan sebelumnya">&#8592;</button>
+                    <button type="button" class="headline-next flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-lg text-[#0B1F4B] shadow-sm transition hover:bg-slate-50" aria-label="Sorotan berikutnya">&#8594;</button>
+                </div>
+            </div>
+
+            <div class="swiper headline-swiper mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-slate-900 shadow-xl">
+                <div class="swiper-wrapper">
+                    @foreach($headlines as $index => $headline)
+                        <div class="swiper-slide">
+                            <a href="{{ route('public.news.show', $headline->slug) }}" class="group relative block">
+                                <div class="relative aspect-[16/10] w-full overflow-hidden bg-slate-800 sm:aspect-[21/9]">
+                                    <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#0B1F4B] to-[#1E3A8A] text-5xl text-blue-300/60" aria-hidden="true">&#9733;</div>
+                                    <img src="{{ asset('storage/' . $headline->featured_image) }}"
+                                         alt="{{ $headline->title }}"
+                                         class="relative h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                                         loading="{{ $index === 0 ? 'eager' : 'lazy' }}"
+                                         onerror="this.style.display='none'">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/55 to-transparent"></div>
+                                </div>
+
+                                <div class="absolute inset-x-0 bottom-0 p-5 sm:p-8 lg:p-10">
+                                    <div class="flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-wide">
+                                        @if($headline->category)
+                                            <span class="rounded-full bg-[#3B82F6] px-3 py-1 text-white">{{ $headline->category->name }}</span>
+                                        @endif
+                                        <time datetime="{{ optional($headline->published_at)->toIso8601String() }}" class="text-blue-100">
+                                            {{ optional($headline->published_at)->translatedFormat('d F Y') }}
+                                        </time>
+                                    </div>
+                                    <h3 class="mt-3 max-w-3xl text-lg font-black leading-snug text-white sm:text-2xl lg:text-3xl">
+                                        {{ $headline->title }}
+                                    </h3>
+                                    @if($ringkas($headline->excerpt ?? $headline->content, 160))
+                                        <p class="mt-3 hidden max-w-2xl text-sm leading-relaxed text-blue-50 sm:block">
+                                            {{ $ringkas($headline->excerpt ?? $headline->content, 160) }}
+                                        </p>
+                                    @endif
+                                    <span class="mt-4 inline-flex items-center gap-2 text-sm font-bold text-white">
+                                        Baca berita <span aria-hidden="true" class="transition group-hover:translate-x-1">&#8594;</span>
+                                    </span>
+                                </div>
                             </a>
-                        @endif
-                        <button type="submit" 
-                                class="px-6 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-semibold">
-                            Cari
-                        </button>
-                    </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                @if($headlines->count() > 1)
+                    <div class="headline-pagination absolute bottom-4 right-5 z-20 !w-auto"></div>
+                @endif
+            </div>
+        </div>
+    </section>
+@endif
+
+<!-- Pencarian & Filter -->
+<section class="border-y border-slate-200 bg-slate-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <form method="GET" action="{{ route('public.news.index') }}" class="w-full lg:max-w-md">
+                @if(request('category'))
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                @endif
+                <label for="news-search" class="sr-only">Cari berita</label>
+                <div class="relative">
+                    <svg class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <input id="news-search"
+                           type="search"
+                           name="search"
+                           value="{{ request('search') }}"
+                           placeholder="Cari judul atau isi berita..."
+                           class="w-full rounded-xl border border-slate-300 bg-white py-3 pl-12 pr-24 text-sm text-slate-900 shadow-sm transition focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/30">
+                    <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg bg-[#1D4ED8] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#1E40AF]">
+                        Cari
+                    </button>
                 </div>
             </form>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <a href="{{ route('public.news.index') }}"
+                   class="rounded-full px-4 py-2 text-sm font-bold transition {{ !request('category') ? 'bg-[#0B1F4B] text-white shadow-sm' : 'border border-slate-300 bg-white text-slate-700 hover:border-[#3B82F6] hover:text-[#1D4ED8]' }}">
+                    Semua
+                </a>
+                @foreach($categories as $category)
+                    @if($category->published_news_count > 0)
+                        <a href="{{ route('public.news.index', ['category' => $category->slug]) }}"
+                           class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold transition {{ request('category') === $category->slug ? 'bg-[#0B1F4B] text-white shadow-sm' : 'border border-slate-300 bg-white text-slate-700 hover:border-[#3B82F6] hover:text-[#1D4ED8]' }}">
+                            {{ $category->name }}
+                            <span class="rounded-full px-1.5 py-0.5 text-[11px] {{ request('category') === $category->slug ? 'bg-white/20' : 'bg-slate-100 text-slate-500' }}">
+                                {{ $category->published_news_count }}
+                            </span>
+                        </a>
+                    @endif
+                @endforeach
+            </div>
         </div>
 
-        <!-- Category Filter -->
-        <div class="flex flex-wrap justify-center gap-3 mb-8">
-            <a href="{{ route('public.news.index') }}" 
-               class="px-6 py-3 rounded-full font-semibold transition-all duration-300 {{ !request('category') ? 'bg-blue-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-blue-50 border border-gray-200' }}">
-                Semua Berita
-            </a>
-            @foreach($categories as $category)
-                @if($category->published_news_count > 0)
-                    <a href="{{ route('public.news.index', ['category' => $category->slug]) }}" 
-                       class="px-6 py-3 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 {{ request('category') === $category->slug ? 'bg-blue-600 text-white shadow-lg' : 'bg-white text-gray-700 hover:bg-blue-50 border border-gray-200' }}">
-                        {{ $category->name }}
-                        <span class="px-2 py-1 text-xs rounded-full {{ request('category') === $category->slug ? 'bg-white/20' : 'bg-gray-100' }}">
-                            {{ $category->published_news_count }}
-                        </span>
-                    </a>
-                @endif
-            @endforeach
-        </div>
-
-        @if($selectedCategory)
-            <div class="text-center mb-8">
-                <h3 class="text-2xl font-bold text-gray-800 mb-2">{{ $selectedCategory->name }}</h3>
-                @if($selectedCategory->description)
-                    <p class="text-gray-600 max-w-2xl mx-auto">{{ $selectedCategory->description }}</p>
-                @endif
+        @if(request()->hasAny(['search', 'category']))
+            <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-slate-600">
+                <span>Menampilkan {{ $news->count() }} dari {{ $news->total() }} artikel.</span>
+                <a href="{{ route('public.news.index') }}" class="font-bold text-[#1D4ED8] hover:underline">Hapus filter</a>
             </div>
         @endif
     </div>
 </section>
 
-<!-- News Grid Section -->
-<section class="py-20 bg-white">
+<!-- Daftar Berita -->
+<section class="bg-white py-14 sm:py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         @if($news->count() > 0)
-            <!-- Results Header -->
-            <div class="text-center mb-10">
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-                    @if(request('search'))
-                        Hasil Pencarian: "{{ request('search') }}"
-                    @elseif($selectedCategory)
-                        {{ $selectedCategory->name }}
-                    @else
-                        Semua Berita Terbaru
-                    @endif
-                </h2>
-                <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto rounded-full mb-6"></div>
-                <p class="text-base sm:text-lg text-gray-600">
-                    Menampilkan {{ $news->count() }} dari {{ $news->total() }} total berita
+            <div class="flex items-end justify-between gap-4">
+                <div>
+                    <p class="text-sm font-bold uppercase tracking-[.2em] text-[#3B82F6]">Arsip</p>
+                    <h2 class="mt-2 text-2xl font-black text-[#0B1F4B] sm:text-3xl">
+                        @if(request('search'))
+                            Hasil pencarian
+                        @elseif($selectedCategory)
+                            Artikel {{ $selectedCategory->name }}
+                        @else
+                            Semua berita
+                        @endif
+                    </h2>
+                </div>
+                <p class="hidden text-sm text-slate-500 sm:block">
+                    Halaman {{ $news->currentPage() }} dari {{ $news->lastPage() }}
                 </p>
             </div>
-            
-            <!-- News Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-                @foreach($news as $article)
-                    <article class="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 h-full flex flex-col">
-                        <!-- Image Section with Overlay -->
-                        <div class="relative h-36 sm:h-44 overflow-hidden bg-gradient-to-br from-indigo-600 via-blue-600 to-indigo-700 flex-shrink-0">
-                            @if($article->featured_image)
-                                <img src="{{ asset('storage/' . $article->featured_image) }}" 
-                                     alt="{{ $article->title }}"
-                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                     loading="lazy">
-                                <!-- Overlay for better text contrast -->
-                                <div class="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/40 group-hover:from-black/20 group-hover:to-black/60 transition-all duration-300"></div>
-                            @else
-                                <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-indigo-500 to-blue-600 flex items-center justify-center">
-                                    <svg class="w-12 h-12 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
-                                    </svg>
-                                </div>
-                            @endif
-                            
-                            <!-- Category Badge - Floating -->
-                            @if($article->category)
-                                <div class="absolute top-2.5 left-2.5 z-10">
-                                    <span class="px-2.5 py-1 bg-white/95 backdrop-blur-md text-indigo-600 text-[10px] sm:text-xs font-bold rounded-full shadow-md">
-                                        {{ $article->category->name }}
-                                    </span>
-                                </div>
-                            @endif
-                        </div>
-                        
-                        <!-- Content Section -->
-                        <div class="p-3.5 sm:p-4 flex flex-col flex-grow">
-                            <!-- Date -->
-                            <div class="flex items-center gap-1 text-[11px] sm:text-xs text-gray-400 mb-2">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                </svg>
-                                {{ $article->published_at->format('d M Y') }}
-                            </div>
 
-                            <!-- Title -->
-                            <h3 class="text-sm sm:text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-indigo-600 transition-colors duration-300 leading-snug">
-                                {{ $article->title }}
+            <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                @foreach($news as $article)
+                    <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+                        <a href="{{ route('public.news.show', $article->slug) }}" class="relative block aspect-[16/10] overflow-hidden bg-slate-100">
+                            <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-100 to-slate-100 text-4xl text-blue-300" aria-hidden="true">&#9733;</div>
+                            @if($article->featured_image)
+                                <img src="{{ asset('storage/' . $article->featured_image) }}"
+                                     alt="{{ $article->title }}"
+                                     class="relative h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                     loading="lazy"
+                                     onerror="this.style.display='none'">
+                            @endif
+                            @if($article->category)
+                                <span class="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-[#1D4ED8] shadow-sm backdrop-blur">
+                                    {{ $article->category->name }}
+                                </span>
+                            @endif
+                        </a>
+
+                        <div class="flex flex-1 flex-col p-5">
+                            <time datetime="{{ optional($article->published_at)->toIso8601String() }}" class="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                                {{ optional($article->published_at)->translatedFormat('d F Y') }}
+                            </time>
+
+                            <h3 class="mt-2 text-base font-black leading-snug text-[#0B1F4B] transition group-hover:text-[#1D4ED8]">
+                                <a href="{{ route('public.news.show', $article->slug) }}" class="line-clamp-3">{{ $article->title }}</a>
                             </h3>
 
-                            <!-- Excerpt -->
-                            <p class="text-gray-500 text-xs sm:text-sm leading-relaxed line-clamp-2 mb-3 flex-grow">
-                                {{ Str::limit(strip_tags($article->excerpt ?? $article->content), 90) }}
-                            </p>
+                            @if($ringkas($article->excerpt ?? $article->content, 120))
+                                <p class="mt-3 line-clamp-3 text-sm leading-relaxed text-slate-600">
+                                    {{ $ringkas($article->excerpt ?? $article->content, 120) }}
+                                </p>
+                            @endif
 
-                            <!-- Read More -->
-                            <a href="{{ route('public.news.show', $article->slug) }}" 
-                               class="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-700 font-semibold text-xs sm:text-sm mt-auto pt-2 border-t border-gray-100 group/link">
-                                <span>Baca Selengkapnya</span>
-                                <svg class="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
+                            <a href="{{ route('public.news.show', $article->slug) }}"
+                               class="mt-auto inline-flex items-center gap-2 pt-4 text-sm font-bold text-[#1D4ED8]">
+                                Baca selengkapnya
+                                <span aria-hidden="true" class="transition group-hover:translate-x-1">&#8594;</span>
                             </a>
                         </div>
                     </article>
                 @endforeach
             </div>
 
-            <!-- Pagination -->
             @if($news->hasPages())
-                <div class="mt-16 flex justify-center">
-                    <div class="bg-white rounded-2xl shadow-lg p-4">
-                        {{ $news->appends(request()->query())->links() }}
-                    </div>
+                <div class="mt-12">
+                    {{ $news->appends(request()->query())->links() }}
                 </div>
             @endif
         @else
-            <!-- Empty State -->
-            <div class="text-center py-20">
-                <div class="max-w-md mx-auto">
-                    <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-8">
-                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-4">
-                        @if(request('search'))
-                            Tidak Ada Berita yang Ditemukan
-                        @elseif(request('category'))
-                            Belum Ada Berita di Kategori Ini
-                        @else
-                            Belum Ada Berita
-                        @endif
-                    </h3>
-                    <p class="text-gray-600 mb-8 leading-relaxed">
-                        @if(request('search'))
-                            Tidak ada berita yang sesuai dengan pencarian "{{ request('search') }}". Coba kata kunci lain atau lihat semua berita.
-                        @elseif(request('category'))
-                            Belum ada artikel di kategori {{ $selectedCategory->name }}. Silakan cek kategori lain.
-                        @else
-                            Berita akan segera tersedia. Silakan kembali lagi nanti!
-                        @endif
-                    </p>
-                    @if(request()->hasAny(['search', 'category']))
-                        <a href="{{ route('public.news.index') }}" 
-                           class="inline-flex items-center gap-2 px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
-                            </svg>
-                            <span>Lihat Semua Berita</span>
-                        </a>
-                    @endif
+            <!-- Belum ada hasil -->
+            <div class="mx-auto max-w-lg rounded-2xl border border-slate-200 bg-slate-50 px-6 py-14 text-center">
+                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-sm">
+                    <svg class="h-8 w-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                    </svg>
                 </div>
+                <h2 class="mt-6 text-xl font-black text-[#0B1F4B]">
+                    @if(request('search'))
+                        Tidak ada berita yang cocok
+                    @elseif($selectedCategory)
+                        Belum ada artikel di kategori ini
+                    @else
+                        Belum ada berita
+                    @endif
+                </h2>
+                <p class="mt-3 text-sm leading-relaxed text-slate-600">
+                    @if(request('search'))
+                        Kata kunci &ldquo;{{ request('search') }}&rdquo; belum menemukan hasil. Coba kata lain atau lihat seluruh arsip berita.
+                    @elseif($selectedCategory)
+                        Artikel untuk kategori {{ $selectedCategory->name }} akan tampil di sini setelah dipublikasikan.
+                    @else
+                        Berita akan tampil di halaman ini setelah dipublikasikan oleh sekolah.
+                    @endif
+                </p>
+                @if(request()->hasAny(['search', 'category']))
+                    <a href="{{ route('public.news.index') }}" class="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#1D4ED8] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#1E40AF]">
+                        Lihat semua berita <span aria-hidden="true">&#8594;</span>
+                    </a>
+                @endif
             </div>
         @endif
     </div>
 </section>
 
-<!-- Call to Action Section -->
-<section class="py-20 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 relative overflow-hidden">
-    <!-- Background Pattern -->
-    <div class="absolute inset-0 opacity-10">
-        <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <pattern id="cta-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="white" stroke-width="0.5"/>
-                </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#cta-grid)" />
-        </svg>
-    </div>
-    
-    <!-- Floating Elements -->
-    <div class="absolute inset-0 overflow-hidden">
-        <div class="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full animate-pulse"></div>
-        <div class="absolute bottom-20 right-10 w-24 h-24 bg-white/10 rounded-full animate-pulse animation-delay-2000"></div>
-        <div class="absolute top-1/2 left-1/4 w-16 h-16 bg-white/10 rounded-full animate-pulse animation-delay-4000"></div>
-    </div>
-    
-    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-            Jangan Lewatkan Berita Terbaru!
-        </h2>
-        <p class="text-xl text-white/90 mb-12 leading-relaxed max-w-2xl mx-auto">
-            Ikuti terus perkembangan sekolah dan dapatkan informasi terkini langsung dari sumbernya
-        </p>
-        
-        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
-            <a href="{{ route('ppdb.register') }}" 
-               class="group px-10 py-4 bg-white text-blue-600 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105 transition-all duration-300 flex items-center gap-3">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                </svg>
-                <span>Daftar Sekarang</span>
-                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                </svg>
-            </a>
-            
-            <a href="{{ route('info.contact') }}" 
-               class="px-10 py-4 bg-white/10 backdrop-blur-lg text-white rounded-2xl font-bold text-lg border-2 border-white/30 hover:bg-white/20 hover:border-white/50 transition-all duration-300 flex items-center gap-3">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                </svg>
-                <span>Hubungi Kami</span>
-            </a>
+<!-- Ajakan -->
+<section class="bg-slate-50 py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col items-start gap-6 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+            <div class="max-w-2xl">
+                <h2 class="text-xl font-black text-[#0B1F4B] sm:text-2xl">Ingin tahu lebih banyak tentang sekolah kami?</h2>
+                <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                    Pelajari program keahlian yang tersedia atau hubungi sekolah untuk informasi pendaftaran dan kunjungan.
+                </p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <a href="{{ route('public.competencies.index') }}" class="rounded-xl bg-[#1D4ED8] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#1E40AF]">
+                    Program Keahlian
+                </a>
+                <a href="{{ route('info.contact') }}" class="rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-bold text-[#0B1F4B] transition hover:border-[#3B82F6] hover:text-[#1D4ED8]">
+                    Hubungi Kami
+                </a>
+            </div>
         </div>
     </div>
 </section>
-
 @endsection
 
 @push('styles')
 <style>
-    /* Custom Animations */
-    @keyframes blob {
-        0%, 100% {
-            transform: translate(0, 0) scale(1);
-        }
-        25% {
-            transform: translate(20px, -50px) scale(1.1);
-        }
-        50% {
-            transform: translate(-20px, 20px) scale(0.9);
-        }
-        75% {
-            transform: translate(50px, 50px) scale(1.05);
-        }
+    .headline-swiper { position: relative; }
+
+    .headline-swiper .swiper-pagination-bullet {
+        width: 8px;
+        height: 8px;
+        background: #ffffff;
+        opacity: .45;
+        transition: all .3s ease;
     }
-    
-    .animate-blob {
-        animation: blob 7s infinite;
-    }
-    
-    .animation-delay-2000 {
-        animation-delay: 2s;
-    }
-    
-    .animation-delay-4000 {
-        animation-delay: 4s;
-    }
-    
-    /* Line Clamp Utilities */
-    .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    
-    .line-clamp-3 {
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    
-    /* Smooth Scroll */
-    html {
-        scroll-behavior: smooth;
-    }
-    
-    /* Enhanced Glassmorphism Effect */
-    .backdrop-blur-lg {
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-    }
-    
-    /* Enhanced Shadow Effects */
-    .shadow-3xl {
-        box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
-    }
-    
-    /* Intersection Observer Animation Classes */
-    .fade-in-section {
-        opacity: 0;
-        transform: translateY(20vh);
-        visibility: hidden;
-        transition: opacity 0.8s ease-out, transform 1.2s ease-out;
-        will-change: opacity, visibility;
-    }
-    
-    .fade-in-section.is-visible {
+
+    .headline-swiper .swiper-pagination-bullet-active {
+        width: 26px;
+        border-radius: 9999px;
         opacity: 1;
-        transform: none;
-        visibility: visible;
     }
 </style>
 @endpush
 
 @push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Enhanced Scroll Animation Observer
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-        
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    
-                    // Add staggered animation to child elements
-                    const children = entry.target.querySelectorAll('.animate-on-scroll');
-                    children.forEach((child, index) => {
-                        setTimeout(() => {
-                            child.classList.add('animate-fade-in-up');
-                        }, index * 100);
-                    });
-                }
-            });
-        }, observerOptions);
-        
-        // Observe all sections with fade-in-section class
-        document.querySelectorAll('section').forEach(section => {
-            section.classList.add('fade-in-section');
-            observer.observe(section);
-        });
-        
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-        
-        // Search form enhancement
-        const searchForm = document.querySelector('form[method="GET"]');
-        const searchInput = searchForm?.querySelector('input[name="search"]');
-        
-        if (searchInput) {
-            // Auto-focus search input when page loads (if no search term)
-            if (!searchInput.value) {
-                setTimeout(() => {
-                    searchInput.focus();
-                }, 1000);
-            }
-            
-            // Clear search on Escape key
-            searchInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && this.value) {
-                    this.value = '';
-                    searchForm.submit();
-                }
-            });
-        }
-        
-        // Category filter enhancement
-        const categoryLinks = document.querySelectorAll('a[href*="category="]');
-        categoryLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                // Add loading state
-                this.style.opacity = '0.7';
-                this.style.pointerEvents = 'none';
-            });
-        });
+document.addEventListener('DOMContentLoaded', function () {
+    var headline = document.querySelector('.headline-swiper');
+
+    if (!headline || typeof Swiper === 'undefined') {
+        return;
+    }
+
+    new Swiper(headline, {
+        loop: headline.querySelectorAll('.swiper-slide').length > 1,
+        speed: 600,
+        autoplay: { delay: 6000, disableOnInteraction: false, pauseOnMouseEnter: true },
+        pagination: { el: '.headline-pagination', clickable: true },
+        navigation: { nextEl: '.headline-next', prevEl: '.headline-prev' },
+        keyboard: { enabled: true, onlyInViewport: true },
+        a11y: { enabled: true },
+        grabCursor: true
     });
+});
 </script>
 @endpush

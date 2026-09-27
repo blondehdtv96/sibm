@@ -23,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
         if (app()->environment('production')) {
             \URL::forceScheme('https');
         }
+
+        // Tampilkan nama hari & bulan dalam Bahasa Indonesia
+        // (dipakai translatedFormat() dan diffForHumans() di seluruh tampilan).
+        \Carbon\Carbon::setLocale('id');
         
         // Share settings data with all public views
         view()->composer('layouts.public-tailwind', \App\View\Composers\SettingsComposer::class);

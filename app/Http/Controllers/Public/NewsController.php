@@ -36,11 +36,33 @@ class NewsController extends Controller
 
         $news = $query->latest('published_at')->paginate(16);
         $categories = NewsCategory::withCount('publishedNews')->get();
-        $selectedCategory = $request->filled('category') 
-            ? NewsCategory::where('slug', $request->category)->first() 
+        $selectedCategory = $request->filled('category')
+            ? NewsCategory::where('slug', $request->category)->first()
             : null;
 
-        return view('public.news.index', compact('news', 'categories', 'selectedCategory'));
+        // Slider sorotan hanya di halaman pertama arsip lengkap, supaya hasil
+        // pencarian/filter langsung menampilkan daftar artikelnya.
+        $headlines = collect();
+        if (! $request->filled('search') && ! $request->filled('category') && $news->currentPage() === 1) {
+            $headlines = News::with('category')
+                ->published()
+                ->whereNotNull('featured_image')
+                ->latest('published_at')
+                ->take(5)
+                ->get();
+        }
+
+        // Tanggal publikasi terbaru untuk ringkasan di header halaman.
+        $latestPublishedAt = News::published()->max('published_at');
+        $latestPublishedAt = $latestPublishedAt ? \Illuminate\Support\Carbon::parse($latestPublishedAt) : null;
+
+        return view('public.news.index', compact(
+            'news',
+            'categories',
+            'selectedCategory',
+            'headlines',
+            'latestPublishedAt'
+        ));
     }
 
     /**
@@ -53,15 +75,27 @@ class NewsController extends Controller
             abort(404);
         }
 
-        $news->load(['category', 'author']);
+        $news->load(['category', 'author', 'images']);
 
         // Get related news from the same category
-        $relatedNews = News::published()
+        $relatedNews = News::with('category')
+            ->published()
             ->where('category_id', $news->category_id)
             ->where('id', '!=', $news->id)
             ->latest('published_at')
-            ->take(3)
+            ->take(4)
             ->get();
+
+        // Bila kategori belum punya artikel lain, tampilkan berita terbaru lainnya
+        // supaya sidebar tidak kosong.
+        if ($relatedNews->isEmpty()) {
+            $relatedNews = News::with('category')
+                ->published()
+                ->where('id', '!=', $news->id)
+                ->latest('published_at')
+                ->take(4)
+                ->get();
+        }
 
         return view('public.news.show', compact('news', 'relatedNews'));
     }
