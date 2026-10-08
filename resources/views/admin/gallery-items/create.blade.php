@@ -20,7 +20,7 @@
 
     <!-- Form -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <form action="{{ route('admin.gallery-items.store') }}" method="POST" enctype="multipart/form-data" id="uploadForm" class="space-y-6">
+        <form action="{{ route('admin.gallery-items.store') }}" method="POST" enctype="multipart/form-data" id="uploadForm" class="space-y-6" data-no-upload-loader>
             @csrf
 
             <!-- Album Selection -->
@@ -280,41 +280,87 @@ document.getElementById('uploadForm').addEventListener('submit', async function 
     const submitBtn = document.getElementById('submitBtn');
     const csrfToken = document.querySelector('input[name="_token"]').value;
 
+    const totalBytes = selectedFiles.reduce((sum, file) => sum + file.size, 0);
+    const formatBytes = window.UploadLoader ? window.UploadLoader.formatBytes : (b) => Math.round(b / 1048576) + ' MB';
+
     progress.style.display = 'block';
     totalFilesEl.textContent = selectedFiles.length;
     submitBtn.disabled = true;
 
+    // Overlay progres global: persentase nyata dari byte yang sudah terkirim
+    if (window.UploadLoader) {
+        window.UploadLoader.show({
+            title: `Mengunggah ${selectedFiles.length} Foto...`,
+            detail: `${selectedFiles.length} berkas • ${formatBytes(totalBytes)}`
+        });
+        window.UploadLoader.setProgress(0);
+    }
+
+    const warnOnLeave = (event) => {
+        event.preventDefault();
+        event.returnValue = 'Unggahan masih berjalan. Yakin ingin meninggalkan halaman ini?';
+        return event.returnValue;
+    };
+    window.addEventListener('beforeunload', warnOnLeave);
+
     let successCount = 0;
     let failCount = 0;
+    let uploadedBytes = 0;
 
-    for (let i = 0; i < selectedFiles.length; i++) {
-        const titleInput = document.querySelector(`[name="titles[${i}]"]`);
-
+    // XMLHttpRequest (bukan fetch) supaya progres per berkas bisa dibaca dan
+    // overlay AJAX global tidak ikut menutupi bar progres ini.
+    const uploadOne = (file, title) => new Promise((resolve) => {
         const formData = new FormData();
         formData.append('_token', csrfToken);
         formData.append('album_id', albumId);
-        formData.append('image', selectedFiles[i]);
-        formData.append('title', titleInput ? titleInput.value : '');
+        formData.append('image', file);
+        formData.append('title', title);
 
-        try {
-            const response = await fetch(uploadAjaxUrl, {
-                method: 'POST',
-                headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                body: formData,
-            });
-            const data = await response.json();
-            data.success ? successCount++ : failCount++;
-        } catch (err) {
-            failCount++;
-        }
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', uploadAjaxUrl, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+        xhr.upload.addEventListener('progress', (event) => {
+            if (!event.lengthComputable || !window.UploadLoader || !totalBytes) return;
+            const sent = Math.min(uploadedBytes + event.loaded, totalBytes);
+            window.UploadLoader.setProgress((sent / totalBytes) * 100);
+        });
+
+        xhr.addEventListener('load', () => {
+            let ok = false;
+            try {
+                ok = JSON.parse(xhr.responseText).success === true;
+            } catch (err) {
+                ok = false;
+            }
+            resolve(ok);
+        });
+
+        xhr.addEventListener('error', () => resolve(false));
+        xhr.addEventListener('abort', () => resolve(false));
+        xhr.send(formData);
+    });
+
+    for (let i = 0; i < selectedFiles.length; i++) {
+        const titleInput = document.querySelector(`[name="titles[${i}]"]`);
+        const ok = await uploadOne(selectedFiles[i], titleInput ? titleInput.value : '');
+
+        ok ? successCount++ : failCount++;
+        uploadedBytes += selectedFiles[i].size;
 
         currentFileEl.textContent = i + 1;
         progressFill.style.width = Math.round(((i + 1) / selectedFiles.length) * 100) + '%';
+
+        if (window.UploadLoader) {
+            window.UploadLoader.setProgress(totalBytes ? (uploadedBytes / totalBytes) * 100 : 100);
+        }
     }
 
     submitBtn.disabled = false;
+    window.removeEventListener('beforeunload', warnOnLeave);
 
     if (failCount > 0) {
+        if (window.UploadLoader) window.UploadLoader.hide();
         alert(`${successCount} image(s) uploaded, ${failCount} failed. Check the failed files and try again if needed.`);
     }
 

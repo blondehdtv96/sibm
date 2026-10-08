@@ -624,5 +624,6 @@
     @include('components.page-loader')
     @include('components.ajax-loader')
     @include('components.button-loading')
+    @include('components.upload-loader')
 </body>
 </html>

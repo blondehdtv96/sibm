@@ -803,5 +803,9 @@
             }
         }
     </style>
+
+    <!-- Loading Components -->
+    @include('components.button-loading')
+    @include('components.upload-loader')
 </body>
 </html>
