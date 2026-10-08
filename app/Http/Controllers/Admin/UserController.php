@@ -60,7 +60,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', Rule::in(['admin', 'teacher', 'student'])],
+            'role' => ['required', Rule::in(['admin', 'editor', 'teacher', 'student'])],
             'phone' => ['nullable', 'string', 'max:20'],
             'profile_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:20480'],
         ]);
@@ -104,7 +104,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', Rule::in(['admin', 'teacher', 'student'])],
+            'role' => ['required', Rule::in(['admin', 'editor', 'teacher', 'student'])],
             'phone' => ['nullable', 'string', 'max:20'],
             'profile_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:20480'],
         ]);
@@ -162,7 +162,7 @@ class UserController extends Controller
             'action' => ['required', Rule::in(['delete', 'change_role'])],
             'user_ids' => ['required', 'array'],
             'user_ids.*' => ['exists:users,id'],
-            'role' => ['required_if:action,change_role', Rule::in(['admin', 'teacher', 'student'])],
+            'role' => ['required_if:action,change_role', Rule::in(['admin', 'editor', 'teacher', 'student'])],
         ]);
 
         $userIds = $validated['user_ids'];

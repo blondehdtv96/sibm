@@ -139,7 +139,7 @@
         >
             <!-- Logo (Fixed at top) -->
             <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200 flex-shrink-0">
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3">
+                <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : route('admin.news.index') }}" class="flex items-center space-x-3">
                     @php($adminLogoUrl = \App\Models\Setting::getLogo('site_logo'))
                     @if($adminLogoUrl)
                         <img src="{{ $adminLogoUrl }}" alt="{{ setting('site_name', 'Panel Admin') }}" class="w-8 h-8 object-contain rounded-lg site-logo-animated">
@@ -162,6 +162,7 @@
             <!-- Navigation (Scrollable) -->
             <nav class="flex-1 px-4 py-6 space-y-8 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400">
                 <!-- Dashboard -->
+                @if(auth()->user()->isAdmin())
                 <div>
                     <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Dasbor</h3>
                     <a href="{{ route('admin.dashboard') }}" 
@@ -172,11 +173,13 @@
                         Ringkasan
                     </a>
                 </div>
+                @endif
 
                 <!-- Content Management -->
                 <div>
                     <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Manajemen Konten</h3>
                     <div class="space-y-1">
+                        @if(auth()->user()->isAdmin())
                         <a href="{{ route('admin.pages.index') }}" 
                            class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.pages.*') ? 'bg-ios-blue text-white' : 'text-gray-700 hover:bg-gray-100' }}">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,6 +187,7 @@
                             </svg>
                             Halaman
                         </a>
+                        @endif
                         <a href="{{ route('admin.news.index') }}" 
                            class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.news.*') ? 'bg-ios-blue text-white' : 'text-gray-700 hover:bg-gray-100' }}">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -191,6 +195,7 @@
                             </svg>
                             Berita & Acara
                         </a>
+                        @if(auth()->user()->isAdmin())
                         <a href="{{ route('admin.competencies.index') }}" 
                            class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.competencies.*') ? 'bg-ios-blue text-white' : 'text-gray-700 hover:bg-gray-100' }}">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,6 +210,7 @@
                             </svg>
                             Profil Guru & Karyawan
                         </a>
+                        @endif
                         <a href="{{ route('admin.gallery-albums.index') }}" 
                            class="flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors {{ request()->routeIs('admin.gallery-albums.*') || request()->routeIs('admin.gallery-items.*') ? 'bg-ios-blue text-white' : 'text-gray-700 hover:bg-gray-100' }}">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,6 +222,7 @@
                 </div>
 
                 <!-- Registration -->
+                @if(auth()->user()->isAdmin())
                 <div>
                     <h3 class="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Pendaftaran</h3>
                     <div class="space-y-1">
@@ -319,6 +326,7 @@
                         </a>
                     </div>
                 </div>
+                @endif
             </nav>
         </aside>
 
@@ -340,6 +348,7 @@
                     <!-- Right: Actions + User -->
                     <div class="flex items-center space-x-4">
                         <!-- Notifications -->
+                        @if(auth()->user()->isAdmin())
                         <div x-data="{ open: false, unreadCount: {{ auth()->user()->unreadNotifications->count() }} }" class="relative">
                             <button @click="open = !open" class="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -401,6 +410,8 @@
                                 @endif
                             </div>
                         </div>
+
+                        @endif
 
                         <!-- User Menu -->
                         <div x-data="{ open: false }" class="relative">

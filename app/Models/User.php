@@ -71,6 +71,45 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if user has editor role (news & photo gallery only)
+     */
+    public function isEditor(): bool
+    {
+        return $this->role === 'editor';
+    }
+
+    /**
+     * Check if user may manage news and photo gallery albums
+     */
+    public function canManageContent(): bool
+    {
+        return $this->isAdmin() || $this->isEditor();
+    }
+
+    /**
+     * Available roles and their human readable labels
+     *
+     * @return array<string, string>
+     */
+    public static function roleOptions(): array
+    {
+        return [
+            'admin' => 'Admin',
+            'editor' => 'Editor Konten',
+            'teacher' => 'Teacher',
+            'student' => 'Student',
+        ];
+    }
+
+    /**
+     * Human readable label for this user's role
+     */
+    public function getRoleLabelAttribute(): string
+    {
+        return self::roleOptions()[$this->role] ?? ucfirst($this->role);
+    }
+
+    /**
      * Check if user has specific role
      */
     public function hasRole(string $role): bool

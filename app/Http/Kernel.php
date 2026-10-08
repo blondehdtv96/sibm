@@ -74,6 +74,7 @@ class Kernel extends HttpKernel
         // Custom role-based middleware
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'teacher' => \App\Http\Middleware\TeacherMiddleware::class,
+        'content.manager' => \App\Http\Middleware\ContentManagerMiddleware::class,
         'session.timeout' => \App\Http\Middleware\SessionTimeout::class,
     ];
 }

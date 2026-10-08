@@ -323,11 +323,13 @@
             <div class="ios-flex ios-items-center ios-gap-sm">
                 <!-- Quick Actions -->
                 <div class="ios-flex ios-items-center ios-gap-sm ios-hidden-mobile">
+                    @if(auth()->user()->isAdmin())
                     <a href="{{ route('admin.pages.create') }}" class="ios-button-ghost ios-button-sm" title="New Page">
                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
                         </svg>
                     </a>
+                    @endif
                     
                     <a href="{{ route('admin.news.create') }}" class="ios-button-ghost ios-button-sm" title="New Article">
                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
@@ -403,7 +405,7 @@
     <aside class="admin-sidebar" :class="{ 'open': sidebarOpen, 'collapsed': sidebarCollapsed }">
         <!-- Logo -->
         <div class="sidebar-header">
-            <a href="{{ route('admin.dashboard') }}" class="sidebar-logo">
+            <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : route('admin.news.index') }}" class="sidebar-logo">
                 <div class="logo-icon">
                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect width="32" height="32" rx="8" fill="var(--ios-blue)"/>
@@ -418,6 +420,7 @@
 
         <!-- Navigation -->
         <nav class="sidebar-nav">
+            @if(auth()->user()->isAdmin())
             <div class="nav-section">
                 <h3 class="nav-section-title" x-show="!sidebarCollapsed">Dashboard</h3>
                 <ul class="nav-list">
@@ -432,9 +435,12 @@
                 </ul>
             </div>
 
+            @endif
+
             <div class="nav-section">
                 <h3 class="nav-section-title" x-show="!sidebarCollapsed">Content Management</h3>
                 <ul class="nav-list">
+                    @if(auth()->user()->isAdmin())
                     <li>
                         <a href="{{ route('admin.pages.index') }}" class="nav-item {{ request()->routeIs('admin.pages.*') ? 'active' : '' }}">
                             <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
@@ -443,6 +449,7 @@
                             <span x-show="!sidebarCollapsed">Pages</span>
                         </a>
                     </li>
+                    @endif
                     <li>
                         <a href="{{ route('admin.news.index') }}" class="nav-item {{ request()->routeIs('admin.news.*') ? 'active' : '' }}">
                             <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
@@ -452,6 +459,7 @@
                             <span x-show="!sidebarCollapsed">News & Events</span>
                         </a>
                     </li>
+                    @if(auth()->user()->isAdmin())
                     <li>
                         <a href="{{ route('admin.competencies.index') }}" class="nav-item {{ request()->routeIs('admin.competencies.*') ? 'active' : '' }}">
                             <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
@@ -460,6 +468,7 @@
                             <span x-show="!sidebarCollapsed">Competencies</span>
                         </a>
                     </li>
+                    @endif
                     <li>
                         <a href="{{ route('admin.gallery-albums.index') }}" class="nav-item {{ request()->routeIs('admin.gallery-albums.*') || request()->routeIs('admin.gallery-items.*') ? 'active' : '' }}">
                             <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
@@ -471,6 +480,7 @@
                 </ul>
             </div>
 
+            @if(auth()->user()->isAdmin())
             <div class="nav-section">
                 <h3 class="nav-section-title" x-show="!sidebarCollapsed">Registration</h3>
                 <ul class="nav-list">
@@ -507,6 +517,7 @@
                     <!-- Settings link will be added later -->
                 </ul>
             </div>
+            @endif
         </nav>
     </aside>
 

@@ -186,122 +186,166 @@
 
         <form action="{{ route('admin.settings.update-statistics') }}" method="POST" class="p-6">
             @csrf
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Statistic 1 -->
-                <div class="bg-gray-50 rounded-lg p-4">
-                    <h4 class="font-semibold text-gray-900 mb-4">Statistik 1</h4>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nilai</label>
-                            <input 
-                                type="text" 
-                                name="stat1_value" 
-                                value="{{ old('stat1_value', setting('stat1_value', '1000+')) }}"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
-                                placeholder="1000+"
-                            >
+
+            @if($statistics->isEmpty())
+                <p class="text-sm text-gray-500">Belum ada data statistik.</p>
+            @else
+                <p class="mb-5 text-sm text-gray-500">
+                    Angka ini tampil pada panel statistik di halaman utama. Kolom <strong>Akhiran</strong> diisi bila
+                    angkanya perlu imbuhan, misalnya <code class="rounded bg-gray-100 px-1">+</code> atau
+                    <code class="rounded bg-gray-100 px-1">%</code>.
+                </p>
+
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    @foreach($statistics as $index => $statistic)
+                        <div class="rounded-lg bg-gray-50 p-4">
+                            <div class="mb-4 flex items-center justify-between">
+                                <h4 class="font-semibold text-gray-900">Statistik {{ $index + 1 }}</h4>
+                                <label class="inline-flex items-center gap-2 text-sm text-gray-600">
+                                    <input
+                                        type="checkbox"
+                                        name="statistics[{{ $index }}][is_active]"
+                                        value="1"
+                                        @checked(old("statistics.$index.is_active", $statistic->status === 'active'))
+                                        class="rounded border-gray-300 text-ios-blue focus:ring-ios-blue"
+                                    >
+                                    Tampilkan
+                                </label>
+                            </div>
+
+                            <input type="hidden" name="statistics[{{ $index }}][id]" value="{{ $statistic->id }}">
+
+                            <div class="space-y-3">
+                                <div class="grid grid-cols-3 gap-3">
+                                    <div class="col-span-2">
+                                        <label class="mb-1 block text-sm font-medium text-gray-700">Nilai</label>
+                                        <input
+                                            type="text"
+                                            name="statistics[{{ $index }}][value]"
+                                            value="{{ old("statistics.$index.value", $statistic->value) }}"
+                                            class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-ios-blue @error("statistics.$index.value") border-red-500 @enderror"
+                                            placeholder="1400"
+                                        >
+                                        @error("statistics.$index.value")
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div>
+                                        <label class="mb-1 block text-sm font-medium text-gray-700">Akhiran</label>
+                                        <input
+                                            type="text"
+                                            name="statistics[{{ $index }}][suffix]"
+                                            value="{{ old("statistics.$index.suffix", $statistic->suffix) }}"
+                                            class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-ios-blue"
+                                            placeholder="+"
+                                        >
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="mb-1 block text-sm font-medium text-gray-700">Label</label>
+                                    <input
+                                        type="text"
+                                        name="statistics[{{ $index }}][label]"
+                                        value="{{ old("statistics.$index.label", $statistic->label) }}"
+                                        class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-transparent focus:ring-2 focus:ring-ios-blue @error("statistics.$index.label") border-red-500 @enderror"
+                                        placeholder="Siswa Aktif"
+                                    >
+                                    @error("statistics.$index.label")
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Label</label>
-                            <input 
-                                type="text" 
-                                name="stat1_label" 
-                                value="{{ old('stat1_label', setting('stat1_label', 'Alumni Sukses')) }}"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
-                                placeholder="Alumni Sukses"
-                            >
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
 
-                <!-- Statistic 2 -->
-                <div class="bg-gray-50 rounded-lg p-4">
-                    <h4 class="font-semibold text-gray-900 mb-4">Statistik 2</h4>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nilai</label>
-                            <input 
-                                type="text" 
-                                name="stat2_value" 
-                                value="{{ old('stat2_value', setting('stat2_value', '15+')) }}"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
-                                placeholder="15+"
-                            >
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Label</label>
-                            <input 
-                                type="text" 
-                                name="stat2_label" 
-                                value="{{ old('stat2_label', setting('stat2_label', 'Program Keahlian')) }}"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
-                                placeholder="Program Keahlian"
-                            >
-                        </div>
-                    </div>
+                <div class="mt-6 flex justify-end">
+                    <button type="submit" class="rounded-lg bg-ios-blue px-6 py-2 text-white transition-colors hover:bg-blue-600">
+                        Simpan Statistik
+                    </button>
                 </div>
+            @endif
+        </form>
+    </div>
 
-                <!-- Statistic 3 -->
-                <div class="bg-gray-50 rounded-lg p-4">
-                    <h4 class="font-semibold text-gray-900 mb-4">Statistik 3</h4>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nilai</label>
-                            <input 
-                                type="text" 
-                                name="stat3_value" 
-                                value="{{ old('stat3_value', setting('stat3_value', '50+')) }}"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
-                                placeholder="50+"
-                            >
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Label</label>
-                            <input 
-                                type="text" 
-                                name="stat3_label" 
-                                value="{{ old('stat3_label', setting('stat3_label', 'Guru Berpengalaman')) }}"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
-                                placeholder="Guru Berpengalaman"
-                            >
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Statistic 4 -->
-                <div class="bg-gray-50 rounded-lg p-4">
-                    <h4 class="font-semibold text-gray-900 mb-4">Statistik 4</h4>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nilai</label>
-                            <input 
-                                type="text" 
-                                name="stat4_value" 
-                                value="{{ old('stat4_value', setting('stat4_value', '95%')) }}"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
-                                placeholder="95%"
-                            >
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Label</label>
-                            <input 
-                                type="text" 
-                                name="stat4_label" 
-                                value="{{ old('stat4_label', setting('stat4_label', 'Tingkat Kelulusan')) }}"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent"
-                                placeholder="Tingkat Kelulusan"
-                            >
-                        </div>
-                    </div>
-                </div>
+    <!-- Homepage Running Text Section -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-emerald-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 1 1 0-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 0 1-1.44-4.282m3.102.069a18.03 18.03 0 0 1-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 0 1 8.835 2.535M10.34 6.66a23.847 23.847 0 0 0 8.835-2.535m0 0A23.74 23.74 0 0 0 18.795 3m.38 1.125a23.91 23.91 0 0 1 1.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 0 0 1.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 0 1 0 3.46"/>
+                </svg>
+                <h3 class="text-lg font-semibold text-gray-900">Teks Berjalan Homepage</h3>
             </div>
+            <a href="{{ route('home') }}" target="_blank" class="text-sm text-blue-600 hover:text-blue-700">
+                Lihat di Homepage →
+            </a>
+        </div>
 
-            <div class="mt-6 flex justify-end">
-                <button type="submit" class="px-6 py-2 bg-ios-blue text-white rounded-lg hover:bg-blue-600 transition-colors">
-                    Simpan Statistik
-                </button>
+        <form action="{{ route('admin.settings.update-running-text') }}" method="POST" class="p-6">
+            @csrf
+            <div class="space-y-6">
+                <label class="flex items-start gap-3">
+                    <input
+                        type="checkbox"
+                        name="running_text_enabled"
+                        value="1"
+                        @checked(old('running_text_enabled', $runningTextEnabled))
+                        class="mt-1 rounded border-gray-300 text-ios-blue focus:ring-ios-blue"
+                    >
+                    <span>
+                        <span class="block text-sm font-medium text-gray-700">Tampilkan teks berjalan</span>
+                        <span class="block text-xs text-gray-500">Matikan untuk menyembunyikan baris teks berjalan dari halaman utama.</span>
+                    </span>
+                </label>
+
+                <div>
+                    <label for="running_text_content" class="mb-2 block text-sm font-medium text-gray-700">
+                        Isi Teks Berjalan
+                    </label>
+                    <textarea
+                        name="running_text_content"
+                        id="running_text_content"
+                        rows="6"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2 font-mono text-sm focus:border-transparent focus:ring-2 focus:ring-ios-blue @error('running_text_content') border-red-500 @enderror"
+                        placeholder="Pendaftaran SPMB 2026 telah dibuka&#10;Kunjungi sekolah setiap hari kerja pukul 08.00 - 15.00&#10;Informasi beasiswa | https://contoh.sch.id/beasiswa"
+                    >{{ old('running_text_content', $runningTextContent) }}</textarea>
+                    <p class="mt-2 text-xs text-gray-500">
+                        <strong>Satu baris = satu pesan.</strong> Pesan akan berjalan bergantian.
+                        Untuk membuat pesan bisa diklik, tambahkan tanda <code class="rounded bg-gray-100 px-1">|</code>
+                        lalu alamat tautannya, contoh:
+                        <code class="rounded bg-gray-100 px-1">Pendaftaran dibuka | https://contoh.sch.id/ppdb</code>
+                    </p>
+                    @error('running_text_content')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="running_text_speed" class="mb-2 block text-sm font-medium text-gray-700">Kecepatan</label>
+                    @php $currentSpeed = old('running_text_speed', $runningTextSpeed); @endphp
+                    <select
+                        name="running_text_speed"
+                        id="running_text_speed"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-ios-blue md:max-w-xs"
+                    >
+                        <option value="slow" @selected($currentSpeed === 'slow')>Lambat</option>
+                        <option value="normal" @selected($currentSpeed === 'normal')>Normal</option>
+                        <option value="fast" @selected($currentSpeed === 'fast')>Cepat</option>
+                    </select>
+                    @error('running_text_speed')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="rounded-lg bg-emerald-600 px-6 py-2 text-white transition-colors hover:bg-emerald-700">
+                        Simpan Teks Berjalan
+                    </button>
+                </div>
             </div>
         </form>
+    </div>
     </div>
 
     <!-- PPDB Brochure Section -->

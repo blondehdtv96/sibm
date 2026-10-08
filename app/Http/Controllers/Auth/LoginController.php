@@ -81,6 +81,8 @@ class LoginController extends Controller
             $user = Auth::user();
             if ($user->isAdmin()) {
                 return redirect()->intended('/admin/dashboard');
+            } elseif ($user->isEditor()) {
+                return redirect()->intended('/admin/news');
             } elseif ($user->isTeacher()) {
                 return redirect()->intended('/teacher/dashboard');
             } else {

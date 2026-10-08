@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Models\Statistic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -115,11 +116,22 @@ class SettingController extends Controller
         $principalPhoto = Setting::get('principal_photo', '');
         $principalMessage = Setting::get('principal_message', '');
 
+        // The homepage renders these rows, so the form edits them directly.
+        $statistics = Statistic::orderBy('order')->orderBy('id')->get();
+
+        $runningTextEnabled = filter_var(Setting::get('running_text_enabled', '1'), FILTER_VALIDATE_BOOLEAN);
+        $runningTextContent = Setting::get('running_text_content', '');
+        $runningTextSpeed = Setting::get('running_text_speed', 'normal');
+
         return view('admin.settings.school-content', compact(
             'overview',
             'principalName',
             'principalPhoto',
-            'principalMessage'
+            'principalMessage',
+            'statistics',
+            'runningTextEnabled',
+            'runningTextContent',
+            'runningTextSpeed'
         ));
     }
 
@@ -288,27 +300,62 @@ class SettingController extends Controller
         return redirect()->back()->with('success', 'Video YouTube homepage berhasil diperbarui!');
     }
 
+    /**
+     * Update the homepage statistics.
+     *
+     * These live in the `statistics` table, which is what the homepage renders.
+     * (An older version of this form wrote stat1..4_* settings that nothing read,
+     * so edits never reached the homepage.)
+     */
     public function updateStatistics(Request $request)
     {
         $validated = $request->validate([
-            'stat1_value' => 'required|string|max:50',
-            'stat1_label' => 'required|string|max:100',
-            'stat2_value' => 'required|string|max:50',
-            'stat2_label' => 'required|string|max:100',
-            'stat3_value' => 'required|string|max:50',
-            'stat3_label' => 'required|string|max:100',
-            'stat4_value' => 'required|string|max:50',
-            'stat4_label' => 'required|string|max:100',
+            'statistics' => 'required|array|min:1',
+            'statistics.*.id' => 'required|integer|exists:statistics,id',
+            'statistics.*.value' => 'required|string|max:50',
+            'statistics.*.suffix' => 'nullable|string|max:10',
+            'statistics.*.label' => 'required|string|max:100',
+            'statistics.*.is_active' => 'nullable|boolean',
+        ], [], [
+            'statistics.*.value' => 'nilai statistik',
+            'statistics.*.label' => 'label statistik',
         ]);
 
-        foreach ($validated as $key => $value) {
-            Setting::updateOrCreate(
-                ['key' => $key],
-                ['value' => $value]
-            );
+        foreach ($validated['statistics'] as $order => $row) {
+            Statistic::where('id', $row['id'])->update([
+                'value' => trim($row['value']),
+                'suffix' => trim((string) ($row['suffix'] ?? '')),
+                'label' => trim($row['label']),
+                'status' => !empty($row['is_active']) ? 'active' : 'inactive',
+                'order' => $order,
+            ]);
         }
 
         return redirect()->back()->with('success', 'Statistik homepage berhasil diperbarui!');
+    }
+
+    /**
+     * Update the homepage running text (marquee).
+     */
+    public function updateRunningText(Request $request)
+    {
+        $validated = $request->validate([
+            'running_text_content' => 'nullable|string|max:2000',
+            'running_text_speed' => 'required|in:slow,normal,fast',
+        ], [], [
+            'running_text_content' => 'isi teks berjalan',
+            'running_text_speed' => 'kecepatan',
+        ]);
+
+        // Normalise line endings so the frontend can split on "\n" alone.
+        $content = str_replace(["\r\n", "\r"], "\n", (string) $validated['running_text_content']);
+        $content = implode("\n", array_filter(array_map('trim', explode("\n", $content)), fn ($line) => $line !== ''));
+
+        Setting::set('running_text_enabled', $request->boolean('running_text_enabled') ? '1' : '0');
+        Setting::set('running_text_content', $content, 'textarea');
+        Setting::set('running_text_speed', $validated['running_text_speed']);
+
+        return redirect()->back()->with('success', 'Teks berjalan homepage berhasil diperbarui!');
     }
 
     public function updatePpdbBrochure(Request $request)

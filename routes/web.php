@@ -114,16 +114,8 @@ Route::get('/demo/interactive-components', function () {
     return view('demo.interactive-components');
 })->middleware(['auth'])->name('demo.interactive-components');
 
-// Admin routes
-Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Dashboard data API
-    Route::get('dashboard/data', [\App\Http\Controllers\Admin\DashboardController::class, 'getData'])->name('dashboard.data');
-    Route::get('dashboard/export', [\App\Http\Controllers\Admin\DashboardController::class, 'exportStatistics'])->name('dashboard.export');
-    
-    // Page management routes
-    Route::resource('pages', PageController::class);
-    Route::patch('pages/{page}/toggle-status', [PageController::class, 'toggleStatus'])->name('pages.toggle-status');
-    
+// Content editor routes - news & photo gallery (admins and editors)
+Route::middleware(['auth', 'session.timeout', 'content.manager'])->prefix('admin')->name('admin.')->group(function () {
     // News category management routes
     Route::resource('news-categories', \App\Http\Controllers\Admin\NewsCategoryController::class);
     
@@ -133,6 +125,24 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     Route::post('news/upload-image', [\App\Http\Controllers\Admin\NewsController::class, 'uploadImage'])->name('news.upload-image');
     Route::post('news/upload-file', [\App\Http\Controllers\Admin\NewsController::class, 'uploadFile'])->name('news.upload-file');
 
+    // Gallery album management routes
+    Route::resource('gallery-albums', \App\Http\Controllers\Admin\GalleryAlbumController::class);
+    Route::post('gallery-albums/update-order', [\App\Http\Controllers\Admin\GalleryAlbumController::class, 'updateOrder'])->name('gallery-albums.update-order');
+    
+    // Gallery item management routes
+    Route::resource('gallery-items', \App\Http\Controllers\Admin\GalleryItemController::class)->except(['index', 'show']);
+    Route::post('gallery-items/upload-ajax', [\App\Http\Controllers\Admin\GalleryItemController::class, 'uploadAjax'])->name('gallery-items.upload-ajax');
+});
+
+// Admin routes
+Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Dashboard data API
+    Route::get('dashboard/data', [\App\Http\Controllers\Admin\DashboardController::class, 'getData'])->name('dashboard.data');
+    Route::get('dashboard/export', [\App\Http\Controllers\Admin\DashboardController::class, 'exportStatistics'])->name('dashboard.export');
+    
+    // Page management routes
+    Route::resource('pages', PageController::class);
+    Route::patch('pages/{page}/toggle-status', [PageController::class, 'toggleStatus'])->name('pages.toggle-status');
     
     // Competency management routes
     Route::resource('competencies', \App\Http\Controllers\Admin\CompetencyController::class);
@@ -156,14 +166,6 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     Route::delete('staff-profiles/{staffProfile}/images/{image}', [\App\Http\Controllers\Admin\StaffProfileController::class, 'deleteGalleryImage'])->name('staff-profiles.images.destroy');
     Route::resource('staff-profiles', \App\Http\Controllers\Admin\StaffProfileController::class);
 
-    // Gallery album management routes
-    Route::resource('gallery-albums', \App\Http\Controllers\Admin\GalleryAlbumController::class);
-    Route::post('gallery-albums/update-order', [\App\Http\Controllers\Admin\GalleryAlbumController::class, 'updateOrder'])->name('gallery-albums.update-order');
-    
-    // Gallery item management routes
-    Route::resource('gallery-items', \App\Http\Controllers\Admin\GalleryItemController::class)->except(['index', 'show']);
-    Route::post('gallery-items/upload-ajax', [\App\Http\Controllers\Admin\GalleryItemController::class, 'uploadAjax'])->name('gallery-items.upload-ajax');
-    
     // PPDB settings management routes
     Route::resource('ppdb-settings', \App\Http\Controllers\Admin\PpdbSettingController::class);
     Route::patch('ppdb-settings/{ppdbSetting}/toggle-status', [\App\Http\Controllers\Admin\PpdbSettingController::class, 'toggleStatus'])->name('ppdb-settings.toggle-status');
@@ -215,6 +217,7 @@ Route::middleware(['auth', 'session.timeout', 'admin'])->prefix('admin')->name('
     Route::post('settings/update-principal-message', [\App\Http\Controllers\Admin\SettingController::class, 'updatePrincipalMessage'])->name('settings.update-principal-message');
     Route::delete('settings/delete-principal-photo', [\App\Http\Controllers\Admin\SettingController::class, 'deletePrincipalPhoto'])->name('settings.delete-principal-photo');
     Route::post('settings/update-statistics', [\App\Http\Controllers\Admin\SettingController::class, 'updateStatistics'])->name('settings.update-statistics');
+    Route::post('settings/update-running-text', [\App\Http\Controllers\Admin\SettingController::class, 'updateRunningText'])->name('settings.update-running-text');
     Route::post('settings/update-ppdb-brochure', [\App\Http\Controllers\Admin\SettingController::class, 'updatePpdbBrochure'])->name('settings.update-ppdb-brochure');
     Route::delete('settings/delete-ppdb-brochure', [\App\Http\Controllers\Admin\SettingController::class, 'deletePpdbBrochure'])->name('settings.delete-ppdb-brochure');
     Route::get('settings/contact-social', [\App\Http\Controllers\Admin\SettingController::class, 'contactSocial'])->name('settings.contact-social');

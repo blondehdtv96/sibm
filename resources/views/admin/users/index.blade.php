@@ -39,6 +39,7 @@
                 <select name="role" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ios-blue focus:border-transparent">
                     <option value="">All Roles</option>
                     <option value="admin" {{ request('role') === 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="editor" {{ request('role') === 'editor' ? 'selected' : '' }}>Editor Konten</option>
                     <option value="teacher" {{ request('role') === 'teacher' ? 'selected' : '' }}>Teacher</option>
                     <option value="student" {{ request('role') === 'student' ? 'selected' : '' }}>Student</option>
                 </select>
@@ -126,10 +127,11 @@
                             <td class="px-6 py-4">
                                 <span class="px-2 py-1 text-xs font-semibold rounded-full 
                                     @if($user->role === 'admin') bg-red-100 text-red-700
+                                    @elseif($user->role === 'editor') bg-purple-100 text-purple-700
                                     @elseif($user->role === 'teacher') bg-blue-100 text-blue-700
                                     @else bg-gray-100 text-gray-700
                                     @endif">
-                                    {{ ucfirst($user->role) }}
+                                    {{ $user->role_label }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500">{{ $user->created_at->format('M d, Y') }}</td>
@@ -227,6 +229,7 @@
                         <select name="role" x-model="bulkRole" class="ios-select" required>
                             <option value="">Choose a role...</option>
                             <option value="admin">Admin</option>
+                            <option value="editor">Editor Konten</option>
                             <option value="teacher">Teacher</option>
                             <option value="student">Student</option>
                         </select>

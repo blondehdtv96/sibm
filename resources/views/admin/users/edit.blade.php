@@ -115,6 +115,7 @@
                     >
                         <option value="">Select a role...</option>
                         <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="editor" {{ old('role', $user->role) === 'editor' ? 'selected' : '' }}>Editor Konten (Berita &amp; Galeri)</option>
                         <option value="teacher" {{ old('role', $user->role) === 'teacher' ? 'selected' : '' }}>Teacher</option>
                         <option value="student" {{ old('role', $user->role) === 'student' ? 'selected' : '' }}>Student</option>
                     </select>
@@ -124,6 +125,7 @@
                     @else
                     <p class="ios-text-secondary ios-text-sm ios-mt-xs">
                         <strong>Admin:</strong> Full system access. 
+                        <strong>Editor Konten:</strong> Hanya kelola Berita &amp; Album Foto. 
                         <strong>Teacher:</strong> Content management. 
                         <strong>Student:</strong> Limited access.
                     </p>
